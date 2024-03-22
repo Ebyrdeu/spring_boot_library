@@ -1,4 +1,4 @@
-name: Jakarta CI pipeline
+name: Library Spring Boot CI pipeline
 
 on:
   push:
