@@ -2,10 +2,12 @@ package dev.ebrydeu.spring_boot_library.domain.entities;
 
 import lombok.*;
 import jakarta.persistence.*;
-import java.util.UUID;
-@Data
+import org.hibernate.proxy.HibernateProxy;
+
+import java.util.Objects;
+
 @Entity
-@Table(name = "USER")
+@Table(name = "user")
 
 @Getter
 @Setter
@@ -14,11 +16,37 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NonNull private UUID id;
+    @Column(nullable = false, name = "user_id")
+    private Long id;
 
-    @NonNull private String firstName;
-    @NonNull private String lastName;
-    @NonNull private String profileName;
-    @NonNull private String profilePicture;
-    @NonNull private String email;
+    @Column (unique = true, nullable = false, name = "profile_name")
+    private String profileName;
+
+    @Column(nullable = false, name = "first_name")
+    private String firstName;
+
+    @Column(nullable = false, name = "last_name")
+    private String lastName;
+
+    @Column(nullable = false, name = "image")
+    private String profilePicture;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
 }
