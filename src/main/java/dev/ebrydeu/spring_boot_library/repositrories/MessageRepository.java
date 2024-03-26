@@ -19,12 +19,12 @@ public interface MessageRepository extends ListCrudRepository<Message, Long> {
             """)
     @Modifying
     @Transactional
-    void editMessageBody(String body, Long id);
+    int editMessageBody(String body, Long id);
 
     @Query("""
             update Message m set m.title = ?1 where m.id = ?2
             """)
     @Modifying
     @Transactional
-    void editMessageTitle(String title, Long id);
+    int editMessageTitle(String title, Long id);
 }
