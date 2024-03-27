@@ -1,17 +1,18 @@
 package dev.ebrydeu.spring_boot_library.domain.entities;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -19,7 +20,7 @@ public class User {
     @Column(nullable = false, name = "user_id")
     private Long id;
 
-    @Column (unique = true, nullable = false, name = "profile_name")
+    @Column(unique = true, nullable = false, name = "profile_name")
     private String profileName;
 
     @Column(nullable = false, name = "first_name")

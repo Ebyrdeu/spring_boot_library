@@ -7,14 +7,14 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
-@Table (name = "message")
-
+@Table(name = "message")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Message {
 
     @Id
@@ -35,8 +35,8 @@ public class Message {
     @Column(nullable = false)
     private Instant date;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Override
