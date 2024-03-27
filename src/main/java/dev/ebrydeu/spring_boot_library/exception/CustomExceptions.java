@@ -52,5 +52,6 @@ public class CustomExceptions {
             super(message);
         }
     }
+
 }
 
