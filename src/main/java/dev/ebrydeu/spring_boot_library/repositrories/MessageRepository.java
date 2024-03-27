@@ -5,11 +5,12 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Modifying;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface MessageRepository extends ListCrudRepository<Message, Long> {
-    List<Message> findAll();
-
     List<Message> findByAuthor(String author); // <>
 
     List<Message> findByTitle(String title);
