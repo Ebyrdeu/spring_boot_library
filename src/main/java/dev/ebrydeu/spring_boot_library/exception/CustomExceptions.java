@@ -1,8 +1,8 @@
 package dev.ebrydeu.spring_boot_library.exception;
 
 public class CustomExceptions {
-    public static class UserNotFoundException extends RuntimeException {
-        public UserNotFoundException(String message) {
+    public static class NotFoundException extends RuntimeException {
+        public NotFoundException(String message) {
             super(message);
         }
     }

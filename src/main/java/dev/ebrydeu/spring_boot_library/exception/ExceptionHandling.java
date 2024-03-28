@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ExceptionHandling {
-    @ExceptionHandler({CustomExceptions.UserNotFoundException.class})
+    @ExceptionHandler({CustomExceptions.NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> userNotFound(Exception exception) {
+    public ResponseEntity<Object> notFound(Exception exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
