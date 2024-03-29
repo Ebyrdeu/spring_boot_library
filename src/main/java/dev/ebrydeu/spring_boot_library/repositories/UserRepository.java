@@ -1,4 +1,4 @@
-package dev.ebrydeu.spring_boot_library.repositrories;
+package dev.ebrydeu.spring_boot_library.repositories;
 
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import org.springframework.data.repository.ListCrudRepository;
