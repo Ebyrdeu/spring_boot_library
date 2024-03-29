@@ -26,10 +26,8 @@ public class UserService  {
     }
     public UserDto getUserById(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new CustomExceptions.NotFoundException("User not found with id: " + userId);
-        }
-        return UserDto.map(userOptional.get());
+        return userOptional.map(UserDto::map)
+                .orElseThrow(() -> new CustomExceptions.NotFoundException("User not found with id: " + userId));
     }
     public UserDto createUser(UserDto userDto) {
         if (!userRepository.findByEmail(userDto.email()).isEmpty()) {
@@ -40,10 +38,8 @@ public class UserService  {
         return UserDto.map(savedUser);
     }
     public void deleteUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new CustomExceptions.NotFoundException("User not found with id: " + userId);
-        }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new CustomExceptions.NotFoundException("User not found with id: " + userId));
         userRepository.deleteById(userId);
     }
 
