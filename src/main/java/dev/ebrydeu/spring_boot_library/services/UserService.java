@@ -3,23 +3,20 @@ import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.exception.CustomExceptions;
 import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class UserService  {
-
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
     @Cacheable("users")
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
