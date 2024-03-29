@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -68,7 +70,7 @@ class UserRepositoryTest {
 
     @Test
     void findByEmailSuccessful() {
-        List<User> retrievedUser = userRepository.findByEmail("svensson@example.com");
+        Optional<User> retrievedUser = userRepository.findByEmail("svensson@example.com");
         assertThat(retrievedUser).contains(savedUser);
     }
 }
