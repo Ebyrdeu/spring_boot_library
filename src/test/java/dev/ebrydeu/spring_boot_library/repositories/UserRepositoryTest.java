@@ -73,4 +73,9 @@ class UserRepositoryTest {
         Optional<User> retrievedUser = userRepository.findByEmail("svensson@example.com");
         assertThat(retrievedUser).contains(savedUser);
     }
+    @Test
+    void findByEmailUnsuccessful() {
+        Optional<User> retrievedUser = userRepository.findByEmail("nonexistent@example.com");
+        assertThat(retrievedUser).isEmpty();
+    }
 }
