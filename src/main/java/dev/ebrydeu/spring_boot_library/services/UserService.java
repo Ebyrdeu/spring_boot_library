@@ -43,9 +43,9 @@ public class UserService  {
     }
     @CacheEvict("users")
     public void deleteUser(Long userId) {
-        userRepository.findById(userId)
+        User userToDelete = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomExceptions.NotFoundException("User not found with id: " + userId));
-        userRepository.deleteById(userId);
+        userRepository.deleteById(userToDelete.getId());
     }
     @Cacheable("users")
     public List<UserDto> findByFirstName(String firstName) {
