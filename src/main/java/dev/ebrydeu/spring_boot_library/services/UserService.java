@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class UserService  {
         List<User> users = userRepository.findAll();
         return users.stream()
                 .map(UserDto::map)
-                .collect(Collectors.toList());
+                .toList();
     }
     @Cacheable("users")
     public UserDto getUserById(Long userId) {
@@ -52,28 +52,27 @@ public class UserService  {
         List<User> users = userRepository.findByFirstName(firstName);
         return users.stream()
                 .map(UserDto::map)
-                .collect(Collectors.toList());
+                .toList();
     }
     @Cacheable("users")
     public List<UserDto> findByLastName(String lastName) {
         List<User> users = userRepository.findByLastName(lastName);
         return users.stream()
                 .map(UserDto::map)
-                .collect(Collectors.toList());
+                .toList();
     }
     @Cacheable("users")
     public List<UserDto> findByProfileName(String profileName) {
         List<User> users = userRepository.findByProfileName(profileName);
         return users.stream()
                 .map(UserDto::map)
-                .collect(Collectors.toList());
+                .toList();
     }
     @Cacheable("users")
     public List<UserDto> findByEmail(String email) {
         Optional<User> users = userRepository.findByEmail(email);
         return users.stream()
                 .map(UserDto::map)
-                .collect(Collectors.toList());
+                .toList();
     }
-
 }

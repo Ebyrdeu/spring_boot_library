@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @Transactional
@@ -22,21 +22,21 @@ public class MessageService {
         public List<MessageDto> findAllMessages() {
             return messageRepository.findAll().stream()
                     .map(MessageDto::map)
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         @Cacheable("messages")
         public List<MessageDto> findMessagesByAuthor(String author) {
             return messageRepository.findByAuthor(author).stream()
                     .map(MessageDto::map)
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         @Cacheable("messages")
         public List<MessageDto> findMessagesByTitle(String title) {
             return messageRepository.findByTitle(title).stream()
                     .map(MessageDto::map)
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         @CacheEvict("messages")
