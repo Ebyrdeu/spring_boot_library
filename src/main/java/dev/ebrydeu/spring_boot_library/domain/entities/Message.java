@@ -31,6 +31,9 @@ public class Message {
     @Column(nullable = false)
     private String author;
 
+    @Column(nullable = false)
+    private boolean messagePrivate;
+
     @CreationTimestamp
     @Column(nullable = false)
     private Instant date;

@@ -28,4 +28,11 @@ public interface MessageRepository extends ListCrudRepository<Message, Long> {
     @Modifying
     @Transactional
     int editMessageTitle(String title, Long id);
+
+    @Query("""
+        update Message m SET m.messagePrivate = ?1 where m.id = ?2
+        """)
+    @Modifying
+    @Transactional
+    String setMessagePrivate(boolean messagePrivate, Long id);
 }

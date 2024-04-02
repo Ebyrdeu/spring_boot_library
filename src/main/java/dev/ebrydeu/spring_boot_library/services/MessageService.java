@@ -61,5 +61,12 @@ public class MessageService {
         message.setTitle(title);
         return MessageDto.map(messageRepository.save(message));
     }
+    @CacheEvict("messages")
+    public Object setMessagePrivate(boolean messagePrivate, Long id) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new CustomExceptions.NotFoundException("Message not found with id: " + id));
+        message.setMessagePrivate(messagePrivate);
+        return MessageDto.map(messageRepository.save(message));
+    }
 }
 
