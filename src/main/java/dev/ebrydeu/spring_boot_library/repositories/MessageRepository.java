@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends ListCrudRepository<Message, Long> {
-    List<Message> findByAuthor(String author); // <>
 
     List<Message> findByTitle(String title);
 
@@ -34,5 +33,5 @@ public interface MessageRepository extends ListCrudRepository<Message, Long> {
         """)
     @Modifying
     @Transactional
-    String setMessagePrivate(boolean messagePrivate, Long id);
+    void setMessagePrivate(boolean messagePrivate, Long id);
 }

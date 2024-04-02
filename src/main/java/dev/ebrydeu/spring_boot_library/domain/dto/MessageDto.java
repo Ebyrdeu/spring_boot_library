@@ -15,10 +15,11 @@ public record MessageDto(
         String title,
         @NotBlank(message = "Body must not be blank")
         String body,
-        String author,
         @NotNull(message = "Date must not be null")
         @PastOrPresent(message = "Date must be in the past or present")
         Instant date,
+        @NotNull(message = "Status should not be empty")
+        Boolean messagePrivate,
         @NotNull(message = "User information must not be null")
         UserDto user) {
 
@@ -27,8 +28,8 @@ public record MessageDto(
                 entity.getId(),
                 entity.getTitle(),
                 entity.getBody(),
-                entity.getAuthor(),
                 entity.getDate(),
+                entity.isMessagePrivate(),
                 UserDto.map(entity.getUser())
         );
     }
@@ -38,8 +39,8 @@ public record MessageDto(
         message.setId(dto.id());
         message.setTitle(dto.title());
         message.setBody(dto.body());
-        message.setAuthor(dto.author());
         message.setDate(dto.date());
+        message.setMessagePrivate(dto.messagePrivate);
         message.setUser(UserDto.map(dto.user()));
 
         return message;
