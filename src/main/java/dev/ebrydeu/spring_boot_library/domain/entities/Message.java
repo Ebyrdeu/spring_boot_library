@@ -28,6 +28,9 @@ public class Message {
     @Column(nullable = false)
     private String body;
 
+    @Column(nullable = false)
+    private String author;
+
     @CreationTimestamp
     @Column(nullable = false)
     private Instant date;
