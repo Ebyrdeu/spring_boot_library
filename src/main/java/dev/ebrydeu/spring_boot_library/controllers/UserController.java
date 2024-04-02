@@ -1,8 +1,10 @@
 package dev.ebrydeu.spring_boot_library.controllers;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
+import dev.ebrydeu.spring_boot_library.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,15 +22,11 @@ public class UserController {
 
     @GetMapping("{id}")
     public UserDto getUserById(@PathVariable Long id) {
-        try {
             return userService.getUserById(id);
-        } catch (Exception e) {
-            return null;
-      }
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@RequestBody UserDto userDto) {
+    public UserDto createUser(@Validated @RequestBody UserDto userDto) {
         return userService.createUser(userDto);
     }
 
