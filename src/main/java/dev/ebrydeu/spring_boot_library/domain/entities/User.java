@@ -13,7 +13,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends Auditable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
