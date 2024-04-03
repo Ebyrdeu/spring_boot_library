@@ -14,6 +14,11 @@ import java.util.List;
 public class MessageController{
     private final MessageService messageService;
 
+    @PatchMapping("/{id}/private/{messagePrivate}")
+    public Object setMessagePrivate(@PathVariable Long id, @PathVariable boolean messagePrivate) {
+        return messageService.setMessagePrivate(messagePrivate, id);
+    }
+  
     @GetMapping
     public List<MessageDto> getAllMessages(){
         return messageService.findAllMessages();
@@ -41,3 +46,4 @@ public class MessageController{
         return messageService.editMessageTitle(id, title);
     }
 }
+

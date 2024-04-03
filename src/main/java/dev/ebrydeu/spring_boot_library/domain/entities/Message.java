@@ -29,7 +29,7 @@ public class Message {
     private String body;
 
     @Column(nullable = false)
-    private String author;
+    private boolean messagePrivate;
 
     @CreationTimestamp
     @Column(nullable = false)
