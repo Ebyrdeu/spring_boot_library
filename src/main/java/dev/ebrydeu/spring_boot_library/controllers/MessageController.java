@@ -14,7 +14,7 @@ import java.util.List;
 public class MessageController{
     private final MessageService messageService;
 
-    @PutMapping("/{id}/private/{messagePrivate}")
+    @PatchMapping("/{id}/private/{messagePrivate}")
     public Object setMessagePrivate(@PathVariable Long id, @PathVariable boolean messagePrivate) {
         return messageService.setMessagePrivate(messagePrivate, id);
     }
