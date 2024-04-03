@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public List<UserDto> findByEmail(@PathVariable String email) {
+    public UserDto findByEmail(@PathVariable String email) {
         return userService.findByEmail(email);
     }
 }
