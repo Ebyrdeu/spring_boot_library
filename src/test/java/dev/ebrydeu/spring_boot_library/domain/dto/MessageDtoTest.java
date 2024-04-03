@@ -26,7 +26,7 @@ class MessageDtoTest {
         soft.assertThat(entity.getDate()).isEqualTo(dto.date());
 
         soft.assertThat(entity.getUser().getId()).isEqualTo(dto.user().id());
-        soft.assertThat(entity.getUser().getProfileName()).isEqualTo(dto.user().profileName());
+        soft.assertThat(entity.getUser().getUsername()).isEqualTo(dto.user().username());
 
         soft.assertAll();
 
@@ -41,8 +41,8 @@ class MessageDtoTest {
                 .title("test")
                 .body("body")
                 .date(Instant.now())
-                .messagePrivate(true)
-                .user(User.builder().id(1L).profileName("profile").build())
+                .isPrivate(true)
+                .user(User.builder().id(1L).username("profile").build())
                 .build();
 
         MessageDto dto = MessageDto.map(entity);
@@ -51,10 +51,10 @@ class MessageDtoTest {
         soft.assertThat(dto.title()).isEqualTo(entity.getTitle());
         soft.assertThat(dto.body()).isEqualTo(entity.getBody());
         soft.assertThat(dto.date()).isEqualTo(entity.getDate());
-        soft.assertThat(dto.messagePrivate()).isEqualTo(entity.isMessagePrivate());
+        soft.assertThat(dto.isPrivate()).isEqualTo(entity.isPrivate());
 
         soft.assertThat(dto.user().id()).isEqualTo(entity.getUser().getId());
-        soft.assertThat(dto.user().profileName()).isEqualTo(entity.getUser().getProfileName());
+        soft.assertThat(dto.user().username()).isEqualTo(entity.getUser().getUsername());
 
 
         soft.assertAll();

@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 @Entity
-@Table(name = "message")
+@Table(name = "messages")
 @Builder
 @Getter
 @Setter
@@ -28,14 +28,13 @@ public class Message {
     @Column(nullable = false)
     private String body;
 
-    @Column(nullable = false)
-    private boolean messagePrivate;
+    @Column(name = "is_private", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isPrivate;
 
     @CreationTimestamp
-    @Column(nullable = false)
     private Instant date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
