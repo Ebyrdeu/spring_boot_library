@@ -1,85 +1,27 @@
 package dev.ebrydeu.spring_boot_library.services;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
-import dev.ebrydeu.spring_boot_library.domain.entities.User;
-import dev.ebrydeu.spring_boot_library.exception.CustomExceptions;
-import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
+public interface UserService {
+    UserDto save(UserDto dto);
 
-    @Cacheable("users")
-    public List<UserDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
-    }
+    List<UserDto> findAll();
 
-    @Cacheable("users")
-    public UserDto getUserById(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        return userOptional.map(UserDto::map)
-                .orElseThrow(() -> new CustomExceptions.NotFoundException("User not found with id: " + userId));
-    }
+    UserDto findById(Long userId);
 
-    @CacheEvict("users")
-    public UserDto createUser(UserDto userDto) {
-        userRepository.findByEmail(userDto.email())
-                .ifPresent(existingUser -> {
-                    throw new CustomExceptions.EmailAlreadyExistsException("Email already exists: " + existingUser.getEmail());
-                });
+    List<UserDto> findByFirstname(String firstname);
 
-        User user = UserDto.map(userDto);
-        User savedUser = userRepository.save(user);
-        return UserDto.map(savedUser);
-    }
+    List<UserDto> findByLastname(String lastname);
 
-    @CacheEvict("users")
-    public void deleteUser(Long userId) {
-        User userToDelete = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomExceptions.NotFoundException("User not found with id: " + userId));
-        userRepository.deleteById(userToDelete.getId());
-    }
+    List<UserDto> findByUsername(String username);
 
-    @Cacheable("users")
-    public List<UserDto> findByFirstName(String firstName) {
-        List<User> users = userRepository.findByFirstName(firstName);
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
-    }
+    UserDto findByEmail(String email);
 
-    @Cacheable("users")
-    public List<UserDto> findByLastName(String lastName) {
-        List<User> users = userRepository.findByLastName(lastName);
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
-    }
+    boolean isExists(Long id);
 
-    @Cacheable("users")
-    public List<UserDto> findByProfileName(String profileName) {
-        List<User> users = userRepository.findByProfileName(profileName);
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
-    }
+    void partialUpdate(Long id, UserDto dto);
 
-    @Cacheable("users")
-    public UserDto findByEmail(String email) {
-        User users = userRepository.findByEmail(email).orElseThrow(() -> new CustomExceptions.NotFoundException("User not found with email: " + email));
-        return UserDto.map(users);
-    }
+    void delete(Long id);
 }

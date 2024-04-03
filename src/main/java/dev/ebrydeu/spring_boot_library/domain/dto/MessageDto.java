@@ -3,7 +3,6 @@ package dev.ebrydeu.spring_boot_library.domain.dto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
@@ -15,11 +14,8 @@ public record MessageDto(
         String title,
         @NotBlank(message = "Body must not be blank")
         String body,
-        @NotNull(message = "Date must not be null")
-        @PastOrPresent(message = "Date must be in the past or present")
         Instant date,
-        @NotNull(message = "Status should not be empty")
-        Boolean messagePrivate,
+        boolean isPrivate,
         @NotNull(message = "User information must not be null")
         UserDto user) {
 
@@ -29,19 +25,19 @@ public record MessageDto(
                 entity.getTitle(),
                 entity.getBody(),
                 entity.getDate(),
-                entity.isMessagePrivate(),
+                entity.isPrivate(),
                 UserDto.map(entity.getUser())
         );
     }
 
     public static Message map(MessageDto dto) {
         Message message = new Message();
-        message.setId(dto.id());
-        message.setTitle(dto.title());
-        message.setBody(dto.body());
-        message.setDate(dto.date());
-        message.setMessagePrivate(dto.messagePrivate);
-        message.setUser(UserDto.map(dto.user()));
+        message.setId(dto.id);
+        message.setTitle(dto.title);
+        message.setBody(dto.body);
+        message.setDate(dto.date);
+        message.setPrivate(dto.isPrivate);
+        message.setUser(UserDto.map(dto.user));
 
         return message;
     }

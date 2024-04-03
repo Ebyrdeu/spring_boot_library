@@ -2,104 +2,91 @@ package dev.ebrydeu.spring_boot_library.repositories;
 
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@ActiveProfiles("dev")
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class MessageRepositoryTest {
-    @Autowired
-    private MessageRepository messageRepository;
+    private final MessageRepository repository;
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    private Message savedMessage;
-    private User savedUser;
-
-    @BeforeEach
-    void setUp() {
-        User user = new User();
-        user.setProfileName("svenX");
-        user.setFirstName("Sven");
-        user.setLastName("Svensson");
-        user.setProfilePicture("profile_picture_1");
-        user.setEmail("svensson@example.com");
-
-        Message message = new Message();
-        message.setTitle("Test Title");
-        message.setBody("Test Body");
-        message.setDate(Instant.now());
-        message.setMessagePrivate(false);
-        message.setUser(user);
-
-        savedUser = entityManager.persist(user);
-        savedMessage = entityManager.persist(message);
-
-        entityManager.flush();
+    public MessageRepositoryTest(MessageRepository repository) {
+        this.repository = repository;
     }
 
     @Test
-    void saveNewMessageToDatabaseSuccessful() {
+    @DisplayName("Message can be created and recalled")
+    void messageCanBeCreatedAndRecalled() {
+        User userOne = createUserOne();
+        Message messageOne = createMessageOne(userOne);
 
-        assertThat(entityManager.find(Message.class, savedMessage.getId())).isEqualTo(savedMessage);
+        repository.save(messageOne);
+
+        Optional<Message> result = repository.findById(messageOne.getId());
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(messageOne);
     }
 
     @Test
-    void deleteMessageFromDatabaseSuccessful() {
-        messageRepository.delete(savedMessage);
+    @DisplayName("Multiply Messages can be created and recalled")
+    void multiplyMessagesCanBeCreatedAndRecalled() {
+        User userOne = createUserOne();
+        Message messageOne = createMessageOne(userOne);
+        repository.save(messageOne);
 
-        assertThat(entityManager.find(Message.class, savedMessage.getId())).isNull();
+        Message messageTwo = createMessageTwo(userOne);
+        repository.save(messageTwo);
+
+        List<Message> result = repository.findAll();
+
+        assertThat(result)
+                .hasSize(2)
+                .containsExactly(messageOne, messageTwo);
     }
 
     @Test
-    void messageFindByTitleSuccessful() {
-        List<Message> retrievedMessage = messageRepository.findByTitle("Test Title");
-        assertThat(retrievedMessage).contains(savedMessage);
+    @DisplayName("Message can be updated")
+    void messageCanBeUpdated() {
+        User userOne = createUserOne();
+        Message messageOne = createMessageOne(userOne);
+        repository.save(messageOne);
+
+        messageOne.setPrivate(true);
+        repository.save(messageOne);
+
+        Optional<Message> result = repository.findById(messageOne.getId());
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(messageOne);
+
     }
 
     @Test
-    void editMessageBodySuccessful() {
-        String newBody = "New Body";
-        Long id = savedMessage.getId();
+    @DisplayName("Message can be deleted")
+    void messageCanBeDeleted() {
 
-        messageRepository.editMessageBody(newBody, id);
-        entityManager.clear();
-        Message updatedMessage = entityManager.find(Message.class, savedMessage.getId());
+        User userOne = createUserOne();
+        Message messageOne = createMessageOne(userOne);
 
-        assertThat(updatedMessage.getBody()).isEqualTo("New Body");
-    }
+        repository.save(messageOne);
+        repository.deleteById(messageOne.getId());
 
-    @Test
-    void editMessageTitleSuccessful() {
-        String newTitle = "New Title";
-        Long id = savedMessage.getId();
+        Optional<Message> result = repository.findById(messageOne.getId());
 
-        messageRepository.editMessageTitle(newTitle, id);
-        entityManager.clear();
-        Message updatedMessage = entityManager.find(Message.class, savedMessage.getId());
-
-        assertThat(updatedMessage.getTitle()).isEqualTo("New Title");
-    }
-
-    @Test
-    void setMessagePublicSuccessful() {
-        boolean messagePublic = Boolean.parseBoolean("true");
-        Long id = savedMessage.getId();
-
-        messageRepository.setMessagePrivate(messagePublic, id);
-        entityManager.clear();
-        Message updatedMessage = entityManager.find(Message.class, savedMessage.getId());
-
-        assertThat(updatedMessage.isMessagePrivate()).isTrue();
+        assertThat(result).isEmpty();
     }
 }
