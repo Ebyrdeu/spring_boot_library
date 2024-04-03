@@ -15,7 +15,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class Message extends Auditable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
