@@ -7,7 +7,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.util.Objects;
 
 @Entity
-@Table(name = "usertable")
+@Table(name = "users")
 @Builder
 @Getter
 @Setter
@@ -20,19 +20,19 @@ public class User extends Auditable<User> {
     @Column(nullable = false, name = "user_id")
     private Long id;
 
-    @Column(unique = true, nullable = false, name = "profile_name")
-    private String profileName;
+    @Column(unique = true, nullable = false, name = "username")
+    private String username;
 
-    @Column(nullable = false, name = "first_name")
-    private String firstName;
+    @Column(name = "firstname")
+    private String firstname;
 
-    @Column(nullable = false, name = "last_name")
-    private String lastName;
+    @Column(name = "lastname")
+    private String lastname;
 
-    @Column(nullable = false, name = "image")
+    @Column(name = "image")
     private String profilePicture;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Override

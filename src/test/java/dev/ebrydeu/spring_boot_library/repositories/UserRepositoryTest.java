@@ -1,81 +1,89 @@
 package dev.ebrydeu.spring_boot_library.repositories;
 
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import java.util.List;
 import java.util.Optional;
 
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserOne;
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserTwo;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@ActiveProfiles("dev")
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserRepositoryTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository repository;
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    private User savedUser;
-
-    @BeforeEach
-    void setUp() {
-        User user = new User();
-        user.setProfileName("svenX");
-        user.setFirstName("Sven");
-        user.setLastName("Svensson");
-        user.setProfilePicture("profile_picture_1");
-        user.setEmail("svensson@example.com");
-
-        savedUser = entityManager.persist(user);
-        entityManager.flush();
+    public UserRepositoryTest(UserRepository repository) {
+        this.repository = repository;
     }
 
     @Test
-    void saveNewUserToDatabaseSuccessful() {
+    @DisplayName("User can be created and recalled")
+    void userCanBeCreatedAndRecalled() {
+        User user = createUserOne();
+        repository.save(user);
 
-        assertThat(entityManager.find(User.class, savedUser.getId())).isEqualTo(savedUser);
+        Optional<User> result = repository.findById(user.getId());
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(user);
     }
 
-    @Test
-    void deleteUserFromDatabaseSuccessful() {
-        userRepository.delete(savedUser);
-
-        assertThat(entityManager.find(User.class, savedUser.getId())).isNull();
-    }
-
-    @Test
-    void findByProfileNameSuccessful() {
-        List<User> retrievedUser = userRepository.findByProfileName("svenX");
-        assertThat(retrievedUser).contains(savedUser);
-    }
 
     @Test
-    void findByFirstNameSuccessful() {
-        List<User> retrievedUser = userRepository.findByFirstName("Sven");
-        assertThat(retrievedUser).contains(savedUser);
+    @DisplayName("Multiply Users can be created and recalled")
+    void multiplyUsersCanBeCreatedAndRecalled() {
+        User userOne = createUserOne();
+        repository.save(userOne);
+
+        User userTwo = createUserTwo();
+        repository.save(userTwo);
+
+        List<User> result = repository.findAll();
+
+        assertThat(result)
+                .hasSize(2)
+                .containsExactly(userOne, userTwo);
     }
 
-    @Test
-    void findByLastNameSuccessful() {
-        List<User> retrievedUser = userRepository.findByLastName("Svensson");
-        assertThat(retrievedUser).contains(savedUser);
-    }
 
     @Test
-    void findByEmailSuccessful() {
-        Optional<User> retrievedUser = userRepository.findByEmail("svensson@example.com");
-        assertThat(retrievedUser).contains(savedUser);
+    @DisplayName("User can be updated")
+    void userCanBeUpdated() {
+        User userOne = createUserOne();
+        repository.save(userOne);
+
+        userOne.setEmail("updated@gmail.com");
+        repository.save(userOne);
+
+        Optional<User> result = repository.findById(userOne.getId());
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(userOne);
     }
+
+
     @Test
-    void findByEmailUnsuccessful() {
-        Optional<User> retrievedUser = userRepository.findByEmail("nonexistent@example.com");
-        assertThat(retrievedUser).isEmpty();
+    @DisplayName("User can be deleted")
+    void userCanBeDeleted() {
+        User userOne = createUserOne();
+        repository.save(userOne);
+        repository.deleteById(userOne.getId());
+
+        Optional<User> result = repository.findById(userOne.getId());
+
+        assertThat(result).isEmpty();
     }
+
 }

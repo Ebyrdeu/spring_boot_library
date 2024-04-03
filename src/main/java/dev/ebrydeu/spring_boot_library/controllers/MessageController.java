@@ -1,49 +1,65 @@
 package dev.ebrydeu.spring_boot_library.controllers;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
-import dev.ebrydeu.spring_boot_library.services.MessageService;
+import dev.ebrydeu.spring_boot_library.domain.entities.Message;
+import dev.ebrydeu.spring_boot_library.services.impl.MessageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/messages")
 @RequiredArgsConstructor
-public class MessageController{
-    private final MessageService messageService;
+public class MessageController {
 
-    @PatchMapping("/{id}/private/{messagePrivate}")
-    public Object setMessagePrivate(@PathVariable Long id, @PathVariable boolean messagePrivate) {
-        return messageService.setMessagePrivate(messagePrivate, id);
-    }
-  
-    @GetMapping
-    public List<MessageDto> getAllMessages(){
-        return messageService.findAllMessages();
-    }
-
-
-    @GetMapping("/title/{title}")
-    public List<MessageDto> getMessagesByTitle(@PathVariable String title){
-        return messageService.findMessagesByTitle(title);
-    }
+    private final MessageServiceImpl service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageDto createMessage(@RequestBody MessageDto messageDto){
-        return messageService.saveMessage(messageDto);
+    public MessageDto createMessage(@RequestBody MessageDto dto) {
+        return service.save(dto);
     }
 
-    @PutMapping("/{id}/body")
-    public MessageDto editMessageBody(@PathVariable Long id, @RequestBody String body){
-        return messageService.editMessageBody(id, body);
+    @GetMapping
+    public List<MessageDto> findAll() {
+        return service.findAll();
     }
 
-    @PutMapping("/{id}/title")
-    public MessageDto editMessageTitle(@PathVariable Long id, @RequestBody String title){
-        return messageService.editMessageTitle(id, title);
+    @GetMapping("/{id}")
+    public MessageDto findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @GetMapping("/title/{title}")
+    public List<MessageDto> findByTitle(@PathVariable String title) {
+        return service.findByTitle(title);
+    }
+
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fullUpdate(@PathVariable("id") Long id, @RequestBody MessageDto dto) {
+        if (!service.isExists(id)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        Message message = MessageDto.map(dto);
+        message.setId(id);
+
+        service.save(MessageDto.map(message));
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void partialUpdate(@PathVariable("id") Long id, @RequestBody MessageDto dto) {
+        service.partialUpdate(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }
 

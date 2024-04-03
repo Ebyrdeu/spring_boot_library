@@ -1,11 +1,13 @@
 package dev.ebrydeu.spring_boot_library.controllers;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
+import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -13,46 +15,65 @@ import java.util.List;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
 
-    @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
-    }
+    private final UserService service;
 
-    @GetMapping("{id}")
-    public UserDto getUserById(@PathVariable Long id) {
-            return userService.getUserById(id);
-    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@Validated @RequestBody UserDto userDto) {
-        return userService.createUser(userDto);
+    public UserDto createUser(@Validated @RequestBody UserDto dto) {
+        return service.save(dto);
     }
 
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @GetMapping
+    public List<UserDto> findAll() {
+        return service.findAll();
     }
 
-    @GetMapping("/firstName/{firstName}")
-    public List<UserDto> findByFirstName(@PathVariable String firstName) {
-        return userService.findByFirstName(firstName);
+    @GetMapping("/{id}")
+    public UserDto findById(@PathVariable Long id) {
+        return service.findById(id);
     }
 
-    @GetMapping("/lastName/{lastName}")
-    public List<UserDto> findByLastName(@PathVariable String lastName) {
-        return userService.findByLastName(lastName);
+    @GetMapping("/firstname/{firstname}")
+    public List<UserDto> findByFirstname(@PathVariable String firstname) {
+        return service.findByFirstname(firstname);
     }
 
-    @GetMapping("/profileName/{profileName}")
-    public List<UserDto> findByProfileName(@PathVariable String profileName) {
-        return userService.findByProfileName(profileName);
+    @GetMapping("/lastname/{lastname}")
+    public List<UserDto> findByLastname(@PathVariable String lastname) {
+        return service.findByLastname(lastname);
+    }
+
+    @GetMapping("/username/{username}")
+    public List<UserDto> findByUsername(@PathVariable String username) {
+        return service.findByUsername(username);
     }
 
     @GetMapping("/email/{email}")
-    public List<UserDto> findByEmail(@PathVariable String email) {
-        return userService.findByEmail(email);
+    public UserDto findByEmail(@PathVariable String email) {
+        return service.findByEmail(email);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fullUpdate(@PathVariable("id") Long id, @RequestBody UserDto dto) {
+        if (!service.isExists(id)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        User user = UserDto.map(dto);
+        user.setId(id);
+
+        service.save(UserDto.map(user));
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void partialUpdate(@PathVariable("id") Long id, @RequestBody UserDto dto) {
+        service.partialUpdate(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }
