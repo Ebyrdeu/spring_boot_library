@@ -38,8 +38,8 @@ class MessageRepositoryTest {
         Message message = new Message();
         message.setTitle("Test Title");
         message.setBody("Test Body");
-        message.setAuthor("Test Author");
         message.setDate(Instant.now());
+        message.setMessagePrivate(false);
         message.setUser(user);
 
         savedUser = entityManager.persist(user);
@@ -59,12 +59,6 @@ class MessageRepositoryTest {
         messageRepository.delete(savedMessage);
 
         assertThat(entityManager.find(Message.class, savedMessage.getId())).isNull();
-    }
-
-    @Test
-    void messageFindByAuthorSuccessful() {
-        List<Message> retrievedMessage = messageRepository.findByAuthor("Test Author");
-        assertThat(retrievedMessage).contains(savedMessage);
     }
 
     @Test
@@ -95,5 +89,17 @@ class MessageRepositoryTest {
         Message updatedMessage = entityManager.find(Message.class, savedMessage.getId());
 
         assertThat(updatedMessage.getTitle()).isEqualTo("New Title");
+    }
+
+    @Test
+    void setMessagePublicSuccessful() {
+        boolean messagePublic = Boolean.parseBoolean("true");
+        Long id = savedMessage.getId();
+
+        messageRepository.setMessagePrivate(messagePublic, id);
+        entityManager.clear();
+        Message updatedMessage = entityManager.find(Message.class, savedMessage.getId());
+
+        assertThat(updatedMessage.isMessagePrivate()).isTrue();
     }
 }

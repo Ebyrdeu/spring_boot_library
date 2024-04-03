@@ -16,14 +16,13 @@ class MessageDtoTest {
     void messageDtoReturnsMessage() {
         SoftAssertions soft = new SoftAssertions();
         MessageDto dto = new MessageDto(
-                1L, "test", "body", "author", Instant.now(),
+                1L, "test", "body", Instant.now(), true,
                 new UserDto(1L, "name", "name", "name", "picture", "email")
         );
         Message entity = MessageDto.map(dto);
         soft.assertThat(entity.getId()).isEqualTo(dto.id());
         soft.assertThat(entity.getTitle()).isEqualTo(dto.title());
         soft.assertThat(entity.getBody()).isEqualTo(dto.body());
-        soft.assertThat(entity.getAuthor()).isEqualTo(dto.author());
         soft.assertThat(entity.getDate()).isEqualTo(dto.date());
 
         soft.assertThat(entity.getUser().getId()).isEqualTo(dto.user().id());
@@ -41,8 +40,8 @@ class MessageDtoTest {
                 .id(1L)
                 .title("test")
                 .body("body")
-                .author("author")
                 .date(Instant.now())
+                .messagePrivate(true)
                 .user(User.builder().id(1L).profileName("profile").build())
                 .build();
 
@@ -51,8 +50,8 @@ class MessageDtoTest {
         soft.assertThat(dto.id()).isEqualTo(entity.getId());
         soft.assertThat(dto.title()).isEqualTo(entity.getTitle());
         soft.assertThat(dto.body()).isEqualTo(entity.getBody());
-        soft.assertThat(dto.author()).isEqualTo(entity.getAuthor());
         soft.assertThat(dto.date()).isEqualTo(entity.getDate());
+        soft.assertThat(dto.messagePrivate()).isEqualTo(entity.isMessagePrivate());
 
         soft.assertThat(dto.user().id()).isEqualTo(entity.getUser().getId());
         soft.assertThat(dto.user().profileName()).isEqualTo(entity.getUser().getProfileName());
