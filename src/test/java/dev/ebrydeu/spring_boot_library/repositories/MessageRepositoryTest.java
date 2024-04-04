@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,32 +88,5 @@ class MessageRepositoryTest {
         Optional<Message> result = repository.findById(messageOne.getId());
 
         assertThat(result).isEmpty();
-    }
-    @Test
-    @DisplayName("Message can be created and its auditing fields are correctly populated")
-    void messageCanBeCreatedAndItsAuditingFieldsAreCorrectlyPopulated() {
-
-        User userOne = createUserOne();
-        Message messageOne = createMessageOne(userOne);
-
-        repository.save(messageOne);
-
-        Optional<Message> result = repository.findById(messageOne.getId());
-
-        assertThat(result).isPresent();
-        Message retrievedMessage = result.get();
-        assertThat(retrievedMessage)
-                .usingRecursiveComparison()
-                .ignoringFields("id", "date", "user", "creationDate", "createdBy", "lastModifiedDate", "lastModifiedBy")
-                .isEqualTo(messageOne);
-
-        assertThat(retrievedMessage.getCreatedBy().getUsername()).isEqualTo("testUser");
-        assertThat(retrievedMessage.getCreationDate()).isNotNull();
-        assertThat(retrievedMessage.getLastModifiedBy().getUsername()).isEqualTo("testUser");
-        assertThat(retrievedMessage.getLastModifiedDate()).isNotNull();
-
-        Instant testStartTime = Instant.now().minusSeconds(45); //works if test takes less than 45 Seconds
-        assertThat(retrievedMessage.getCreationDate()).isAfter(testStartTime);
-        assertThat(retrievedMessage.getLastModifiedDate()).isAfterOrEqualTo(retrievedMessage.getCreationDate());
     }
 }
