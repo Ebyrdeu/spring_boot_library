@@ -15,6 +15,8 @@ import java.util.Optional;
 
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -88,5 +90,21 @@ class MessageRepositoryTest {
         Optional<Message> result = repository.findById(messageOne.getId());
 
         assertThat(result).isEmpty();
+    }
+    @Test
+    @DisplayName("Auditing fields are populated for Message")
+    void auditingFieldsArePopulatedForMessage() {
+        User user = createUserOne();
+        Message message = createMessageOne(user);
+        message = repository.save(message);
+
+        Optional<Message> fetchedMessage = repository.findById(message.getId());
+        assertThat(fetchedMessage).isPresent();
+
+        Message persistedMessage = fetchedMessage.get();
+        assertNotNull(persistedMessage.getCreationDate());
+        assertEquals("testUser", persistedMessage.getCreatedBy());
+        assertNotNull(persistedMessage.getLastModifiedDate());
+        assertEquals("testUser", persistedMessage.getLastModifiedBy());
     }
 }

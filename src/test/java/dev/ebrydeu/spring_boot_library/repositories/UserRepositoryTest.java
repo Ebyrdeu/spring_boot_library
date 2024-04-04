@@ -9,13 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-
 import java.util.List;
 import java.util.Optional;
 
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserOne;
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserTwo;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -85,5 +85,15 @@ class UserRepositoryTest {
         Optional<User> result = repository.findById(userOne.getId());
 
         assertThat(result).isEmpty();
+    }
+    @Test
+    @DisplayName("Auditing fields are populated")
+    void auditingFieldsArePopulated() {
+        User user = createUserOne();
+        user = repository.save(user);
+
+        assertNotNull(user.getCreationDate());
+        assertThat(user.getCreatedBy()).isEqualTo("testUser");
+
     }
 }
