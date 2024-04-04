@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,4 +87,24 @@ class UserRepositoryTest {
         assertThat(result).isEmpty();
     }
 
+    @Test
+    @DisplayName("User can be created and its auditing fields are correctly populated")
+    void userCanBeCreatedAndItsAuditingFieldsAreCorrectlyPopulated() {
+        User userOne = createUserOne();
+
+        repository.save(userOne);
+
+        Optional<User> result = repository.findById(userOne.getId());
+        assertThat(result).isPresent();
+        User retrievedUser = result.get();
+
+        assertThat(retrievedUser.getCreatedBy().getUsername()).isEqualTo("testUser");
+        assertThat(retrievedUser.getCreationDate()).isNotNull();
+        assertThat(retrievedUser.getLastModifiedBy().getUsername()).isEqualTo("testUser");
+        assertThat(retrievedUser.getLastModifiedDate()).isNotNull();
+
+        Instant testStartTime = Instant.now().minusSeconds(45); //works if test takes less than 45 Seconds
+        assertThat(retrievedUser.getCreationDate()).isAfter(testStartTime);
+        assertThat(retrievedUser.getLastModifiedDate()).isAfterOrEqualTo(retrievedUser.getCreationDate());
+    }
 }
