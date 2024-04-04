@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {

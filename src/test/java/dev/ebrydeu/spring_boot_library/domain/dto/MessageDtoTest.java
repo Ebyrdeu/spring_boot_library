@@ -1,24 +1,21 @@
 package dev.ebrydeu.spring_boot_library.domain.dto;
 
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
-import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.createMessageOne;
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserOne;
 
 class MessageDtoTest {
-
 
     @Test
     @DisplayName("MessageDto returns Message")
     void messageDtoReturnsMessage() {
         SoftAssertions soft = new SoftAssertions();
-        MessageDto dto = new MessageDto(
-                1L, "test", "body", Instant.now(), true,
-                new UserDto(1L, "name", "name", "name", "picture", "email")
-        );
+        MessageDto dto = MessageDto.map(createMessageOne(createUserOne()));
+
         Message entity = MessageDto.map(dto);
         soft.assertThat(entity.getId()).isEqualTo(dto.id());
         soft.assertThat(entity.getTitle()).isEqualTo(dto.title());
@@ -36,14 +33,7 @@ class MessageDtoTest {
     @DisplayName("Message returns MessageDto")
     void messageReturnsMessageDto() {
         SoftAssertions soft = new SoftAssertions();
-        Message entity = Message.builder()
-                .id(1L)
-                .title("test")
-                .body("body")
-                .date(Instant.now())
-                .isPrivate(true)
-                .user(User.builder().id(1L).username("profile").build())
-                .build();
+        Message entity = createMessageOne(createUserOne());
 
         MessageDto dto = MessageDto.map(entity);
 
@@ -55,7 +45,6 @@ class MessageDtoTest {
 
         soft.assertThat(dto.user().id()).isEqualTo(entity.getUser().getId());
         soft.assertThat(dto.user().username()).isEqualTo(entity.getUser().getUsername());
-
 
         soft.assertAll();
     }
