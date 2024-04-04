@@ -5,6 +5,8 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserOne;
+
 class UserDtoTest {
 
 
@@ -12,14 +14,7 @@ class UserDtoTest {
     @DisplayName("UserDto returns User")
     void userDtoReturnsUser() {
         SoftAssertions soft = new SoftAssertions();
-        UserDto dto = new UserDto(
-                1L,
-                "profile",
-                "first",
-                "last",
-                "picture",
-                "email"
-        );
+        UserDto dto = UserDto.map(createUserOne());
 
         User entity = UserDto.map(dto);
 
@@ -37,14 +32,8 @@ class UserDtoTest {
     @DisplayName("User returns UserDto")
     void userReturnsUserDto() {
         SoftAssertions soft = new SoftAssertions();
-        User entity = User.builder()
-                .id(1L)
-                .username("profile")
-                .firstname("first")
-                .lastname("last")
-                .profilePicture("picture")
-                .email("email")
-                .build();
+        User entity = createUserOne();
+
         UserDto dto = UserDto.map(entity);
 
         soft.assertThat(dto.id()).isEqualTo(entity.getId());
