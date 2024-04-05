@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <link th:href="@{/home-stylesheet.css}" rel="stylesheet">
+    <style>
+        button {
+            padding: 10px 10px; /* Adjust padding to your preference */
+            font-size: 16px; /* Adjust font size to your preference */
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 250px; /* Fixed width for the buttons */
+        }
+
+        .github-button:hover,
+        .new-user-button:hover,
+        .no-login-button:hover {
+            border-color: black; /* Change border color to black on hover */
+        }
+
+        .github-button,
+        .new-user-button,
+        .no-login-button {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .language-link {
+            margin-right: 15px;
+        }
+
+        .no-login {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <a href="http://localhost:8080/web/users?lang=en" class="language-link">English</a>
+    <a href="http://localhost:8080/web/users?lang=sv" class="language-link">Svenska</a>
+</div>
+
+<div class="container">
+    <h2 style="margin-left: 25px;"> Welcome to the site</h2>
+        <form id="home">
+        <br>
+        <div class="new-user">
+            <button class="new-user-button" onclick="window.location.href='#'">Create a new account</button>
+        </div>
+        <br>
+        <div class="github-signin">
+            <button class="github-button" onclick="window.location.href='#'">Sign in with GitHub</button>
+        </div>
+        <br>
+        <div class="no-login">
+            <button class="no-login-button" onclick="window.location.href='#'">Continue without signing in</button>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>
+
