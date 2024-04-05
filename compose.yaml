@@ -12,5 +12,11 @@ services:
     volumes:
       - db-data:/var/lib/db
 
+  libretranslate:
+    image: 'libretranslate/libretranslate:latest'
+    command: '--load-only en,sv'
+    ports:
+      - '5000:5000'
+
 volumes:
   db-data:
