@@ -1,11 +1,14 @@
 package dev.ebrydeu.spring_boot_library.repositories;
 
+import dev.ebrydeu.spring_boot_library.config.AuditingConfig;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -15,9 +18,10 @@ import java.util.Optional;
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserOne;
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserTwo;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
+@DataJpaTest
+@Import({AuditingConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserRepositoryTest {
 
@@ -32,7 +36,7 @@ class UserRepositoryTest {
     @DisplayName("User can be created and recalled")
     void userCanBeCreatedAndRecalled() {
         User user = createUserOne();
-        repository.save(user);
+        user = repository.save(user);
 
         Optional<User> result = repository.findById(user.getId());
 
@@ -62,10 +66,11 @@ class UserRepositoryTest {
     @DisplayName("User can be updated")
     void userCanBeUpdated() {
         User userOne = createUserOne();
-        repository.save(userOne);
+        userOne = repository.save(userOne);
 
         userOne.setEmail("updated@gmail.com");
-        repository.save(userOne);
+
+        userOne = repository.save(userOne);
 
         Optional<User> result = repository.findById(userOne.getId());
 
@@ -85,5 +90,14 @@ class UserRepositoryTest {
 
         assertThat(result).isEmpty();
     }
+    @Test
+    @DisplayName("Auditing fields are populated")
+    void auditingFieldsArePopulated() {
+        User user = createUserOne();
+        user = repository.save(user);
 
+        assertNotNull(user.getCreationDate());
+        assertThat(user.getCreatedBy()).isEqualTo("testUser");
+
+    }
 }

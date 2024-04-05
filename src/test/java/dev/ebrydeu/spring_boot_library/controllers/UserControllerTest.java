@@ -1,7 +1,6 @@
 package dev.ebrydeu.spring_boot_library.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.ebrydeu.spring_boot_library.TestDataUtils;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.services.UserService;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {

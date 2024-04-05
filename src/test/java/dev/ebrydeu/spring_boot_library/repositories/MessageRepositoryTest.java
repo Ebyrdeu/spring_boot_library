@@ -1,25 +1,28 @@
 package dev.ebrydeu.spring_boot_library.repositories;
 
+import dev.ebrydeu.spring_boot_library.config.AuditingConfig;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
 
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
+@DataJpaTest
+@Import({AuditingConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class MessageRepositoryTest {
+
     private final MessageRepository repository;
 
     @Autowired
@@ -33,7 +36,7 @@ class MessageRepositoryTest {
         User userOne = createUserOne();
         Message messageOne = createMessageOne(userOne);
 
-        repository.save(messageOne);
+        messageOne = repository.save(messageOne);
 
         Optional<Message> result = repository.findById(messageOne.getId());
 
@@ -63,7 +66,7 @@ class MessageRepositoryTest {
     void messageCanBeUpdated() {
         User userOne = createUserOne();
         Message messageOne = createMessageOne(userOne);
-        repository.save(messageOne);
+        messageOne = repository.save(messageOne);
 
         messageOne.setPrivate(true);
         repository.save(messageOne);
@@ -82,11 +85,31 @@ class MessageRepositoryTest {
         User userOne = createUserOne();
         Message messageOne = createMessageOne(userOne);
 
-        repository.save(messageOne);
+        messageOne = repository.save(messageOne);
+
         repository.deleteById(messageOne.getId());
 
         Optional<Message> result = repository.findById(messageOne.getId());
 
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Auditing fields are populated for Message")
+    void auditingFieldsArePopulatedForMessage() {
+        User user = createUserOne();
+
+        Message message = createMessageOne(user);
+
+        message = repository.save(message);
+
+        Optional<Message> fetchedMessage = repository.findById(message.getId());
+        assertThat(fetchedMessage).isPresent();
+
+        Message persistedMessage = fetchedMessage.get();
+        assertNotNull(persistedMessage.getCreationDate());
+        assertEquals("testUser", persistedMessage.getCreatedBy());
+        assertNotNull(persistedMessage.getLastModifiedDate());
+        assertEquals("testUser", persistedMessage.getLastModifiedBy());
     }
 }
