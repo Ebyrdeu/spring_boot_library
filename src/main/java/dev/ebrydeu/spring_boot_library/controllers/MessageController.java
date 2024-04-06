@@ -38,6 +38,11 @@ public class MessageController {
         return service.findByTitle(title);
     }
 
+    @GetMapping("/public")
+    public List<MessageDto> findPublicMessages() {
+        return service.findPublicMessages();
+    }
+
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

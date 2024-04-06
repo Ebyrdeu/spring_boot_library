@@ -10,4 +10,6 @@ import java.util.List;
 public interface MessageRepository extends ListCrudRepository<Message, Long> {
     List<Message> findByTitle(String title);
 
+    List<Message> findMessageByIsPrivateFalse();
+
 }

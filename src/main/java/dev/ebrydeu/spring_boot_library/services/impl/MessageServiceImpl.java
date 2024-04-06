@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static dev.ebrydeu.spring_boot_library.exception.Exceptions.NotFoundException;
 import static dev.ebrydeu.spring_boot_library.libs.Utils.isNullable;
@@ -75,7 +76,13 @@ public class MessageServiceImpl implements MessageService {
         Message messageToDelete = repository.findById(id).orElseThrow(() -> new NotFoundException("Message not found with id: " + id));
         repository.deleteById(messageToDelete.getId());
     }
-
+    @Override
+    @Cacheable("publicMessages")
+    public List<MessageDto> findPublicMessages() {
+        return repository.findMessageByIsPrivateFalse().stream()
+                .map(MessageDto::map)
+                .toList();
+    }
 
 }
 

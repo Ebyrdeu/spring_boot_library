@@ -13,6 +13,8 @@ public interface MessageService {
     MessageDto findById(Long id);
     List<MessageDto> findByTitle(String title);
 
+    List<MessageDto> findPublicMessages();
+
     boolean isExists(Long id);
 
     void partialUpdate(Long id, MessageDto dto);
