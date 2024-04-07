@@ -37,9 +37,9 @@ public class User extends Auditable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'STANDARD")
+    private Enum role;
 
     @Override
     public final boolean equals(Object o) {
