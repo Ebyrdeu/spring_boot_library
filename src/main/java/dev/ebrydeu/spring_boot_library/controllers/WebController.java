@@ -31,7 +31,7 @@ public class WebController {
     @PostMapping("/users")
     public String saveUser(@ModelAttribute("user") UserDto dto) {
         userService.save(dto);
-        return "redirect:/web/users";
+        return "redirect:/web/users";// can be any other pathway of our choice
     }
 
     @PatchMapping("/userprofile/")
