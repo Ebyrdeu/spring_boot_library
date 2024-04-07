@@ -17,6 +17,9 @@ services:
     command: '--load-only en,sv'
     ports:
       - '5000:5000'
+    volumes:
+      - libretranslate-data:/var/lib/libretranslate
 
 volumes:
   db-data:
+  libretranslate-data:
