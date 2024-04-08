@@ -18,6 +18,7 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         h1 {
             text-align: center;
@@ -41,15 +42,34 @@
         .message p {
             margin: 0;
         }
-        .edit-profile-button {
-            padding: 10px 20px;
+        .profile-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .profile-box {
+            display: flex;
+            align-items: center;
+        }
+        .profile-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .profile-box h3 {
+            margin: 0;
+        }
+        .edit-profile-button, .logout-button {
+            padding: 5px;
             background-color: #007bff;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-        .edit-profile-button:hover {
+        .edit-profile-button:hover, .logout-button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -58,32 +78,61 @@
 <div class="container">
     <h1>Welcome to Your Profile Home</h1>
 
-
-    <div class="message-board">
-        <div class="message">
-            <p><strong>Title:</strong> Example Title</p>
-            <p><strong>Author:</strong> John Doe</p>
-            <p><strong>Date:</strong> April 8, 2024</p>
-            <p><strong>Visibility:</strong> Public</p>
-            <p><strong>Content:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod diam eu lectus tincidunt, vel vehicula libero maximus.</p>
+    <div class="profile-container">
+        <div class="profile-box">
+            <img src="your-profile-picture.jpg" alt="Your Profile Picture">
+            <h3>Your Name</h3>
         </div>
-        <div class="message">
-            <p><strong>Title:</strong> Example Title</p>
-            <p><strong>Author:</strong> John Doe</p>
-            <p><strong>Date:</strong> April 8, 2024</p>
-            <p><strong>Visibility:</strong> Public</p>
-            <p><strong>Content:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod diam eu lectus tincidunt, vel vehicula libero maximus.</p>
-        </div>
-        <div class="message">
-            <p><strong>Title:</strong> Example Title</p>
-            <p><strong>Author:</strong> John Doe</p>
-            <p><strong>Date:</strong> April 8, 2024</p>
-            <p><strong>Visibility:</strong> Public</p>
-            <p><strong>Content:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod diam eu lectus tincidunt, vel vehicula libero maximus.</p>
+        <div>
+            <button class="edit-profile-button">Edit Profile</button>
+            <button class="logout-button">Log Out</button>
         </div>
     </div>
 
-    <button class="edit-profile-button">Edit Profile</button>
+    <div class="message-board">
+        <div class="message">
+            <p><strong>Title:</strong> The Great Gatsby</p>
+            <p><strong>Author:</strong> F. Scott Fitzgerald</p>
+            <p><strong>Date:</strong> April 8, 2024</p>
+            <p><strong>Rating:</strong> 5/5</p>
+            <p><strong>Review:</strong> A brilliant portrayal of the Jazz Age that captures the essence of the American Dream and its corruption. The characters are deeply flawed yet compelling, and the prose is exquisitely crafted. A timeless classic that resonates with readers even today.</p>
+        </div>
+        <div class="message">
+            <p><strong>Title:</strong> To Kill a Mockingbird</p>
+            <p><strong>Author:</strong> Harper Lee</p>
+            <p><strong>Date:</strong> April 9, 2024</p>
+            <p><strong>Rating:</strong> 4/5</p>
+            <p><strong>Review:</strong> A poignant exploration of racial injustice and moral growth in the American South. The narrative, seen through the eyes of Scout Finch, provides a unique perspective on societal norms and the human capacity for empathy. While the pacing can be slow at times, the themes addressed remain relevant.</p>
+        </div>
+        <div class="message">
+            <p><strong>Title:</strong> Harry Potter and the Sorcerer's Stone</p>
+            <p><strong>Author:</strong> J.K. Rowling</p>
+            <p><strong>Date:</strong> April 10, 2024</p>
+            <p><strong>Rating:</strong> 5/5</p>
+            <p><strong>Review:</strong> An enchanting journey into a world of magic and wonder. Rowling's imaginative storytelling and well-developed characters captivate readers of all ages. The themes of friendship, bravery, and the battle between good and evil are skillfully woven into the narrative, making it a modern classic.</p>
+        </div>
+        <div class="message">
+            <p><strong>Title:</strong> The Catcher in the Rye</p>
+            <p><strong>Author:</strong> J.D. Salinger</p>
+            <p><strong>Date:</strong> April 11, 2024</p>
+            <p><strong>Rating:</strong> 3/5</p>
+            <p><strong>Review:</strong> Holden Caulfield's cynical voice offers a raw and authentic portrayal of teenage angst and alienation. While some readers may find his narrative compelling, others may struggle to connect with his disillusionment and repetitive thoughts. The novel's exploration of adolescence and societal expectations remains relevant, but its impact may vary depending on the reader's perspective.</p>
+        </div>
+        <div class="message">
+            <p><strong>Title:</strong> Pride and Prejudice</p>
+            <p><strong>Author:</strong> Jane Austen</p>
+            <p><strong>Date:</strong> April 12, 2024</p>
+            <p><strong>Rating:</strong> 5/5</p>
+            <p><strong>Review:</strong> A masterpiece of romantic fiction, Pride and Prejudice is a delightful blend of wit, social commentary, and love. Austen's keen observations on human nature and her sharp dialogue create a world that feels both familiar and enchanting. The characters, particularly Elizabeth Bennet and Mr. Darcy, are unforgettable, and the themes of love, class, and societal expectations are timeless.</p>
+        </div>
+        <div class="message">
+            <p><strong>Title:</strong> 1984</p>
+            <p><strong>Author:</strong> George Orwell</p>
+            <p><strong>Date:</strong> April 13, 2024</p>
+            <p><strong>Rating:</strong> 4/5</p>
+            <p><strong>Review:</strong> A chilling dystopian novel that serves as a warning against totalitarianism and government surveillance. Orwell's vision of a society controlled by propaganda and thought policing is as relevant today as it was when the book was first published. The protagonist, Winston Smith, struggles against a regime that seeks to eradicate individuality and independent thought, making 1984 a thought-provoking and unsettling read.</p>
+        </div>
+    </div>
 </div>
 </body>
 </html>
