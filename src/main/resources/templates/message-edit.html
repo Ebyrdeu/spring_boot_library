@@ -67,17 +67,26 @@
     document.getElementById("editMessageForm").addEventListener("submit", function(event) {
         event.preventDefault();
 
-        var newTitle = document.getElementById("editMessageTitle").value;
-        var newContent = document.getElementById("editMessageContent").value;
+        // Get the logged-in user ID
+        var loggedInUserId = "";
+        var creatorIdOfMessage = "";
+        if (loggedInUserId === creatorIdOfMessage) {
+            // User is authorized to edit the message
+            var newTitle = document.getElementById("editMessageTitle").value;
+            var newContent = document.getElementById("editMessageContent").value;
 
-        var message = {
-            title: newTitle,
-            content: newContent
-        };
+            var message = {
+                title: newTitle,
+                content: newContent
+            };
 
-        console.log("Updated message:", message);
+            console.log("Updated message:", message);
 
-        alert("Message updated successfully!");
+            alert("Message updated successfully!");
+        } else {
+            // User is not authorized to edit the message
+            alert("You are not authorized to edit this message.");
+        }
     });
 </script>
 </body>
