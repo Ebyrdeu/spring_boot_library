@@ -1,23 +1,138 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Messages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .message .title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .message .author {
+            font-style: italic;
+            color: #666;
+        }
+        .message .timestamp {
+            font-size: 12px;
+            color: #666;
+        }
+        .message .content {
+            margin-top: 10px;
+            color: #444;
+        }
+        .message .visibility {
+            font-size: 12px;
+            color: #666;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<h1>All Messages</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Title</th>
-        <th>Message Body</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="message : ${messages}">
-        <td th:text="${messages.title}"></td>
-        <td th:text="${message.messageBody}"></td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
+    <h1>Message Board</h1>
+    <div class="message">
+        <div class="title">Example Title</div>
+        <div class="author">John Doe</div>
+        <div class="timestamp">April 8, 2024</div>
+        <div class="visibility">Public</div>
+        <div class="content">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod diam eu lectus tincidunt, vel vehicula libero maximus.
+        </div>
+    </div>
+    <form id="messageForm">
+        <input type="text" id="messageTitle" placeholder="Title">
+        <textarea id="messageContent" placeholder="Enter your message..."></textarea>
+        <select id="messageVisibility">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+        <button type="submit">Post Message</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("messageForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var messageTitle = document.getElementById("messageTitle").value;
+        var messageContent = document.getElementById("messageContent").value;
+        var messageVisibility = document.getElementById("messageVisibility").value;
+        if (messageTitle.trim() !== "" && messageContent.trim() !== "") {
+            var messageContainer = document.createElement("div");
+            messageContainer.classList.add("message");
+
+            var title = document.createElement("div");
+            title.classList.add("title");
+            title.textContent = messageTitle;
+            messageContainer.appendChild(title);
+
+            var author = document.createElement("div");
+            author.classList.add("author");
+            author.textContent = "Your Name";
+            messageContainer.appendChild(author);
+
+            var timestamp = document.createElement("div");
+            timestamp.classList.add("timestamp");
+            timestamp.textContent = new Date().toLocaleString();
+            messageContainer.appendChild(timestamp);
+
+            var visibility = document.createElement("div");
+            visibility.classList.add("visibility");
+            visibility.textContent = messageVisibility.charAt(0).toUpperCase() + messageVisibility.slice(1);
+            messageContainer.appendChild(visibility);
+
+            var content = document.createElement("div");
+            content.classList.add("content");
+            content.textContent = messageContent;
+            messageContainer.appendChild(content);
+
+            document.querySelector(".container").insertBefore(messageContainer, document.getElementById("messageForm"));
+            document.getElementById("messageTitle").value = "";
+            document.getElementById("messageContent").value = "";
+        } else {
+            alert("Please enter both title and message.");
+        }
+    });
+</script>
+</body>
+</html>
