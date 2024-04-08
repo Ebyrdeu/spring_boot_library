@@ -6,10 +6,10 @@
     <title>Message Board</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Georgia", serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #f5f5f5;
         }
         .container {
             width: 80%;
@@ -18,6 +18,11 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        #messageForm {
+            display: inline-block;
+            text-align: left;
         }
         .message {
             background-color: #f9f9f9;
@@ -57,29 +62,25 @@
         }
         button {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #4F5E4A;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #6B7E65;
+        }
+        h1 {
+            margin-top: 20px;
+            text-align: center;
+            color: #4F5E4A;
         }
     </style>
 </head>
 <body>
+<h1>Write a new message</h1>
 <div class="container">
-    <h1>Message Board</h1>
-    <div class="message">
-        <div class="title">Example Title</div>
-        <div class="author">John Doe</div>
-        <div class="timestamp">April 8, 2024</div>
-        <div class="visibility">Public</div>
-        <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod diam eu lectus tincidunt, vel vehicula libero maximus.
-        </div>
-    </div>
     <form id="messageForm">
         <input type="text" id="messageTitle" placeholder="Title">
         <textarea id="messageContent" placeholder="Enter your message..."></textarea>
