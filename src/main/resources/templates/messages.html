@@ -12,14 +12,12 @@
     <tr>
         <th>Title</th>
         <th>Message Body</th>
-        <!-- Add other message attributes as needed -->
     </tr>
     </thead>
     <tbody>
     <tr th:each="message : ${messages}">
         <td th:text="${messages.title}"></td>
         <td th:text="${message.messageBody}"></td>
-        <!-- Add other message attributes as needed -->
     </tr>
     </tbody>
 </table>
