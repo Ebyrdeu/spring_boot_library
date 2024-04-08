@@ -37,6 +37,10 @@ public class User extends Auditable {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'STANDARD")
+    private Enum role;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
