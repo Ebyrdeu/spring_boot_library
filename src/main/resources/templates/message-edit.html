@@ -2,9 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Message</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>Edit Message</h1>
+    <form id="editMessageForm">
+        <label for="editMessageTitle">Title:</label>
+        <input type="text" id="editMessageTitle" placeholder="Enter the new title">
 
+        <label for="editMessageContent">Message:</label>
+        <textarea id="editMessageContent" placeholder="Enter the new message text"></textarea>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("editMessageForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        var newTitle = document.getElementById("editMessageTitle").value;
+        var newContent = document.getElementById("editMessageContent").value;
+
+        var message = {
+            title: newTitle,
+            content: newContent
+        };
+
+        console.log("Updated message:", message);
+
+        alert("Message updated successfully!");
+    });
+</script>
 </body>
 </html>
