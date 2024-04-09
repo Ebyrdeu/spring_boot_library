@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <link th:href="@{/home-stylesheet.css}" rel="stylesheet">
     <style>
         button {
             padding: 10px 10px; /* Adjust padding to your preference */
@@ -47,11 +46,11 @@
 
         <br>
         <div class="github-signin">
-            <button class="github-button" onclick="window.location.href='#'">Sign in with GitHub</button>
+            <button type="button" class="github-button" onclick="window.location.href='/oauth2/authorization/github'">Sign in with GitHub</button>
         </div>
         <br>
         <div class="no-login">
-            <button class="no-login-button" onclick="window.location.href='#'">Continue without signing in</button>
+            <button type="button" class="no-login-button" onclick="window.location.href='/user-profile-page'">Continue without signing in</button>
         </div>
 
     </form>

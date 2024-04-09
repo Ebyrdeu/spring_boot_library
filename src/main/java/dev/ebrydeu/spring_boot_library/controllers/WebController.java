@@ -24,7 +24,8 @@ public class WebController {
     public String home() {
         return "home";
     }
-
+    @GetMapping("/user-profile-page")
+    public String userProfilePage() {return "user-profile-page";}
     @GetMapping("/guest-page")
     public String guestPage() {return "guest-page";}
 

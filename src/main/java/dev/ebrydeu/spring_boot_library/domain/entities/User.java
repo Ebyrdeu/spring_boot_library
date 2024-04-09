@@ -39,7 +39,7 @@ public class User extends Auditable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'STANDARD")
-    private Enum role;
+    private Role role;
 
     @Override
     public final boolean equals(Object o) {
