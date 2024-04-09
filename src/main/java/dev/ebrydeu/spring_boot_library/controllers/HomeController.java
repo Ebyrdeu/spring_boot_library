@@ -12,4 +12,7 @@ public class HomeController {
     }
     @GetMapping("/user-profile-page")
     public String userProfilePage() {return "user-profile-page";}
+
+    @GetMapping("/user-edit")
+    public String userEditPage() {return "user-edit";}
 }
