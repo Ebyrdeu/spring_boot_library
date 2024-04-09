@@ -54,6 +54,31 @@
             border-radius: 50%;
             margin-bottom: 10px;
         }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button-container button:hover {
+            background-color: #6B7E65;
+        }
+
+        .button-container button:first-child {
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+        }
+
+        .button-container button:first-child:hover {
+            background-color: #6B7E65;
+        }
     </style>
 </head>
 <body>
@@ -74,7 +99,10 @@
 
         <img id="preview" src="default-profile-picture.jpg" alt="Profile Picture">
 
-        <button type="submit">Save Changes</button>
+        <div class="button-container">
+            <button type="submit">Save Changes</button>
+            <button type="button" onclick="window.history.back()">Return</button>
+        </div>
     </form>
 </div>
 

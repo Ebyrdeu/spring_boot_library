@@ -37,15 +37,15 @@
         }
         .message .author {
             font-style: italic;
-            color: #666;
+            color: #333;
         }
         .message .timestamp {
             font-size: 12px;
-            color: #666;
+            color: #333;
         }
         .message .content {
             margin-top: 10px;
-            color: #444;
+            color: #333;
         }
         .message .visibility {
             font-size: 12px;
@@ -76,20 +76,24 @@
             text-align: center;
             color: #4F5E4A;
         }
+        .return-btn {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 <h1>Write a new message</h1>
 <div class="container">
-    <form id="messageForm">
-        <input type="text" id="messageTitle" placeholder="Title">
-        <textarea id="messageContent" placeholder="Enter your message..."></textarea>
-        <select id="messageVisibility">
-            <option value="public">Public</option>
-            <option value="private">Private</option>
+    <form id="messageForm" action="/web/messages/new" method="post">
+        <input type="text" id="messageTitle" name="title" placeholder="Title">
+        <textarea id="messageContent" name="body" placeholder="Enter your message..."></textarea>
+        <select id="messageVisibility" name="isPrivate">
+            <option value="false">Public</option>
+            <option value="true">Private</option>
         </select>
         <button type="submit">Post Message</button>
     </form>
+    <button class="return-btn" onclick="window.history.back()">Return</button>
 </div>
 
 <script>
