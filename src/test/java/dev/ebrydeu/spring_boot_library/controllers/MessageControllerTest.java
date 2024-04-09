@@ -2,6 +2,7 @@ package dev.ebrydeu.spring_boot_library.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dev.ebrydeu.spring_boot_library.config.SecurityConfigTest;
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +27,7 @@ import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc(addFilters = false)
+@Import(SecurityConfigTest.class)
 class MessageControllerTest {
 
     private final MessageService messageService;

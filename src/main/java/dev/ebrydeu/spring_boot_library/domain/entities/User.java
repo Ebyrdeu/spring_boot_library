@@ -38,7 +38,7 @@ public class User extends Auditable {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'STANDARD")
+    @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'GUEST'")
     private Role role;
 
     @Override
