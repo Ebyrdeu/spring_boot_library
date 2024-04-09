@@ -50,6 +50,13 @@ public class MessageServiceImpl implements MessageService {
                 .collect(Collectors.toList());
     }
 
+    public List<MessageDto> getPage(int p, int i) {
+//        return catRepository.findAll(PageRequest.of(p,i)).toList();
+        //return MessageDto.map.findCatsBy(p,i);
+        return MessageDto.map.fi
+
+    }
+
     @Override
     public MessageDto findById(Long id) {
         Message message = repository.findById(id).orElseThrow(() -> new NotFoundException("Message not found with id: " + id));
