@@ -1,5 +1,6 @@
 package dev.ebrydeu.spring_boot_library.domain.entities;
 
+import dev.ebrydeu.spring_boot_library.domain.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +40,10 @@ public class Message extends Auditable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'USER'")
+    private Role role;
 
     @Override
     public final boolean equals(Object o) {

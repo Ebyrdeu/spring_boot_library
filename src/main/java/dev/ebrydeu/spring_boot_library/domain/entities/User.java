@@ -1,5 +1,6 @@
 package dev.ebrydeu.spring_boot_library.domain.entities;
 
+import dev.ebrydeu.spring_boot_library.domain.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
