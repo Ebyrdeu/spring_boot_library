@@ -15,4 +15,7 @@ public class HomeController {
 
     @GetMapping("/user-edit")
     public String userEditPage() {return "user-edit";}
+
+    @GetMapping("message-create")
+    public String messageCreatePage() {return "message-create";}
 }
