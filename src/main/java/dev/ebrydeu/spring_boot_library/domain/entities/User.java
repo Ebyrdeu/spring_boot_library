@@ -23,13 +23,16 @@ public class User extends Auditable {
     private Long id;
 
     @Column(unique = true, nullable = false, name = "username")
-    private String username;
+    private String userName;
 
     @Column(name = "firstname")
-    private String firstname;
+    private String firstName;
 
     @Column(name = "lastname")
-    private String lastname;
+    private String lastName;
+
+    @Column(name ="Fullname")
+    private String fullName;
 
     @Column(name = "image")
     private String profilePicture;
@@ -41,6 +44,11 @@ public class User extends Auditable {
     @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'GUEST'")
     private Role role;
 
+    public void setFullName(String fullName) {
+        String[] nameParts = fullName.trim().split("//s");
+        firstName = nameParts.length >= 1 ? nameParts[0].trim() : "";
+        lastName = nameParts.length >= 2 ? nameParts[1].trim() : "";
+    }
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

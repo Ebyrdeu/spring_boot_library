@@ -28,7 +28,12 @@ public class WebController {
     public String userProfilePage() {return "user-profile-page";}
     @GetMapping("/guest-page")
     public String guestPage() {return "guest-page";}
-
+    @GetMapping("/messages-page")
+    public String messagesPage() {return "messages-page";}
+    @GetMapping("/user-edit")
+    public String userEdit() {return "user-edit";}
+    @GetMapping("message-create")
+    public String messageCreate() {return "message-create";}
     @PostMapping("/users")
     public String saveUser(@ModelAttribute("user") UserDto dto) {
         userService.save(dto);

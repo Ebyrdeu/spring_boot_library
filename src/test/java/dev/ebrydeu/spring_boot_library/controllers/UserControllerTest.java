@@ -357,9 +357,9 @@ class UserControllerTest {
 
             mockMvc.perform(MockMvcRequestBuilders.get("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(userTwo.getUsername()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value(userTwo.getFirstname()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastname").value(userTwo.getLastname()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(userTwo.getUserName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value(userTwo.getFirstName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastname").value(userTwo.getLastName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.profilePicture").value(userTwo.getProfilePicture()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userTwo.getEmail()));
 
@@ -372,8 +372,8 @@ class UserControllerTest {
             service.save(UserDto.map(userOne));
 
             User user = createUserOne();
-            user.setFirstname(null);
-            user.setLastname(null);
+            user.setFirstName(null);
+            user.setLastName(null);
             user.setProfilePicture(null);
             user.setEmail("updated@gmail.com");
 
@@ -383,9 +383,9 @@ class UserControllerTest {
 
             mockMvc.perform(MockMvcRequestBuilders.get("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(user.getUsername()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value(user.getFirstname()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastname").value(user.getLastname()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(user.getUserName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value(user.getFirstName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastname").value(user.getLastName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.profilePicture").value(user.getProfilePicture()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("updated@gmail.com"));
 
