@@ -11,6 +11,9 @@ public interface MessageService {
     List<MessageDto> findAll();
 
     MessageDto findById(Long id);
+
+    List<MessageDto> getPage(int p, int i);
+
     List<MessageDto> findByTitle(String title);
 
     List<MessageDto> findPublicMessages();

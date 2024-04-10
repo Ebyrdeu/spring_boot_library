@@ -1,5 +1,6 @@
 package dev.ebrydeu.spring_boot_library.repositories;
 
+import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
@@ -20,5 +21,7 @@ public interface MessageRepository extends ListPagingAndSortingRepository<Messag
             """, nativeQuery = true)
     List<Message> findById(long cursor, int pageSize);
 }
+
+
 
 
