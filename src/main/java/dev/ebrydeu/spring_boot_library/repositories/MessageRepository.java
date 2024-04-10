@@ -1,6 +1,5 @@
 package dev.ebrydeu.spring_boot_library.repositories;
 
-import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
@@ -20,7 +19,14 @@ public interface MessageRepository extends ListPagingAndSortingRepository<Messag
             select * from messages where id > ?1 limit ?2
             """, nativeQuery = true)
     List<Message> findById(long cursor, int pageSize);
+
+    @Query(value = """
+            select * from messages where is private = FALSE and id > ?1 limit ?2
+            """, nativeQuery = true)
+    List<Message> findPublicMessages(long cursor, int pageSize);
 }
+
+
 
 
 

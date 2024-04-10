@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.time.Instant;
 
-public record MessageDto(
+public record MessageDto (
         Long id,
         @NotBlank(message = "Title must not be blank")
         @Size(max = 100, message = "Title must not exceed 100 characters")
@@ -17,7 +18,7 @@ public record MessageDto(
         Instant date,
         boolean isPrivate,
         @NotNull(message = "User information must not be null")
-        UserDto user) {
+        UserDto user) implements Serializable {
 
 
     public static MessageDto map(Message entity) {
