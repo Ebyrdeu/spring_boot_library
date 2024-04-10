@@ -58,4 +58,8 @@ public class Message extends Auditable {
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
+    public Long getId() {
+        return id;
+    }
 }

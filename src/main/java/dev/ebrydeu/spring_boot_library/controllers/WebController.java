@@ -53,6 +53,29 @@ public class WebController {
     }
 
     @GetMapping("/messages")
+    public String messages(Model model){
+        List<MessageDto> messages = messageService.getPage(0, 10);
+        if (!messages.isEmpty()) {
+            MessageDto lastMessage = messages.get(messages.size() - 1);
+            model.addAttribute("nextpage", lastMessage.id());
+        }
+        model.addAttribute("messages", messages);
+        return "messages";
+    }
+
+    @GetMapping("messages/nextpage")
+    public String loadPages(Model model, @RequestParam(defaultValue = "1") String page) {
+        int p = Integer.parseInt(page);
+        List<MessageDto> messages = messageService.getPage(p, 10);
+        if (!messages.isEmpty()) {
+            MessageDto lastMessage = messages.get(messages.size() - 1);
+            model.addAttribute("nextpage", lastMessage.id());
+        }
+        model.addAttribute("messages", messages);
+        return "messages-nextpage";
+    }
+
+    @GetMapping("/messages")
     public String findAllMessages(Model model) {
         List<MessageDto> messages = messageService.findAll();
         model.addAttribute("messages", messages);
