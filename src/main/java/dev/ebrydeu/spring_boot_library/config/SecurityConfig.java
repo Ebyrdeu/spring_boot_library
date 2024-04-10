@@ -4,7 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 
 @Configuration
@@ -20,12 +23,17 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/github")
-                        .defaultSuccessUrl("/user-profile-page")
+                        .successHandler(oauth2AuthenticationSuccessHandler())
                         .failureUrl("/home"))
                 .logout(logout -> logout
                         .logoutSuccessUrl("/home").permitAll());
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler() {
+        return new SimpleUrlAuthenticationSuccessHandler("/user-profile-page");
     }
 
     //@Bean
