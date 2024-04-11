@@ -12,9 +12,9 @@ public class TestDataUtils {
     public static User createUserOne() {
         return User.builder()
                 .id(1L)
-                .username("User One")
-                .firstname("First One")
-                .lastname("Last One")
+                .userName("User One")
+                .firstName("First One")
+                .lastName("Last One")
                 .profilePicture("One picture")
                 .email("one@gmail.com")
                 .build();
@@ -23,9 +23,9 @@ public class TestDataUtils {
     public static User createUserTwo() {
         return User.builder()
                 .id(2L)
-                .username("User Two")
-                .firstname("First Two")
-                .lastname("Last Two")
+                .userName("User Two")
+                .firstName("First Two")
+                .lastName("Last Two")
                 .profilePicture("Two picture")
                 .email("two@gmail.com")
                 .build();

@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable("users")
     public List<UserDto> findByFirstname(String firstname) {
-        List<User> users = repository.findByFirstname(firstname);
+        List<User> users = repository.findByFirstName(firstname);
         return users.stream()
                 .map(UserDto::map)
                 .toList();
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable("users")
     public List<UserDto> findByLastname(String lastname) {
-        List<User> users = repository.findByLastname(lastname);
+        List<User> users = repository.findByLastName(lastname);
         return users.stream()
                 .map(UserDto::map)
                 .toList();
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable("users")
     public List<UserDto> findByUsername(String username) {
-        List<User> users = repository.findByUsername(username);
+        Optional<User> users = repository.findByUserName(username);
         return users.stream()
                 .map(UserDto::map)
                 .toList();
@@ -97,9 +97,9 @@ public class UserServiceImpl implements UserService {
     public void partialUpdate(Long id, UserDto dto) {
         User exsitingUser = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
-        isNullable(exsitingUser::setUsername, dto.username());
-        isNullable(exsitingUser::setFirstname, dto.firstname());
-        isNullable(exsitingUser::setLastname, dto.lastname());
+        isNullable(exsitingUser::setUserName, dto.userName());
+        isNullable(exsitingUser::setFirstName, dto.firstName());
+        isNullable(exsitingUser::setLastName, dto.lastName());
         isNullable(exsitingUser::setProfilePicture, dto.profilePicture());
         isNullable(exsitingUser::setEmail, dto.email());
 

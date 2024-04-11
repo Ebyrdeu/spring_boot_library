@@ -41,6 +41,8 @@ public class Message extends Auditable {
     @JoinColumn(name = "user_id")
     private User user;
 
+
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
