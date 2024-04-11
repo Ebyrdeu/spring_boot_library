@@ -37,8 +37,8 @@ public class User extends Auditable {
     @Column(name = "image")
     private String profilePicture;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column(name = "email", nullable = false, unique = false)
+    private String email = "default@email.com";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'GUEST'")
