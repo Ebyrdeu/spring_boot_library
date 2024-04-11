@@ -49,6 +49,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         user.setUserName((String) attributes.get("login"));
         user.setFullName((String) attributes.get("name"));
         user.setProfilePicture((String) attributes.get("avatar_url"));
+        user.setId((Long) attributes.get("id"));
         user.setRole(Role.USER);
         return user;
     }
