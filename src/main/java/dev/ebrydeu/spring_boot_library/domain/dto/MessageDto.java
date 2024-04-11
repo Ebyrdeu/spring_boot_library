@@ -19,6 +19,12 @@ public record MessageDto(
         @NotNull(message = "User information must not be null")
         UserDto user) {
 
+    public MessageDto {
+    }
+    public MessageDto setUser(UserDto user) {
+        return new MessageDto(id(), title(), body(), date(), isPrivate(), user);
+    }
+
     public static MessageDto map(Message entity) {
         return new MessageDto(
                 entity.getId(),

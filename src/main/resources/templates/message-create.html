@@ -84,13 +84,23 @@
 <body>
 <h1>Write a new message</h1>
 <div class="container">
+    <h1>Create a New Message</h1>
     <form id="messageForm" action="/web/messages/new" method="post">
-        <input type="text" id="messageTitle" name="title" placeholder="Title">
-        <textarea id="messageContent" name="body" placeholder="Enter your message..."></textarea>
-        <select id="messageVisibility" name="isPrivate">
-            <option value="false">Public</option>
-            <option value="true">Private</option>
-        </select>
+        <div>
+            <label for="messageTitle">Title:</label><br>
+            <input type="text" id="messageTitle" name="title" placeholder="Enter message title" required>
+        </div>
+        <div>
+            <label for="messageContent">Content:</label><br>
+            <textarea id="messageContent" name="body" placeholder="Enter your message..." required></textarea>
+        </div>
+        <div>
+            <label for="messageVisibility">Visibility:</label><br>
+            <select id="messageVisibility" name="isPrivate">
+                <option value="false">Public</option>
+                <option value="true">Private</option>
+            </select>
+        </div>
         <button type="submit">Post Message</button>
     </form>
     <button class="return-btn" onclick="window.history.back()">Return</button>
@@ -103,37 +113,16 @@
         var messageContent = document.getElementById("messageContent").value;
         var messageVisibility = document.getElementById("messageVisibility").value;
         if (messageTitle.trim() !== "" && messageContent.trim() !== "") {
-            var messageContainer = document.createElement("div");
-            messageContainer.classList.add("message");
-
-            var title = document.createElement("div");
-            title.classList.add("title");
-            title.textContent = messageTitle;
-            messageContainer.appendChild(title);
-
-            var author = document.createElement("div");
-            author.classList.add("author");
-            author.textContent = "Your Name";
-            messageContainer.appendChild(author);
-
-            var timestamp = document.createElement("div");
-            timestamp.classList.add("timestamp");
-            timestamp.textContent = new Date().toLocaleString();
-            messageContainer.appendChild(timestamp);
-
-            var visibility = document.createElement("div");
-            visibility.classList.add("visibility");
-            visibility.textContent = messageVisibility.charAt(0).toUpperCase() + messageVisibility.slice(1);
-            messageContainer.appendChild(visibility);
-
-            var content = document.createElement("div");
-            content.classList.add("content");
-            content.textContent = messageContent;
-            messageContainer.appendChild(content);
-
-            document.querySelector(".container").insertBefore(messageContainer, document.getElementById("messageForm"));
-            document.getElementById("messageTitle").value = "";
-            document.getElementById("messageContent").value = "";
+            // Create a new message object
+            var newMessage = {
+                title: messageTitle,
+                content: messageContent,
+                visibility: messageVisibility
+            };
+            // Store the new message in local storage
+            localStorage.setItem("newMessage", JSON.stringify(newMessage));
+            // Redirect to the user profile page
+            window.location.href = "/web/user-profile-page";
         } else {
             alert("Please enter both title and message.");
         }

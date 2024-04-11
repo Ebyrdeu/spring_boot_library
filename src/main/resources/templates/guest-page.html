@@ -19,11 +19,6 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
-            text-align: center;
-            color: #4F5E4A;
-            font-family: "Georgia", serif;
-        }
 
         .return-button {
             position: absolute;
@@ -37,37 +32,9 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         .return-button:hover {
             background-color: #6B7E65;
-        }
-
-        .message-form {
-            margin-bottom: 20px;
-        }
-
-        .message-form textarea {
-            width: 100%;
-            min-height: 100px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            resize: vertical;
-        }
-
-        .message-form button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #6B7E65;;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
-        }
-
-        .message-list {
-            list-style-type: none;
-            padding: 0;
         }
 
         .message {
@@ -75,41 +42,102 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
-            border-left: 5px solid #6B7E65;;
+            border-left: 5px solid #6B7E65;
         }
 
         .message p {
             margin: 0;
         }
+
+        h1 {
+            text-align: center;
+            color: #4F5E4A;
+            font-family: "Georgia", serif;
+        }
     </style>
 </head>
 <body>
+<h1>Guest Board</h1>
 <button type="button" class="return-button" onclick="window.location='home'">Return to Home</button>
-<div class="container">
-    <h1 style="text-align: center;">Guest Board</h1>
-    <ul class="message-list" id="messageList">
-        <!-- Messages will be displayed here -->
-    </ul>
+<div class="container" id="messageContainer">
+    <!-- Messages will be displayed here -->
+    <div class="message">
+        <p>Dummy Message 1</p>
+        <p>This is a sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 2</p>
+        <p>This is another sample message to test message display.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+    <div class="message">
+        <p>Dummy Message 3</p>
+        <p>Yet another sample message for testing purposes.</p>
+    </div>
+
 </div>
-
 <script>
-    // Sample messages for demonstration
-    const messages = [
-        "Hello, this is a sample message!",
-        "Welcome to the message board!",
-        "Feel free to view the public messages.",
-    ];
+    // Function to fetch messages from the backend API
+    function fetchMessages() {
+        console.log('Fetching messages...');
+        fetch('/messages/public')
+            .then(response => response.json())
+            .then(messages => {
+                console.log('Received messages:', messages);
+                const messageContainer = document.getElementById('messageContainer');
+                // Clear previous messages
+                messageContainer.innerHTML = '';
+                // Append each message to the message container
+                messages.forEach(message => {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.innerHTML = `<p>${message.title}</p><p>${message.body}</p>`;
+                    messageContainer.appendChild(messageElement);
+                });
+            })
+            .catch(error => console.error('Error fetching messages:', error));
+    }
 
-    // Display sample messages on page load
-    document.addEventListener('DOMContentLoaded', function () {
-        const messageList = document.getElementById('messageList');
-        messages.forEach(function (messageText) {
-            const li = document.createElement('li');
-            li.classList.add('message');
-            li.innerHTML = `<p>${messageText}</p>`;
-            messageList.appendChild(li);
-        });
-    });
+    function isAtBottom() {
+        return window.innerHeight + window.scrollY >= document.body.offsetHeight;
+    }
+
+    function handleScroll() {
+        if (isAtBottom()) {
+            console.log('At bottom of page, fetching more messages...');
+            fetchMessages();
+        }
+    }
+    window.addEventListener('scroll', handleScroll);
+
+    fetchMessages();
 </script>
 </body>
 </html>

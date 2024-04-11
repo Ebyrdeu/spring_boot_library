@@ -2,11 +2,15 @@ package dev.ebrydeu.spring_boot_library.controllers;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
+import dev.ebrydeu.spring_boot_library.services.MessageService;
 import dev.ebrydeu.spring_boot_library.services.impl.MessageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -17,10 +21,18 @@ public class MessageController {
 
     private final MessageServiceImpl service;
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MessageDto createMessage(@RequestBody MessageDto dto) {
         return service.save(dto);
+    }
+
+    @GetMapping("/messages")
+    public String getAllMessages(Model model) {
+        List<MessageDto> messages = service.findAll();
+        model.addAttribute("messages", messages);
+        return "messages";
     }
 
     @GetMapping

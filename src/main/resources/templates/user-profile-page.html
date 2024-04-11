@@ -84,45 +84,62 @@
 <div class="container">
     <h1>Welcome to Your Profile Home</h1>
 
+    <!-- Profile information and buttons -->
     <div class="profile-container">
+        <!-- Profile information -->
         <div class="profile-box">
+            <!-- Your profile picture -->
             <img src="your-profile-picture.jpg" alt="Your Profile Picture">
+            <!-- Your name -->
             <h3>Your Name</h3>
         </div>
+        <!-- Buttons -->
         <div class="button-container">
+            <!-- Edit profile button -->
             <button type="button" class="edit-profile-button" onclick="window.location.href='user-edit'">Edit Profile</button>
+            <!-- Create new message button -->
             <button type="button" class="new-message-button" onclick="window.location.href='message-create'">Create New Message</button>
+            <!-- Log out button -->
             <button class="logout-button">Log Out</button>
         </div>
     </div>
 
-    <div class="message-board">
-        <div class="message">
-            <p><strong>Title:</strong> The Great Gatsby</p>
-            <p><strong>Date:</strong> April 8, 2024</p>
-            <p><strong>Visibility:</strong> Public</p>
-            <p><strong>Review:</strong> A brilliant portrayal of the Jazz Age that captures the essence of the American Dream and its corruption. The characters are deeply flawed yet compelling, and the prose is exquisitely crafted. A timeless classic that resonates with readers even today.</p>
-        </div>
-        <div class="message">
-            <p><strong>Title:</strong> To Kill a Mockingbird</p>
-            <p><strong>Date:</strong> April 9, 2024</p>
-            <p><strong>Visibility:</strong> Public</p>
-            <p><strong>Review:</strong> A poignant exploration of racial injustice and moral growth in the American South. The narrative, seen through the eyes of Scout Finch, provides a unique perspective on societal norms and the human capacity for empathy. While the pacing can be slow at times, the themes addressed remain relevant.</p>
-        </div>
-        <div class="message">
-            <p><strong>Title:</strong> To Kill a Mockingbird</p>
-            <p><strong>Date:</strong> April 9, 2024</p>
-            <p><strong>Visibility:</strong> Public</p>
-            <p><strong>Review:</strong> A poignant exploration of racial injustice and moral growth in the American South. The narrative, seen through the eyes of Scout Finch, provides a unique perspective on societal norms and the human capacity for empathy. While the pacing can be slow at times, the themes addressed remain relevant.</p>
-        </div>
-        <div class="message">
-            <p><strong>Title:</strong> To Kill a Mockingbird</p>
-            <p><strong>Date:</strong> April 9, 2024</p>
-            <p><strong>Visibility:</strong> Public</p>
-            <p><strong>Review:</strong> A poignant exploration of racial injustice and moral growth in the American South. The narrative, seen through the eyes of Scout Finch, provides a unique perspective on societal norms and the human capacity for empathy. While the pacing can be slow at times, the themes addressed remain relevant.</p>
-        </div>
-
+    <!-- Message board -->
+    <div id="messageBoard" class="message-board">
+        <!-- Messages will be dynamically populated here -->
     </div>
 </div>
+
+<script>
+    // Retrieve the new message data from local storage
+    var newMessage = JSON.parse(localStorage.getItem("newMessage"));
+    if (newMessage) {
+        // Create a new message container
+        var messageContainer = document.createElement("div");
+        messageContainer.classList.add("message");
+
+        // Create elements to display message details
+        var title = document.createElement("div");
+        title.classList.add("title");
+        title.textContent = newMessage.title;
+        messageContainer.appendChild(title);
+
+        var content = document.createElement("div");
+        content.classList.add("content");
+        content.textContent = newMessage.content;
+        messageContainer.appendChild(content);
+
+        var visibility = document.createElement("div");
+        visibility.classList.add("visibility");
+        visibility.textContent = newMessage.visibility.charAt(0).toUpperCase() + newMessage.visibility.slice(1);
+        messageContainer.appendChild(visibility);
+
+        // Append the new message to the message board
+        document.getElementById("messageBoard").appendChild(messageContainer);
+
+        // Clear the new message data from local storage
+        localStorage.removeItem("newMessage");
+    }
+</script>
 </body>
 </html>

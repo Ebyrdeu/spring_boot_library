@@ -1,12 +1,16 @@
 package dev.ebrydeu.spring_boot_library.services.impl;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
+import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import dev.ebrydeu.spring_boot_library.repositories.MessageRepository;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
+import dev.ebrydeu.spring_boot_library.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +26,17 @@ import static dev.ebrydeu.spring_boot_library.libs.Utils.isNullable;
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository repository;
+    private final UserService userService;
+
 
     @Override
     @CacheEvict("messages")
     public MessageDto save(MessageDto dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDto currentUser = userService.findByEmail(authentication.getName());
+
         Message message = MessageDto.map(dto);
+        message.setUser(UserDto.map(currentUser));
         Message savedMessage = repository.save(message);
         return MessageDto.map(savedMessage);
     }
@@ -35,7 +45,11 @@ public class MessageServiceImpl implements MessageService {
     @Cacheable("messages")
     public List<MessageDto> findAll() {
         return repository.findAll().stream()
-                .map(MessageDto::map)
+                .map(message -> {
+                    MessageDto messageDto = MessageDto.map(message); // Map the message entity to MessageDto
+                    messageDto.setUser(UserDto.map(message.getUser())); // Map the associated user entity to UserDto
+                    return messageDto;
+                })
                 .toList();
     }
 
@@ -81,7 +95,7 @@ public class MessageServiceImpl implements MessageService {
     public List<MessageDto> findPublicMessages() {
         return repository.findMessageByIsPrivateFalse().stream()
                 .map(MessageDto::map)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 }

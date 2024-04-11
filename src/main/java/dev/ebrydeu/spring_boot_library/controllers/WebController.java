@@ -57,12 +57,12 @@ public class WebController {
 
 
     //method from 40-guest-login-page
-/*    @GetMapping("/public/messages")
+    @GetMapping("/public/messages")
     public String findPublicMessages(Model model) {
         List<MessageDto> publicMessages = messageService.findPublicMessages();
         model.addAttribute("publicMessages", publicMessages);
-        return "public-messages"; // "public-messages.html" is only for not-logged users
-    }*/
+        return "public-messages"; //
+    }
 
     @PatchMapping("/messages/edit")
     public String partialUpdateMessage(@PathVariable Long id, @ModelAttribute("message") MessageDto dto) {

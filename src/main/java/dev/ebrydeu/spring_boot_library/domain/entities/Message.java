@@ -24,6 +24,7 @@ public class Message extends Auditable {
     @Column(nullable = false, name = "message_id")
     private Long id;
 
+
     @Column(nullable = false)
     private String title;
 
@@ -36,7 +37,7 @@ public class Message extends Auditable {
     @CreationTimestamp
     private Instant date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
