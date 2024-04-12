@@ -41,8 +41,11 @@ public class User extends Auditable {
     @Column(name = "image")
     private String profilePicture;
 
-    @Column(name = "email", nullable = false, unique = false)
-    private String email = "default@email.com";
+    @Column(name = "email", nullable = true, unique = true)
+    private String email;
+
+    @Column(name = "githubid")
+    private Integer gitHubId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'GUEST'")

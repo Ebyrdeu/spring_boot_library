@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 public class SecurityConfig {
@@ -40,6 +41,12 @@ public class SecurityConfig {
     public AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler() {
         return new SimpleUrlAuthenticationSuccessHandler("/web/user-profile-page");
     }
+
+    @Bean
+    RestClient restClient() {
+        return RestClient.create();
+    }
+
 
     //@Bean
     //public AuthenticationSuccessHandler loginSuccessHandler() {

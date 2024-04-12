@@ -15,7 +15,7 @@ public interface UserRepository extends ListCrudRepository<User, Long> {
     List<User> findByLastName(String lastName);
 
     Optional<User> findByUserName(String userName);
-    Optional<User> findById(Integer id);
+    Optional<User> findByGitHubId(Integer id);
     Optional<User> findByEmail(String email);
 
 
