@@ -60,7 +60,6 @@ public class WebController {
     }
 
 
-
     //method from 40-guest-login-page
     @GetMapping("/public/messages")
     public String findPublicMessages(Model model) {

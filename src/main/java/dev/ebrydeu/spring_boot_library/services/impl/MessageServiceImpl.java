@@ -44,13 +44,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Cacheable("messages")
     public List<MessageDto> findAll() {
-        return repository.findAll().stream()
-                .map(message -> {
-                    MessageDto messageDto = MessageDto.map(message); // Map the message entity to MessageDto
-                    messageDto.setUser(UserDto.map(message.getUser())); // Map the associated user entity to UserDto
-                    return messageDto;
-                })
-                .toList();
+        List<Message> messages = repository.findAll();
+        return messages.stream()
+                .map(MessageDto::map)
+                .collect(Collectors.toList());
     }
 
     @Override
