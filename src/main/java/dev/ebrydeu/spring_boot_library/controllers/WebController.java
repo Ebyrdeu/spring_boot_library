@@ -4,6 +4,7 @@ import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
 import dev.ebrydeu.spring_boot_library.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,17 +53,25 @@ public class WebController {
         return "redirect:/web/messages";
     }
 
-    @GetMapping("/messages")
-    public String messages(Model model){
+    @GetMapping("messages")
+    public String messages(Model model, HttpServletRequest httpServletRequest) {
         List<MessageDto> messages = messageService.getPage(0, 10);
-        if (!messages.isEmpty()) {
-            MessageDto lastMessage = messages.get(messages.size() - 1);
-            model.addAttribute("nextpage", lastMessage.id());
-        }
+        model.addAttribute("nextpage", messages.getLast().id());
         model.addAttribute("messages", messages);
-        return "messages";
+        model.addAttribute("httpServletRequest", httpServletRequest);
+        return "messages/messages";
     }
 
+    @GetMapping("messages/nextpage")
+    public String loadMore(Model model, @RequestParam(defaultValue = "1") String page) {
+        int p = Integer.parseInt(page);
+        List<MessageDto> messages = messageService.getPage(p, 10);
+        model.addAttribute("nextpage", messages.getLast().id());
+        model.addAttribute("messages", messages);
+        return "messages/nextpage";
+    }
+
+    //VS???
     @GetMapping("messages/nextpage")
     public String loadPages(Model model, @RequestParam(defaultValue = "1") String page) {
         int p = Integer.parseInt(page);
