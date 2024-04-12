@@ -9,10 +9,13 @@ public interface MessageService {
     MessageDto save(MessageDto dto);
 
     List<MessageDto> findAll();
+    List<MessageDto> findMessageBy
 
     MessageDto findById(Long id);
 
     List<MessageDto> getPage(int p, int i);
+
+    List<MessageDto> getPagePublic(int p, int i);
 
     List<MessageDto> findByTitle(String title);
 

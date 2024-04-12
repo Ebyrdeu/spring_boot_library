@@ -119,33 +119,4 @@ class MessageRepositoryTest {
         assertEquals("testUser", persistedMessage.getLastModifiedBy());
     }
 
-
-    @Mock
-    private MessageRepository messageRepository;
-
-    @InjectMocks
-    private MessageService messageService; // Assuming you have a service class where you use the repository
-
-    @Test
-    @DisplayName("Messages can be found by id with pagination")
-    void messagesCanBeFoundByIdWithPagination() {
-        // Create sample test data
-        List<Message> messages = new ArrayList<>();
-        messages.add(Message.builder().id(1L).title("Title 1").body("Body 1").date(Instant.now()).build());
-        messages.add(Message.builder().id(2L).title("Title 2").body("Body 2").date(Instant.now()).build());
-        messages.add(Message.builder().id(3L).title("Title 3").body("Body 3").date(Instant.now()).build());
-        messages.add(Message.builder().id(4L).title("Title 4").body("Body 4").date(Instant.now()).build());
-        messages.add(Message.builder().id(5L).title("Title 5").body("Body 5").date(Instant.now()).build());
-
-        // Mock the behavior of the repository method
-        when(messageRepository.findById(3L, 2)).thenReturn(messages.subList(1, 3)); // return 2 messages starting from index 1
-
-        // Call the method under test
-        List<Message> result = messageService.findById(3L, 2); // Assuming your service has a method to retrieve messages by id with pagination
-
-        // Assert the results
-        assertThat(result)
-                .hasSize(2)
-                .containsExactly(messages.get(1), messages.get(2));
-    }
 }

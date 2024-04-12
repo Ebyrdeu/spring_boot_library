@@ -55,7 +55,13 @@ public class MessageServiceImpl implements MessageService {
         //return MessageDto.map.findCatsBy(p,i);
         return MessageDto.map.fi
 
-    }
+//    @Override
+//    @Cacheable("messages")
+//    public List<MessageDto> getPage(int p, int i) {
+//        return repository.findMessagesByAndPrivate(p,i).stream()
+//                .map(MessageDto::map)
+//                .toList();
+//    }
 
     @Override
     public MessageDto findById(Long id) {
