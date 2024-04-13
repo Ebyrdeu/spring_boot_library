@@ -41,7 +41,7 @@ public class WebController {
         return "redirect:/web/users";// can be any other pathway of our choice
     }
 
-    @PatchMapping("/userprofile/")
+    @PatchMapping("/userprofile/{id}")
     public String partialUpdateUser(@PathVariable Long id, @ModelAttribute("user") UserDto dto) {
         userService.partialUpdate(id, dto);
         return "redirect:/web/users";
@@ -53,7 +53,7 @@ public class WebController {
         return "redirect:/web/messages";
     }
 
-    @GetMapping("messages")
+    @GetMapping("messages/all")
     public String messages(Model model, HttpServletRequest httpServletRequest) {
         List<MessageDto> messages = messageService.getPage(0, 10);
         model.addAttribute("nextpage", messages.getLast().id());
@@ -62,7 +62,7 @@ public class WebController {
         return "messages/messages";
     }
 
-    @GetMapping("messages/nextpage")
+    @GetMapping("messages/all/nextpage")
     public String loadMore(Model model, @RequestParam(defaultValue = "1") String page) {
         int p = Integer.parseInt(page);
         List<MessageDto> messages = messageService.getPage(p, 10);
@@ -71,17 +71,22 @@ public class WebController {
         return "messages/nextpage";
     }
 
-    //VS???
-    @GetMapping("messages/nextpage")
-    public String loadPages(Model model, @RequestParam(defaultValue = "1") String page) {
-        int p = Integer.parseInt(page);
-        List<MessageDto> messages = messageService.getPage(p, 10);
-        if (!messages.isEmpty()) {
-            MessageDto lastMessage = messages.get(messages.size() - 1);
-            model.addAttribute("nextpage", lastMessage.id());
-        }
+    @GetMapping("messages/public")
+    public String messagesPublic(Model model, HttpServletRequest httpServletRequest) {
+        List<MessageDto> messages = messageService.getPagePublic(0, 10);
+        model.addAttribute("nextpage", messages.getLast().id());
         model.addAttribute("messages", messages);
-        return "messages-nextpage";
+        model.addAttribute("httpServletRequest", httpServletRequest);
+        return "messages/messages";
+    }
+
+    @GetMapping("messages/public/nextpage")
+    public String loadMorePublic(Model model, @RequestParam(defaultValue = "1") String page) {
+        int p = Integer.parseInt(page);
+        List<MessageDto> messages = messageService.getPagePublic(p, 10);
+        model.addAttribute("nextpage", messages.getLast().id());
+        model.addAttribute("messages", messages);
+        return "messages/nextpage";
     }
 
     @GetMapping("/messages")
@@ -91,7 +96,6 @@ public class WebController {
         return "messages"; //web page for all messages accessible for logged users
     }
 
-
     //method from 40-guest-login-page
     @GetMapping("/public/messages")
     public String findPublicMessages(Model model) {
@@ -100,13 +104,13 @@ public class WebController {
         return "public-messages"; //
     }
 
-    @PatchMapping("/messages/edit")
+    @PatchMapping("/messages/edit/{id}")
     public String partialUpdateMessage(@PathVariable Long id, @ModelAttribute("message") MessageDto dto) {
         messageService.partialUpdate(id, dto);
         return "redirect:/web/messages";
     }
 
-    @DeleteMapping("/messages/delete")
+    @DeleteMapping("/messages/delete/{id}")
     public String deleteMessage(@PathVariable Long id) {
         messageService.delete(id);
         return "redirect:/web/messages";

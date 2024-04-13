@@ -94,14 +94,16 @@ public class MessageServiceImpl implements MessageService {
                 .map(MessageDto::map)
                 .collect(Collectors.toList());
     }
-    //VS
+    //pagination for all messages
+    @Override
+    @Cacheable("messages")
     public List<MessageDto> getPage(int p, int i) {
         return repository.findMessagesBy(p,i).stream()
                 .map(MessageDto::map)
                 .collect(Collectors.toList());
     }
 
-    //VS
+    //pagination for public messages messages
     @Override
     @Cacheable("messages")
     public List<MessageDto> getPagePublic(int p, int i) {
