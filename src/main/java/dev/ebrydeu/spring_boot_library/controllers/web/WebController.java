@@ -1,4 +1,4 @@
-package dev.ebrydeu.spring_boot_library.controllers;
+package dev.ebrydeu.spring_boot_library.controllers.web;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
@@ -20,14 +20,21 @@ public class WebController {
         this.userService = userService;
         this.messageService = messageService;
     }
+
     @GetMapping("/home")
     public String home() {
         return "home";
     }
+
     @GetMapping("/user-profile-page")
-    public String userProfilePage() {return "user-profile-page";}
+    public String userProfilePage() {
+        return "user-profile-page";
+    }
+
     @GetMapping("/guest-page")
-    public String guestPage() {return "guest-page";}
+    public String guestPage() {
+        return "guest-page";
+    }
 
     @PostMapping("/users")
     public String saveUser(@ModelAttribute("user") UserDto dto) {
