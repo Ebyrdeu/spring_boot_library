@@ -97,8 +97,8 @@
         <div>
             <label for="messageVisibility">Visibility:</label><br>
             <select id="messageVisibility" name="isPrivate">
-                <option value="false">Public</option>
-                <option value="true">Private</option>
+                <option value="true">Public</option>
+                <option value="false">Private</option>
             </select>
         </div>
         <button type="submit">Post Message</button>
@@ -113,12 +113,14 @@
         var messageContent = document.getElementById("messageContent").value;
         var messageVisibility = document.getElementById("messageVisibility").value;
 
+        console.log("Message visibility:", messageVisibility); // Log the visibility value
+
         if (messageTitle.trim() !== "" && messageContent.trim() !== "") {
             // Create a new message object
             var newMessage = {
                 title: messageTitle,
                 content: messageContent,
-                visibility: messageVisibility
+                visibility: messageVisibility // Assign the selected value directly
             };
 
             // Retrieve the current array of messages from local storage or initialize it if not present
