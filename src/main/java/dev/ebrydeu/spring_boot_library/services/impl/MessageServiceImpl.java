@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static dev.ebrydeu.spring_boot_library.exception.Exceptions.InternalServerErrorException;
 import static dev.ebrydeu.spring_boot_library.exception.Exceptions.NotFoundException;
 import static dev.ebrydeu.spring_boot_library.libs.Utils.isNullable;
 
@@ -25,9 +26,13 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @CacheEvict("messages")
     public MessageDto save(MessageDto dto) {
-        Message message = MessageDto.map(dto);
-        Message savedMessage = repository.save(message);
-        return MessageDto.map(savedMessage);
+        try {
+            Message message = MessageDto.map(dto);
+            Message savedMessage = repository.save(message);
+            return MessageDto.map(savedMessage);
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @Override
@@ -66,14 +71,23 @@ public class MessageServiceImpl implements MessageService {
         isNullable(existingMessage::setTitle, dto.title());
         isNullable(existingMessage::setPrivate, dto.isPrivate());
 
-        repository.save(existingMessage);
+        try {
+            repository.save(existingMessage);
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @Override
     @CacheEvict("messages")
     public void delete(Long id) {
         Message messageToDelete = repository.findById(id).orElseThrow(() -> new NotFoundException("Message not found with id: " + id));
-        repository.deleteById(messageToDelete.getId());
+
+        try {
+            repository.deleteById(messageToDelete.getId());
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
 

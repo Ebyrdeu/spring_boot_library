@@ -1,5 +1,6 @@
 package dev.ebrydeu.spring_boot_library.domain.entities;
 
+import dev.ebrydeu.spring_boot_library.domain.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -25,21 +26,21 @@ public class User extends Auditable {
     @Column(unique = true, nullable = false, name = "username")
     private String username;
 
-    @Column(name = "firstname")
-    private String firstname;
+    @Column(name = "firstName")
+    private String firstName;
 
-    @Column(name = "lastname")
-    private String lastname;
+    @Column(name = "lastName")
+    private String lastName;
 
-    @Column(name = "image")
-    private String profilePicture;
+    @Column(name = "avatar")
+    private String avatar;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'GUEST'")
-    private Role role;
+    @Column(name = "role")
+    private Role role = Role.USER;
 
     @Override
     public final boolean equals(Object o) {
