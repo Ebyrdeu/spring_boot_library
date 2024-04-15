@@ -144,7 +144,7 @@
 
             var visibility = document.createElement("div");
             visibility.classList.add("visibility");
-            visibility.textContent = "Visibility: " + (newMessage.visibility === "true" ? "Private" : "Public");
+            visibility.textContent = "Visibility: " + (newMessage.visibility === "false" ? "Private" : "Public");
             messageContainer.appendChild(visibility);
 
             document.getElementById("messageBoard").appendChild(messageContainer);
