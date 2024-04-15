@@ -32,13 +32,22 @@
             border-radius: 5px;
             padding: 10px;
             margin-bottom: 20px;
-        }
-        .message {
-            background-color: #f9f9f9;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border-left: 5px solid #4F5E4A;
+
+            .message {
+                background-color: #f9f9f9;
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                border-left: 5px solid #4F5E4A;
+                overflow: hidden;
+            }
+
+            .message .title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+            }
         }
         .message p {
             margin: 0;
@@ -104,41 +113,43 @@
         </div>
     </div>
 
-    <!-- Message board -->
+
     <div id="messageBoard" class="message-board">
-        <!-- Messages will be dynamically populated here -->
+
     </div>
 </div>
 
 <script>
-    // Retrieve the new message data from local storage
-    var newMessage = JSON.parse(localStorage.getItem("newMessage"));
-    if (newMessage) {
-        // Create a new message container
-        var messageContainer = document.createElement("div");
-        messageContainer.classList.add("message");
 
-        // Create elements to display message details
-        var title = document.createElement("div");
-        title.classList.add("title");
-        title.textContent = newMessage.title;
-        messageContainer.appendChild(title);
+    var messages = JSON.parse(localStorage.getItem("messages"));
+    if (messages) {
+        messages.forEach(function(newMessage) {
+            var messageContainer = document.createElement("div");
+            messageContainer.classList.add("message");
+
+            var titleContainer = document.createElement("div");
+            titleContainer.classList.add("title");
+            var titlePrefix = document.createElement("span");
+            titlePrefix.style.fontWeight = "bold";
+            titlePrefix.textContent = "Title: ";
+            var title = document.createElement("span");
+            title.textContent = newMessage.title;
+            titleContainer.appendChild(titlePrefix);
+            titleContainer.appendChild(title);
+            messageContainer.appendChild(titleContainer);
 
         var content = document.createElement("div");
         content.classList.add("content");
         content.textContent = newMessage.content;
         messageContainer.appendChild(content);
 
-        var visibility = document.createElement("div");
-        visibility.classList.add("visibility");
-        visibility.textContent = newMessage.visibility.charAt(0).toUpperCase() + newMessage.visibility.slice(1);
-        messageContainer.appendChild(visibility);
+            var visibility = document.createElement("div");
+            visibility.classList.add("visibility");
+            visibility.textContent = "Visibility: " + (newMessage.visibility.charAt(0).toUpperCase() + newMessage.visibility.slice(1));
+            messageContainer.appendChild(visibility);
 
-        // Append the new message to the message board
-        document.getElementById("messageBoard").appendChild(messageContainer);
-
-        // Clear the new message data from local storage
-        localStorage.removeItem("newMessage");
+            document.getElementById("messageBoard").appendChild(messageContainer);
+        });
     }
 </script>
 </body>
