@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
-
 @Configuration
 public class SecurityConfig {
 
@@ -33,12 +32,7 @@ public class SecurityConfig {
                                         .userService(customOAuth2UserService))
                         .successHandler(oauth2AuthenticationSuccessHandler()))
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/web/home")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .clearAuthentication(true)
-                        .permitAll());
+                        .logoutSuccessUrl("/web/home"));
                         return http.build();
     }
 
