@@ -1,11 +1,11 @@
 package dev.ebrydeu.spring_boot_library.domain.entities;
 
+import dev.ebrydeu.spring_boot_library.domain.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,36 +23,25 @@ public class User extends Auditable {
     @Column(nullable = false, name = "user_id")
     private Long id;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Message> messages;
-
     @Column(unique = true, nullable = false, name = "username")
     private String userName;
 
-    @Column(name = "firstname")
+    @Column(name = "firstName")
     private String firstName;
 
-    @Column(name = "lastname")
+    @Column(name = "lastName")
     private String lastName;
 
-    @Column(name ="Fullname")
-    private String fullName;
+    @Column(name = "avatar")
+    private String avatar;
 
-    @Column(name = "image")
-    private String profilePicture;
-
-    @Column(name = "email", nullable = false, unique = false)
-    private String email = "default@email.com";
+    @Column(unique = true)
+    private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", columnDefinition= "VARCHAR(20) Default 'GUEST'")
-    private Role role;
+    @Column(name = "role")
+    private Role role = Role.USER;
 
-    public void setFullName(String fullName) {
-        String[] nameParts = fullName.trim().split("//s");
-        firstName = nameParts.length >= 1 ? nameParts[0].trim() : "";
-        lastName = nameParts.length >= 2 ? nameParts[1].trim() : "";
-    }
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

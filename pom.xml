@@ -17,6 +17,17 @@
         <java.version>21</java.version>
         <sonar.organization>ebyrdeu</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.exclusions>
+            **/domain/audit/*.java,
+            **/domain/entities/*.java,
+            **/responses/*.java,
+            **/exception/*.java,
+            **/services/*.java,
+            **/providers/*.java,
+            **/libs/*.java,
+            **/controllers/web/*.java,
+            **/config/*.java
+        </sonar.coverage.exclusions>
     </properties>
     <dependencies>
         <dependency>
@@ -26,6 +37,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
         </dependency>
 
         <dependency>

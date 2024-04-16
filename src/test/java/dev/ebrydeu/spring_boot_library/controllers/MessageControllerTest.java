@@ -53,7 +53,7 @@ class MessageControllerTest {
         @Test
         @DisplayName("On successfully Messages get returns Http status 200 Ok")
         void onSuccessfullyMessagesGetReturnsHttpStatus200Ok() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
@@ -69,7 +69,7 @@ class MessageControllerTest {
             MessageDto savedMessageDto = messageService.save(MessageDto.map(messageOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/" + savedMessageDto.id())
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/" + savedMessageDto.id())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
@@ -88,7 +88,7 @@ class MessageControllerTest {
             MessageDto savedMessageDto = messageService.save(MessageDto.map(messageOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/title/" + savedMessageDto.title())
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/title/" + savedMessageDto.title())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
@@ -111,7 +111,7 @@ class MessageControllerTest {
 
             String messageJson = objectMapper.writeValueAsString(savedMessageDto);
 
-            mockMvc.perform(MockMvcRequestBuilders.post("/messages")
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/messages")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(messageJson))
                     .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -134,7 +134,7 @@ class MessageControllerTest {
 
             messageService.save(MessageDto.map(messageOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.delete("/messages/1").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.delete("/api/messages/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         }
@@ -155,7 +155,7 @@ class MessageControllerTest {
             MessageDto existingMessage = messageService.findById(messageOne.getId());
             String messageJson = objectMapper.writeValueAsString(existingMessage);
 
-            mockMvc.perform(MockMvcRequestBuilders.put("/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
+            mockMvc.perform(MockMvcRequestBuilders.put("/api/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
         }
 
@@ -177,7 +177,7 @@ class MessageControllerTest {
 
             String messageJson = objectMapper.writeValueAsString(message);
 
-            mockMvc.perform(MockMvcRequestBuilders.put("/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
+            mockMvc.perform(MockMvcRequestBuilders.put("/api/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
         }
     }
@@ -188,14 +188,14 @@ class MessageControllerTest {
         @Test
         @DisplayName("On unsuccessfully Message get returns Http status 404 Not Found")
         void onUnsuccessfullyMessageGetReturnsHttpStatus404NotFound() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/1").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
         @Test
         @DisplayName("On unsuccessfully Message deletion returns Http status 404 Not Found")
         void onUnsuccessfullyMessageDeletionReturnsHttpStatus404NotFound() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/1").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
@@ -212,7 +212,7 @@ class MessageControllerTest {
             String messageJson = objectMapper.writeValueAsString(MessageDto.map(messageOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.put("/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
+            mockMvc.perform(MockMvcRequestBuilders.put("/api/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
                     .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
     }
@@ -232,12 +232,12 @@ class MessageControllerTest {
 
             String messageJson = objectMapper.writeValueAsString(MessageDto.map(messageOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.post("/messages").contentType(MediaType.APPLICATION_JSON).content(messageJson))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Title One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.body").value("Body One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.isPrivate").value(false))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.user.id").exists());
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/messages").contentType(MediaType.APPLICATION_JSON).content(messageJson))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value("Title One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.body").value("Body One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.isPrivate").value(false))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.id").exists());
 
         }
 
@@ -253,12 +253,12 @@ class MessageControllerTest {
 
             messageService.save(MessageDto.map(messageOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Title One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].body").value("Body One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].isPrivate").value(false))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].user.id").exists());
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").exists())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value("Title One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].body").value("Body One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].isPrivate").value(false))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].user.id").exists());
         }
 
         @Test
@@ -273,12 +273,12 @@ class MessageControllerTest {
 
             messageService.save(MessageDto.map(messageOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/1").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Title One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.body").value("Body One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.isPrivate").value(false))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.user.id").exists());
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/1").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value("Title One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.body").value("Body One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.isPrivate").value(false))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.id").exists());
         }
 
         @Test
@@ -293,12 +293,12 @@ class MessageControllerTest {
 
             messageService.save(MessageDto.map(messageOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/title/Title One").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Title One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].body").value("Body One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].isPrivate").value(false))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].user.id").exists());
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/title/Title One").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").exists())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value("Title One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].body").value("Body One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].isPrivate").value(false))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].user.id").exists());
         }
 
         @Test
@@ -319,12 +319,12 @@ class MessageControllerTest {
 
             String messageJson = objectMapper.writeValueAsString(messageTwo);
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(messageTwo.getId()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(messageTwo.getTitle()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.body").value(messageTwo.getBody()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.isPrivate").value(messageTwo.isPrivate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.user.id").value(messageTwo.getUser().getId()));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(messageTwo.getId()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(messageTwo.getTitle()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.body").value(messageTwo.getBody()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.isPrivate").value(messageTwo.isPrivate()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.id").value(messageTwo.getUser().getId()));
         }
 
         @Test
@@ -346,12 +346,12 @@ class MessageControllerTest {
 
             String messageJson = objectMapper.writeValueAsString(messageTwo);
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(messageTwo.getId()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(messageTwo.getTitle()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.body").value(messageTwo.getBody()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.isPrivate").value(messageTwo.isPrivate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.user.id").value(messageTwo.getUser().getId()));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/messages/1").contentType(MediaType.APPLICATION_JSON).content(messageJson))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(messageTwo.getId()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(messageTwo.getTitle()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.body").value(messageTwo.getBody()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.isPrivate").value(messageTwo.isPrivate()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.user.id").value(messageTwo.getUser().getId()));
         }
     }
 

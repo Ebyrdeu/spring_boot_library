@@ -1,51 +1,41 @@
 package dev.ebrydeu.spring_boot_library.config;
 
+import dev.ebrydeu.spring_boot_library.providers.SwaggerAdminProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+    private static final String[] SWAGGER_PATHS = {"/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/swagger-ui/**"};
 
-    private final OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService;
-
-    public SecurityConfig(OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService) {
-        this.customOAuth2UserService = customOAuth2UserService;
-    }
     @Bean
-    public SecurityFilterChain web(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/web/home","/oauth2/authorization/github", "/api/public/**","/logout","/web/guest-page").permitAll()
-                        .requestMatchers("/api/user/**", "/web/user-profile-page").hasAnyRole("USER", "ADMIN")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/", "/home", "/oauth2/authorization/github", "/user-profile-page", "/api/public/**", "/swagger/login", "swagger-login").permitAll()
+                        .requestMatchers(SWAGGER_PATHS).hasRole("ADMIN")
+                        .requestMatchers("/api/user/**", "/user-profile-page").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfoEndpoint ->
-                                userInfoEndpoint
-                                        .userService(customOAuth2UserService))
-                        .successHandler(oauth2AuthenticationSuccessHandler()))
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/web/home"));
-                        return http.build();
+                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/user-profile-page"))
+                .httpBasic(withDefaults())
+                .formLogin(formLogin -> {
+                    formLogin.defaultSuccessUrl("/swagger-ui/index.html#/");
+                    formLogin.loginPage("/swagger/login");
+                })
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+                .logout(logout -> logout.logoutSuccessUrl("/home").permitAll())
+                .authenticationProvider(new SwaggerAdminProvider());
+
+        return http.build();
     }
 
-    @Bean
-    public AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler() {
-        return new SimpleUrlAuthenticationSuccessHandler("/web/user-profile-page");
-    }
 
-    //@Bean
-    //public AuthenticationSuccessHandler loginSuccessHandler() {
-      //  SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
-      //  handler.setUseReferer(true);
-      //  handler.setDefaultTargetUrl("/user");
-     //   return handler;
-   // }
 }

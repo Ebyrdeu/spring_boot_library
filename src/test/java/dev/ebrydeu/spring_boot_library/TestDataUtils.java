@@ -1,6 +1,7 @@
 package dev.ebrydeu.spring_boot_library;
 
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
+import dev.ebrydeu.spring_boot_library.domain.entities.Role;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 
 public class TestDataUtils {
@@ -15,8 +16,9 @@ public class TestDataUtils {
                 .userName("User One")
                 .firstName("First One")
                 .lastName("Last One")
-                .profilePicture("One picture")
+                .avatar("One picture")
                 .email("one@gmail.com")
+                .role(Role.USER)
                 .build();
     }
 
@@ -26,7 +28,8 @@ public class TestDataUtils {
                 .userName("User Two")
                 .firstName("First Two")
                 .lastName("Last Two")
-                .profilePicture("Two picture")
+                .avatar("Two picture")
+                .role(Role.ADMIN)
                 .email("two@gmail.com")
                 .build();
     }

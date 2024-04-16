@@ -47,8 +47,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     private User createUser(Map<String, Object> attributes) {
         User user = new User();
         user.setUserName((String) attributes.get("login"));
-        user.setFullName((String) attributes.get("name"));
-        user.setProfilePicture((String) attributes.get("avatar_url"));
+        //user.setFullName((String) attributes.get("name"));
+        user.setAvatar((String) attributes.get("avatar_url"));
         user.setRole(Role.USER);
         return user;
     }

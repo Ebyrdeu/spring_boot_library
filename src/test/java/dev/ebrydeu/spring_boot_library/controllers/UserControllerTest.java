@@ -43,7 +43,7 @@ class UserControllerTest {
         @Test
         @DisplayName("On successfully Users get returns Http status 200 Ok")
         void onSuccessfullyUsersGetReturnsHttpStatus200Ok() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/users").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
@@ -55,7 +55,7 @@ class UserControllerTest {
 
             service.save(UserDto.map(userOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1"))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
@@ -63,21 +63,21 @@ class UserControllerTest {
         @DisplayName("On successfully User firstname get returns Http Status 200 Ok")
         void onSuccessfullyUserFirstnameGetReturnsHttpStatus200Ok() throws Exception {
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/firstname/First One").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/firstname/First One").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
         @Test
         @DisplayName("One successfully User lastname get returns Http Status 200 Ok")
         void oneSuccessfullyUserLastnameGetReturnsHttpStatus200Ok() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/lastname/Last One").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/lastname/Last One").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
         @Test
         @DisplayName("On successfully user profile name get returns Http status 200 Ok")
         void onSuccessfullyUserProfileNameGetReturnsHttpStatus200Ok() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/username/User One").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/username/User One").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
 
@@ -89,7 +89,7 @@ class UserControllerTest {
 
             service.save(UserDto.map(userOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/email/one@gmail.com").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/email/one@gmail.com").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isOk());
         }
     }
@@ -104,7 +104,7 @@ class UserControllerTest {
             userOne.setId(null);
 
             String userJson = objectMapper.writeValueAsString(UserDto.map(userOne));
-            mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.status().isCreated());
         }
     }
@@ -120,7 +120,7 @@ class UserControllerTest {
 
             service.save(UserDto.map(userOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.delete("/users/1").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
         }
 
@@ -133,7 +133,7 @@ class UserControllerTest {
             UserDto existingUser = service.findById(userOne.getId());
             String userJson = objectMapper.writeValueAsString(existingUser);
 
-            mockMvc.perform(MockMvcRequestBuilders.put("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
+            mockMvc.perform(MockMvcRequestBuilders.put("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
         }
 
@@ -150,7 +150,7 @@ class UserControllerTest {
 
             String userJson = objectMapper.writeValueAsString(UserDto.map(user));
 
-            mockMvc.perform(MockMvcRequestBuilders.patch("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
+            mockMvc.perform(MockMvcRequestBuilders.patch("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
         }
     }
@@ -161,7 +161,7 @@ class UserControllerTest {
         @Test
         @DisplayName("On unsuccessfully User get returns Http status 404 Not Found")
         void onUnsuccessfullyUserGetReturnsHttpStatus404NotFound() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/1").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
@@ -169,7 +169,7 @@ class UserControllerTest {
         @Test
         @DisplayName("On unsuccessfully User deletion returns Http status 404 Not Found")
         void onUnsuccessfullyUserDeletionReturnsHttpStatus404NotFound() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.delete("/users/1").contentType(MediaType.APPLICATION_JSON))
+            mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
@@ -179,7 +179,7 @@ class UserControllerTest {
             User user = createUserOne();
             String userJson = objectMapper.writeValueAsString(UserDto.map(user));
 
-            mockMvc.perform(MockMvcRequestBuilders.put("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
+            mockMvc.perform(MockMvcRequestBuilders.put("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
 
@@ -189,7 +189,7 @@ class UserControllerTest {
             User user = createUserOne();
             String userJson = objectMapper.writeValueAsString(UserDto.map(user));
 
-            mockMvc.perform(MockMvcRequestBuilders.patch("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
+            mockMvc.perform(MockMvcRequestBuilders.patch("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.status().isNotFound());
         }
     }
@@ -207,7 +207,7 @@ class UserControllerTest {
 
             String userJson = objectMapper.writeValueAsString(UserDto.map(userOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.status().isConflict());
         }
 
@@ -225,13 +225,13 @@ class UserControllerTest {
 
             String userJson = objectMapper.writeValueAsString(UserDto.map(userOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("User One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("First One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Last One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.profilePicture").value("One picture"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("one@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/users").contentType(MediaType.APPLICATION_JSON).content(userJson))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("User One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value("First One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastName").value("Last One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.avatar").value("One picture"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("one@gmail.com"));
         }
 
         @Test
@@ -243,13 +243,13 @@ class UserControllerTest {
             service.save(UserDto.map(userOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].userName").value("User One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("First One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("Last One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].profilePicture").value("One picture"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("one@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].username").value("User One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].firstName").value("First One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].lastName").value("Last One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].avatar").value("One picture"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].email").value("one@gmail.com"));
         }
 
 
@@ -261,13 +261,13 @@ class UserControllerTest {
 
             service.save(UserDto.map(userOne));
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/1").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("User One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("First One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Last One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.profilePicture").value("One picture"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("one@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("User One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value("First One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastName").value("Last One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.avatar").value("One picture"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("one@gmail.com"));
         }
 
         @Test
@@ -279,13 +279,13 @@ class UserControllerTest {
             service.save(UserDto.map(userOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/firstname/First One").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].userName").value("User One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("First One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("Last One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].profilePicture").value("One picture"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("one@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/firstname/First One").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].username").value("User One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].firstName").value("First One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].lastName").value("Last One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].avatar").value("One picture"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].email").value("one@gmail.com"));
 
         }
 
@@ -298,13 +298,13 @@ class UserControllerTest {
             service.save(UserDto.map(userOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/lastname/Last One").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].userName").value("User One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("First One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("Last One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].profilePicture").value("One picture"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("one@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/lastname/Last One").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].username").value("User One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].firstName").value("First One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].lastName").value("Last One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].avatar").value("One picture"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].email").value("one@gmail.com"));
         }
 
         @Test
@@ -316,13 +316,13 @@ class UserControllerTest {
             service.save(UserDto.map(userOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/username/User One").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].userName").value("User One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("First One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("Last One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].profilePicture").value("One picture"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("one@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/username/User One").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].username").value("User One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].firstName").value("First One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].lastName").value("Last One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].avatar").value("One picture"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].email").value("one@gmail.com"));
         }
 
         @Test
@@ -334,13 +334,13 @@ class UserControllerTest {
             service.save(UserDto.map(userOne));
 
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/email/one@gmail.com").contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("User One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("First One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Last One"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.profilePicture").value("One picture"))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("one@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/email/one@gmail.com").contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("User One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value("First One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastName").value("Last One"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.avatar").value("One picture"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("one@gmail.com"));
         }
 
         @Test
@@ -355,13 +355,13 @@ class UserControllerTest {
 
             String userJson = objectMapper.writeValueAsString(userTwo);
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value(userTwo.getUserName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userTwo.getFirstName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userTwo.getLastName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.profilePicture").value(userTwo.getProfilePicture()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userTwo.getEmail()));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value(userTwo.getUserName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value(userTwo.getFirstName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastName").value(userTwo.getLastName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.avatar").value(userTwo.getAvatar()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(userTwo.getEmail()));
 
         }
 
@@ -374,20 +374,20 @@ class UserControllerTest {
             User user = createUserOne();
             user.setFirstName(null);
             user.setLastName(null);
-            user.setProfilePicture(null);
+            user.setAvatar(null);
             user.setEmail("updated@gmail.com");
 
             service.save(UserDto.map(user));
 
             String userJson = objectMapper.writeValueAsString(user);
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value(user.getUserName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(user.getFirstName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(user.getLastName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.profilePicture").value(user.getProfilePicture()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("updated@gmail.com"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value(user.getUserName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value(user.getFirstName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastName").value(user.getLastName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.avatar").value(user.getAvatar()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("updated@gmail.com"));
 
         }
     }

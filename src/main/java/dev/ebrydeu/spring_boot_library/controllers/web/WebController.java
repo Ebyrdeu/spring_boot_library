@@ -1,4 +1,4 @@
-package dev.ebrydeu.spring_boot_library.controllers;
+package dev.ebrydeu.spring_boot_library.controllers.web;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
@@ -20,39 +20,26 @@ public class WebController {
         this.userService = userService;
         this.messageService = messageService;
     }
+
     @GetMapping("/home")
     public String home() {
         return "home";
     }
+
     @GetMapping("/user-profile-page")
-    public String userProfilePage() {return "user-profile-page";}
-    @GetMapping("/guest-page")
-    public String guestPage() {return "guest-page";}
-    @GetMapping("/messages-page")
-    public String messagesPage() {return "messages-page";}
-    @GetMapping("/user-edit")
-    public String userEdit() {return "user-edit";}
-    @GetMapping("/message-create")
-    public String messageCreate() {
-        return "message-create";
+    public String userProfilePage() {
+        return "user-profile-page";
     }
+
+    @GetMapping("/guest-page")
+    public String guestPage() {
+        return "guest-page";
+    }
+
     @PostMapping("/users")
     public String saveUser(@ModelAttribute("user") UserDto dto) {
         userService.save(dto);
         return "redirect:/web/users";// can be any other pathway of our choice
-    }
-
-    @GetMapping("/myprofile/editmessage")
-    public String showMessageEditPage(@RequestParam("id") Long messageId, Model model) {
-        MessageDto message = messageService.findById(messageId);
-        model.addAttribute("message", message);
-        return "message-edit"; // Assuming you have a message-edit.html template
-    }
-
-    @PatchMapping("/myprofile/editmessage/{id}")
-    public String updateMessage(@PathVariable("id") Long id, @ModelAttribute("message") MessageDto dto) {
-        messageService.partialUpdate(id, dto);
-        return "redirect:/web/messages"; // Redirect to the messages page after editing
     }
 
     @PatchMapping("/userprofile/")
@@ -74,14 +61,13 @@ public class WebController {
         return "messages"; //web page for all messages accessible for logged users
     }
 
-
     //method from 40-guest-login-page
-    @GetMapping("/public/messages")
+/*    @GetMapping("/public/messages")
     public String findPublicMessages(Model model) {
         List<MessageDto> publicMessages = messageService.findPublicMessages();
         model.addAttribute("publicMessages", publicMessages);
-        return "public-messages"; //
-    }
+        return "public-messages"; // "public-messages.html" is only for not-logged users
+    }*/
 
     @PatchMapping("/messages/edit")
     public String partialUpdateMessage(@PathVariable Long id, @ModelAttribute("message") MessageDto dto) {

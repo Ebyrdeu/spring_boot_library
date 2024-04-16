@@ -2,6 +2,7 @@ package dev.ebrydeu.spring_boot_library.services.impl;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
+import dev.ebrydeu.spring_boot_library.exception.Exceptions;
 import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
 import dev.ebrydeu.spring_boot_library.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,56 +29,50 @@ public class UserServiceImpl implements UserService {
     public UserDto save(UserDto dto) {
         Optional<User> existingEmail = repository.findByEmail(dto.email());
 
-        if (existingEmail.isPresent() && !existingEmail.get().getId().equals(dto.id()))
+        if (existingEmail.isPresent() && !existingEmail.get().getId().equals(dto.id())) {
             throw new EmailAlreadyExistsException("Email already exists: " + dto.email());
+        }
+
 
         User user = UserDto.map(dto);
         User savedUser = repository.save(user);
         return UserDto.map(savedUser);
     }
 
+
     @Override
     @Cacheable("users")
     public List<UserDto> findAll() {
         List<User> users = repository.findAll();
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
+        return users.stream().map(UserDto::map).toList();
     }
 
     @Override
     @Cacheable("users")
     public UserDto findById(Long userId) {
         Optional<User> userOptional = repository.findById(userId);
-        return userOptional.map(UserDto::map)
-                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        return userOptional.map(UserDto::map).orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
     }
 
     @Override
     @Cacheable("users")
     public List<UserDto> findByFirstname(String firstname) {
         List<User> users = repository.findByFirstName(firstname);
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
+        return users.stream().map(UserDto::map).toList();
     }
 
     @Override
     @Cacheable("users")
     public List<UserDto> findByLastname(String lastname) {
         List<User> users = repository.findByLastName(lastname);
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
+        return users.stream().map(UserDto::map).toList();
     }
 
     @Override
     @Cacheable("users")
-    public List<UserDto> findByUsername(String username) {
-        Optional<User> users = repository.findByUserName(username);
-        return users.stream()
-                .map(UserDto::map)
-                .toList();
+    public List<UserDto> findByUsername(String userName) {
+        Optional<User> users = repository.findByUserName(userName);
+        return users.stream().map(UserDto::map).toList();
     }
 
     @Override
@@ -97,20 +92,28 @@ public class UserServiceImpl implements UserService {
     public void partialUpdate(Long id, UserDto dto) {
         User exsitingUser = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
-        isNullable(exsitingUser::setUserName, dto.userName());
+        isNullable(exsitingUser::setUserName, dto.username());
         isNullable(exsitingUser::setFirstName, dto.firstName());
         isNullable(exsitingUser::setLastName, dto.lastName());
-        isNullable(exsitingUser::setProfilePicture, dto.profilePicture());
+        isNullable(exsitingUser::setAvatar, dto.avatar());
         isNullable(exsitingUser::setEmail, dto.email());
 
-        repository.save(exsitingUser);
+        try {
+            repository.save(exsitingUser);
+        } catch (Exception e) {
+            throw new Exceptions.InternalServerErrorException(e.getMessage());
+        }
     }
 
     @Override
     @Cacheable("users")
     public void delete(Long id) {
-        User userToDelete = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
-        repository.deleteById(userToDelete.getId());
+        User userToDelete = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
+        try {
+            repository.deleteById(userToDelete.getId());
+        } catch (Exception e) {
+            throw new Exceptions.InternalServerErrorException(e.getMessage());
+        }
     }
 }
