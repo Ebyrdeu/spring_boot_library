@@ -98,6 +98,21 @@
         .edit-button:hover {
             background-color: #6B7E65;
         }
+        .button-container .new-message-button {
+            padding: 10px 20px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            text-decoration: none;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        .button-container .new-message-button:hover {
+            background-color: #6B7E65;
+        }
     </style>
 </head>
 <body>
@@ -118,7 +133,7 @@
             <!-- Edit profile button -->
             <button type="button" class="edit-profile-button" th:onclick="'/user-edit'">Edit Profile</button>
             <!-- Create new message button -->
-            <a href="/message-create.html" class="new-message-button">Create New Message</a>
+            <a href="/web/message-create" class="edit-profile-button new-message-button">Create New Message</a>
             <!-- Logout button -->
             <button type="button" class="logout-button" th:onclick="'/logout'">Log Out</button>
         </div>

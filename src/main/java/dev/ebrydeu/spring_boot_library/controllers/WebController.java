@@ -32,8 +32,10 @@ public class WebController {
     public String messagesPage() {return "messages-page";}
     @GetMapping("/user-edit")
     public String userEdit() {return "user-edit";}
-    @GetMapping("message-create")
-    public String messageCreate() {return "message-create";}
+    @GetMapping("/message-create")
+    public String messageCreate() {
+        return "message-create";
+    }
     @PostMapping("/users")
     public String saveUser(@ModelAttribute("user") UserDto dto) {
         userService.save(dto);
