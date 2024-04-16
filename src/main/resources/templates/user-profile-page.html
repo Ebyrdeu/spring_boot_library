@@ -87,6 +87,19 @@
         .edit-profile-button:hover, .logout-button:hover, .new-message-button:hover {
             background-color: #6B7E65;
         }
+        .edit-button {
+            padding: 5px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .edit-button:hover {
+            background-color: #6B7E65;
+        }
     </style>
 </head>
 <body>
@@ -136,6 +149,7 @@
             titleContainer.appendChild(titlePrefix);
             titleContainer.appendChild(title);
 
+            // Add user information
             var userContainer = document.createElement("div");
             userContainer.classList.add("user");
             var userPrefix = document.createElement("span");
@@ -158,6 +172,14 @@
             visibility.classList.add("visibility");
             visibility.textContent = "Visibility: " + (newMessage.visibility === "false" ? "Private" : "Public");
             messageContainer.appendChild(visibility);
+
+            var editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+            editButton.classList.add("edit-button");
+            editButton.addEventListener("click", function() {
+                window.location.href = '/web/message-edit?id=' + newMessage.id;
+            });
+            messageContainer.appendChild(editButton);
 
             document.getElementById("messageBoard").appendChild(messageContainer);
         });

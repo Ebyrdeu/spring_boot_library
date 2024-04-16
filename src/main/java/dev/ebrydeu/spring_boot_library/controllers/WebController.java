@@ -40,6 +40,19 @@ public class WebController {
         return "redirect:/web/users";// can be any other pathway of our choice
     }
 
+    @GetMapping("/message-edit")
+    public String showMessageEditPage(@RequestParam("id") Long messageId, Model model) {
+        MessageDto message = messageService.findById(messageId);
+        model.addAttribute("message", message);
+        return "message-edit"; // Assuming you have a message-edit.html template
+    }
+
+    @PatchMapping("/message-edit/{id}")
+    public String updateMessage(@PathVariable("id") Long id, @ModelAttribute("message") MessageDto dto) {
+        messageService.partialUpdate(id, dto);
+        return "redirect:/web/messages"; // Redirect to the messages page after editing
+    }
+
     @PatchMapping("/userprofile/")
     public String partialUpdateUser(@PathVariable Long id, @ModelAttribute("user") UserDto dto) {
         userService.partialUpdate(id, dto);
