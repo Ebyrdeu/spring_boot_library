@@ -60,83 +60,40 @@
 <button type="button" class="return-button" onclick="window.location='home'">Return to Home</button>
 <div class="container" id="messageContainer">
     <!-- Messages will be displayed here -->
-    <div class="message">
-        <p>Dummy Message 1</p>
-        <p>This is a sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 2</p>
-        <p>This is another sample message to test message display.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-    <div class="message">
-        <p>Dummy Message 3</p>
-        <p>Yet another sample message for testing purposes.</p>
-    </div>
-
 </div>
 <script>
-    // Function to fetch messages from the backend API
-    function fetchMessages() {
-        console.log('Fetching messages...');
-        fetch('/messages/public')
-            .then(response => response.json())
-            .then(messages => {
-                console.log('Received messages:', messages);
-                const messageContainer = document.getElementById('messageContainer');
-                // Clear previous messages
-                messageContainer.innerHTML = '';
-                // Append each message to the message container
-                messages.forEach(message => {
-                    const messageElement = document.createElement('div');
-                    messageElement.classList.add('message');
-                    messageElement.innerHTML = `<p>${message.title}</p><p>${message.body}</p>`;
-                    messageContainer.appendChild(messageElement);
-                });
-            })
-            .catch(error => console.error('Error fetching messages:', error));
-    }
+    var messages = JSON.parse(localStorage.getItem("messages"));
+    if (messages) {
+        messages.forEach(function(newMessage) {
+            if (newMessage.visibility === "Public") { // Check if the message is public
+                var messageContainer = document.createElement("div");
+                messageContainer.classList.add("message");
 
-    function isAtBottom() {
-        return window.innerHeight + window.scrollY >= document.body.offsetHeight;
-    }
+                var titleContainer = document.createElement("div");
+                titleContainer.classList.add("title");
+                var titlePrefix = document.createElement("span");
+                titlePrefix.style.fontWeight = "bold";
+                titlePrefix.textContent = "Title: ";
+                var title = document.createElement("span");
+                title.textContent = newMessage.title;
+                titleContainer.appendChild(titlePrefix);
+                titleContainer.appendChild(title);
+                messageContainer.appendChild(titleContainer);
 
-    function handleScroll() {
-        if (isAtBottom()) {
-            console.log('At bottom of page, fetching more messages...');
-            fetchMessages();
-        }
-    }
-    window.addEventListener('scroll', handleScroll);
+                var content = document.createElement("div");
+                content.classList.add("content");
+                content.textContent = newMessage.content;
+                messageContainer.appendChild(content);
 
-    fetchMessages();
+                var visibility = document.createElement("div");
+                visibility.classList.add("visibility");
+                visibility.textContent = "Visibility: Public"; // You already know it's public, so you can hard-code this
+                messageContainer.appendChild(visibility);
+
+                document.getElementById("messageBoard").appendChild(messageContainer);
+            }
+        });
+    }
 </script>
 </body>
 </html>

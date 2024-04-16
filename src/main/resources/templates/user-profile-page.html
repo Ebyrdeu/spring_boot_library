@@ -135,7 +135,19 @@
             title.textContent = newMessage.title;
             titleContainer.appendChild(titlePrefix);
             titleContainer.appendChild(title);
+
+            var userContainer = document.createElement("div");
+            userContainer.classList.add("user");
+            var userPrefix = document.createElement("span");
+            userPrefix.style.fontWeight = "bold";
+            userPrefix.textContent = "User: ";
+            var user = document.createElement("span");
+            user.textContent = newMessage.user;
+            userContainer.appendChild(userPrefix);
+            userContainer.appendChild(user);
+
             messageContainer.appendChild(titleContainer);
+            messageContainer.appendChild(userContainer);
 
             var content = document.createElement("div");
             content.classList.add("content");
