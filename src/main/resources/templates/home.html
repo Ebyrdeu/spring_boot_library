@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f5f5f5;
             font-family: Georgia, serif;
         }
@@ -24,88 +24,74 @@
             font-family: Georgia, serif;
         }
 
-        button {
-            padding: 10px 10px;
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
             font-size: 16px;
             border: 2px solid #ccc;
             border-radius: 5px;
             cursor: pointer;
             margin: 5px;
+            text-decoration: none;
+            color: #6B7E65;
+            background-color: #BEC8B6;
             font-family: Georgia, serif;
+            position: relative;
         }
 
-        .github-button:hover,
-        .no-login-button:hover,
-        .translate-button:hover {
+        .button:hover {
             border-color: #6B7E65;
         }
 
-        .github-button,
-        .no-login-button,
-        .translate-button,
-        .language-button {
-            background-color: #BEC8B6;
-            color: #6B7E65;
-            font-family: Georgia, serif;
-        }
-
-        .language-menu {
-            display: none;
+        .dropdown-menu {
             position: absolute;
             top: calc(100% + 5px);
-            right: 10px;
+            right: 0;
             background-color: #f5f5f5;
             border-radius: 5px;
             padding: 2px;
             z-index: 1;
             font-family: Georgia, serif;
             color: #6B7E65;
+            display: none;
         }
 
-        .translate-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-family: Georgia, serif;
+        .button:hover + .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 5px 10px;
             color: #6B7E65;
+            text-decoration: none;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #BEC8B6;
         }
     </style>
 </head>
 <body>
-<div>
-    <div id="language-menu" class="language-menu">
-        <p><button class="language-button" onclick="window.location.href='http://localhost:8080/web/users?lang=en'">English</button></p>
-        <p><button class="language-button" onclick="window.location.href='http://localhost:8080/web/users?lang=sv'">Svenska</button></p>
-    </div>
-    <button class="translate-button" onclick="toggleLanguageMenu()">Translate</button>
-</div>
-
 <div class="container">
     <h2>Welcome to the site</h2>
     <form id="home">
         <div class="github-signin">
-            <button type="button" class="github-button" onclick="window.location.href='/oauth2/authorization/github'">Sign in with GitHub</button>
+            <a class="button github-button" th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
         </div>
         <div class="no-login">
-            <button type="button" class="no-login-button" onclick="window.location.href='guest-page'">Continue without signing in</button>
+            <a class="button no-login-button" th:href="@{/guest-page}">Continue without signing in</a>
         </div>
     </form>
 </div>
 
-<script>
-    function toggleLanguageMenu() {
-        const menu = document.getElementById('language-menu');
-        if (menu.style.display === 'block') {
-            menu.style.display = 'none';
-        } else {
-            menu.style.display = 'block';
-            const translateButton = document.querySelector('.translate-button');
-            const menuHeight = menu.offsetHeight;
-            const translateButtonHeight = translateButton.offsetHeight;
-            const topOffset = translateButtonHeight + 2;
-            menu.style.top = `calc(2% + ${topOffset}px)`;
-        }
-    }
-</script>
+<div>
+    <label for="toggle-language" class="button translate-button">Translate</label>
+    <input id="toggle-language" type="checkbox" style="display: none;">
+    <div class="dropdown-menu language-menu">
+        <a class="language-button" th:href="@{/web/users(lang='en')}">English</a>
+        <a class="language-button" th:href="@{/web/users(lang='sv')}">Svenska</a>
+    </div>
+</div>
 </body>
 </html>

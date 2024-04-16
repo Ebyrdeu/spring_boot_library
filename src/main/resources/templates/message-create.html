@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,10 +82,9 @@
     </style>
 </head>
 <body>
-<h1>Write a new message</h1>
 <div class="container">
     <h1>Create a New Message</h1>
-    <form id="messageForm" action="/web/messages/new" method="post">
+    <form id="messageForm" th:action="@{/web/messages/new}" method="post">
         <div>
             <label for="messageTitle">Title:</label><br>
             <input type="text" id="messageTitle" name="title" placeholder="Enter message title" required>
@@ -105,39 +104,5 @@
     </form>
     <button class="return-btn" onclick="window.history.back()">Return</button>
 </div>
-
-<script>
-    document.getElementById("messageForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        var messageTitle = document.getElementById("messageTitle").value;
-        var messageContent = document.getElementById("messageContent").value;
-        var messageVisibility = document.getElementById("messageVisibility").value;
-
-        console.log("Message visibility:", messageVisibility); // Log the visibility value
-
-        if (messageTitle.trim() !== "" && messageContent.trim() !== "") {
-            // Create a new message object
-            var newMessage = {
-                title: messageTitle,
-                content: messageContent,
-                visibility: messageVisibility // Assign the selected value directly
-            };
-
-            // Retrieve the current array of messages from local storage or initialize it if not present
-            var messages = JSON.parse(localStorage.getItem("messages")) || [];
-
-            // Add the new message to the array
-            messages.push(newMessage);
-
-            // Save the updated array back to local storage
-            localStorage.setItem("messages", JSON.stringify(messages));
-
-            // Redirect to the user profile page
-            window.location.href = "/web/user-profile-page";
-        } else {
-            alert("Please enter both title and message.");
-        }
-    });
-</script>
 </body>
 </html>

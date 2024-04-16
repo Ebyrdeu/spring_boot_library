@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -84,7 +84,7 @@
 <body>
 <div class="container">
     <h1>Edit Profile</h1>
-    <form id="editProfileForm">
+    <form th:action="@{/profile/save}" method="post" enctype="multipart/form-data">
         <label for="profileName">Profile Name:</label>
         <input type="text" id="profileName" name="profileName" placeholder="Enter your profile name" required>
 
@@ -95,7 +95,7 @@
         <input type="email" id="email" name="email" placeholder="Enter your email address">
 
         <label for="profilePicture">Profile Picture:</label>
-        <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+        <input type="file" id="profilePicture" name="profilePicture" accept="image/*" onchange="previewImage(event)">
 
         <img id="preview" src="default-profile-picture.jpg" alt="Profile Picture">
 
@@ -106,28 +106,14 @@
     </form>
 </div>
 
-<script>
-    document.getElementById("profilePicture").addEventListener("change", function() {
+<script th:inline="javascript">
+    function previewImage(event) {
         var reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById("preview").src = e.target.result;
         }
-        reader.readAsDataURL(this.files[0]);
-    });
-
-    document.getElementById("editProfileForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-
-        var profileName = document.getElementById("profileName").value;
-        var fullName = document.getElementById("fullName").value;
-        var email = document.getElementById("email").value;
-
-        console.log("Profile Name:", profileName);
-        console.log("Full Name:", fullName);
-        console.log("Email:", email);
-
-        alert("Profile updated successfully!");
-    });
+        reader.readAsDataURL(event.target.files[0]);
+    }
 </script>
 </body>
 </html>

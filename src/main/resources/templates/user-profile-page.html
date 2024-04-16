@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,22 +32,20 @@
             border-radius: 5px;
             padding: 10px;
             margin-bottom: 20px;
-
-            .message {
-                background-color: #f9f9f9;
-                padding: 10px;
-                margin-bottom: 10px;
-                border-radius: 5px;
-                border-left: 5px solid #4F5E4A;
-                overflow: hidden;
-            }
-
-            .message .title {
-                font-size: 18px;
-                font-weight: bold;
-                color: #333;
-                margin-bottom: 5px;
-            }
+        }
+        .message {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 5px solid #4F5E4A;
+            overflow: hidden;
+        }
+        .message .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
         }
         .message p {
             margin: 0;
@@ -111,79 +109,37 @@
         <!-- Profile information -->
         <div class="profile-box">
             <!-- Your profile picture -->
-            <img src="your-profile-picture.jpg" alt="Your Profile Picture">
+            <img th:src="@{/your-profile-picture.jpg}" alt="Your Profile Picture">
             <!-- Your name -->
             <h3>Your Name</h3>
         </div>
         <!-- Buttons -->
         <div class="button-container">
             <!-- Edit profile button -->
-            <button type="button" class="edit-profile-button" onclick="window.location.href='user-edit'">Edit Profile</button>
+            <button type="button" class="edit-profile-button" th:onclick="'/user-edit'">Edit Profile</button>
             <!-- Create new message button -->
-            <button type="button" class="new-message-button" onclick="window.location.href='message-create'">Create New Message</button>
-            <!-- Log out button -->
-            <button type="button" class="logout-button" onclick="window.location.href='/logout'">Log Out</button>
+            <a href="/message-create.html" class="new-message-button">Create New Message</a>
+            <!-- Logout button -->
+            <button type="button" class="logout-button" th:onclick="'/logout'">Log Out</button>
         </div>
     </div>
 
 
     <div class="message-board" id="messageBoard">
-
+        <div class="message" th:each="message : ${messages}">
+            <div class="title">
+                <span style="font-weight: bold;">Title: </span>
+                <span th:text="${message.title}"></span>
+            </div>
+            <div class="user">
+                <span style="font-weight: bold;">User: </span>
+                <span th:text="${message.user}"></span>
+            </div>
+            <div class="content" th:text="${message.content}"></div>
+            <div class="visibility" th:text="'Visibility: ' + (${message.visibility} ? 'Public' : 'Private')"></div>
+            <button class="edit-button" th:onclick="'/web/message-edit?id=' + ${message.id}">Edit</button>
+        </div>
     </div>
 </div>
-
-<script>
-    var messages = JSON.parse(localStorage.getItem("messages"));
-    if (messages) {
-        messages.forEach(function(newMessage) {
-            var messageContainer = document.createElement("div");
-            messageContainer.classList.add("message");
-
-            var titleContainer = document.createElement("div");
-            titleContainer.classList.add("title");
-            var titlePrefix = document.createElement("span");
-            titlePrefix.style.fontWeight = "bold";
-            titlePrefix.textContent = "Title: ";
-            var title = document.createElement("span");
-            title.textContent = newMessage.title;
-            titleContainer.appendChild(titlePrefix);
-            titleContainer.appendChild(title);
-
-            // Add user information
-            var userContainer = document.createElement("div");
-            userContainer.classList.add("user");
-            var userPrefix = document.createElement("span");
-            userPrefix.style.fontWeight = "bold";
-            userPrefix.textContent = "User: ";
-            var user = document.createElement("span");
-            user.textContent = newMessage.user;
-            userContainer.appendChild(userPrefix);
-            userContainer.appendChild(user);
-
-            messageContainer.appendChild(titleContainer);
-            messageContainer.appendChild(userContainer);
-
-            var content = document.createElement("div");
-            content.classList.add("content");
-            content.textContent = newMessage.content;
-            messageContainer.appendChild(content);
-
-            var visibility = document.createElement("div");
-            visibility.classList.add("visibility");
-            visibility.textContent = "Visibility: " + (newMessage.visibility === "false" ? "Private" : "Public");
-            messageContainer.appendChild(visibility);
-
-            var editButton = document.createElement("button");
-            editButton.textContent = "Edit";
-            editButton.classList.add("edit-button");
-            editButton.addEventListener("click", function() {
-                window.location.href = '/web/message-edit?id=' + newMessage.id;
-            });
-            messageContainer.appendChild(editButton);
-
-            document.getElementById("messageBoard").appendChild(messageContainer);
-        });
-    }
-</script>
 </body>
 </html>

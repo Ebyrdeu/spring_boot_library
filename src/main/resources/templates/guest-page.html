@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Guest Board</title>
@@ -60,40 +60,18 @@
 <button type="button" class="return-button" onclick="window.location='home'">Return to Home</button>
 <div class="container" id="messageContainer">
     <!-- Messages will be displayed here -->
+    <div th:each="message : ${messages}">
+        <div class="message" th:if="${message.visibility == 'Public'}">
+            <div class="title">
+                <span style="font-weight: bold;">Title: </span><span th:text="${message.title}"></span>
+            </div>
+            <div class="user">
+                <span style="font-weight: bold;">User: </span><span th:text="${message.user}"></span>
+            </div>
+            <div class="content" th:text="${message.content}"></div>
+            <div class="visibility">Visibility: Public</div>
+        </div>
+    </div>
 </div>
-<script>
-    var messages = JSON.parse(localStorage.getItem("messages"));
-    if (messages) {
-        messages.forEach(function(newMessage) {
-            if (newMessage.visibility === "Public") { // Check if the message is public
-                var messageContainer = document.createElement("div");
-                messageContainer.classList.add("message");
-
-                var titleContainer = document.createElement("div");
-                titleContainer.classList.add("title");
-                var titlePrefix = document.createElement("span");
-                titlePrefix.style.fontWeight = "bold";
-                titlePrefix.textContent = "Title: ";
-                var title = document.createElement("span");
-                title.textContent = newMessage.title;
-                titleContainer.appendChild(titlePrefix);
-                titleContainer.appendChild(title);
-                messageContainer.appendChild(titleContainer);
-
-                var content = document.createElement("div");
-                content.classList.add("content");
-                content.textContent = newMessage.content;
-                messageContainer.appendChild(content);
-
-                var visibility = document.createElement("div");
-                visibility.classList.add("visibility");
-                visibility.textContent = "Visibility: Public"; // You already know it's public, so you can hard-code this
-                messageContainer.appendChild(visibility);
-
-                document.getElementById("messageBoard").appendChild(messageContainer);
-            }
-        });
-    }
-</script>
 </body>
 </html>
