@@ -26,10 +26,10 @@ public class User extends Auditable {
     @Column(unique = true, nullable = false, name = "username")
     private String username;
 
-    @Column(name = "firstName")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "lastName")
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "avatar")
@@ -40,7 +40,10 @@ public class User extends Auditable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private Role role = Role.USER;
+    private Role role = Role.ROLE_USER;
+
+    @Column(nullable = false, name = "github_id")
+    private Integer githubId;
 
     @Override
     public final boolean equals(Object o) {

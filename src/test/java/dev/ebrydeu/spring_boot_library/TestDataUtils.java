@@ -18,7 +18,7 @@ public class TestDataUtils {
                 .lastName("Last One")
                 .avatar("One picture")
                 .email("one@gmail.com")
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .build();
     }
 
@@ -29,7 +29,7 @@ public class TestDataUtils {
                 .firstName("First Two")
                 .lastName("Last Two")
                 .avatar("Two picture")
-                .role(Role.ADMIN)
+                .role(Role.ROLE_ADMIN)
                 .email("two@gmail.com")
                 .build();
     }

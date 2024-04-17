@@ -30,7 +30,10 @@ public record UserDto(
         String email,
 
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-        Role role
+        Role role,
+
+        @Schema(accessMode = Schema.AccessMode.READ_ONLY, example = "123123")
+        Integer githubId
 ) {
     public static UserDto map(User entity) {
         return new UserDto(
@@ -40,7 +43,8 @@ public record UserDto(
                 entity.getLastName(),
                 entity.getAvatar(),
                 entity.getEmail(),
-                entity.getRole()
+                entity.getRole(),
+                entity.getGithubId()
         );
     }
 
@@ -53,6 +57,7 @@ public record UserDto(
         user.setAvatar(dto.avatar);
         user.setEmail(dto.email);
         user.setRole(dto.role);
+        user.setGithubId(dto.githubId);
         return user;
     }
 }
