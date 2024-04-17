@@ -19,6 +19,7 @@ public class TestDataUtils {
                 .avatar("One picture")
                 .email("one@gmail.com")
                 .role(Role.ROLE_USER)
+                .githubId(123123123)
                 .build();
     }
 
@@ -31,6 +32,7 @@ public class TestDataUtils {
                 .avatar("Two picture")
                 .role(Role.ROLE_ADMIN)
                 .email("two@gmail.com")
+                .githubId(32131231)
                 .build();
     }
 
