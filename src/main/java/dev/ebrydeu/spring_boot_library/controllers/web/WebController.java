@@ -48,6 +48,16 @@ public class WebController {
         return "redirect:/web/users";
     }
 
+    @GetMapping("/message-create")
+    public String createMessage() {
+        return "message-create";
+    }
+
+    @GetMapping("/user-edit")
+    public String editUser() {
+        return "user-edit";
+    }
+
     @PostMapping("/messages/new")
     public String createMessage(@ModelAttribute("message") MessageDto messageDto) {
         messageService.save(messageDto);

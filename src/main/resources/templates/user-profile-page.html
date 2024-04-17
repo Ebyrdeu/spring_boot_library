@@ -133,7 +133,7 @@
             <!-- Edit profile button -->
             <a th:href="@{/web/user-edit}" class="edit-profile-button">Edit Profile</a>
             <!-- Create new message button -->
-            <a href="/web/message-create" class="edit-profile-button new-message-button">Create New Message</a>
+            <a th:href="@{/web/message-create}" class="new-message-button">Create New Message</a>
             <!-- Logout button -->
             <button type="button" class="logout-button" th:onclick="'/logout'">Log Out</button>
         </div>

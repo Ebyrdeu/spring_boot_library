@@ -24,7 +24,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**", "/user-profile-page").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/user-profile-page"))
+                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/web/user-profile-page"))
                 .httpBasic(withDefaults())
                 .formLogin(formLogin -> {
                     formLogin.defaultSuccessUrl("/swagger-ui/index.html#/");
@@ -36,6 +36,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
 }
