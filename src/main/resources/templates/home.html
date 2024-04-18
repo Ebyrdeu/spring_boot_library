@@ -35,7 +35,9 @@
             color: #6B7E65;
             background-color: #BEC8B6;
             font-family: Georgia, serif;
-            position: relative;
+            position: fixed;
+            top: 25px;
+            right: 105px;
         }
 
         .button:hover {
@@ -53,11 +55,23 @@
             color: #6B7E65;
             background-color: #BEC8B6;
             font-family: Georgia, serif;
-            position: relative;
+            position: fixed;
+            top: 25px;
+        }
+
+        .language-button:first-child {
+            left: 35px;
+        }
+
+        .language-button:nth-child(2) {
+            left: 150px;
         }
 
         .language-button:hover {
             border-color: #6B7E65;
+        }
+        .messageContainer {
+            margin-top: 120px; /* Adjust as needed */
         }
 
     </style>
@@ -69,10 +83,20 @@
         <div class="github-signin">
             <a class="button github-button" th:if="${isAuthenticated}" th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
         </div>
-        <div class="no-login">
-            <a class="button no-login-button" th:if="${isAuthenticated}" th:href="@{/guest-page}">Continue without signing in</a>
-        </div>
     </form>
+</div>
+<div class="container" id="messageContainer">
+    <!-- Sample Message -->
+    <div class="message">
+        <div class="title">
+            <span style="font-weight: bold;">Title: </span><span>Sample Message Title</span>
+        </div>
+        <div class="user">
+            <span style="font-weight: bold;">User: </span><span>John Doe</span>
+        </div>
+        <div class="content">This is a sample message content.</div>
+        <div class="visibility">Visibility: Public</div>
+    </div>
 </div>
 
 <div class="language-buttons">
@@ -80,6 +104,7 @@
         <button class="language-button" type="submit" name="lang" value="en">English</button>
         <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
     </form>
+</div>
 </div>
 </body>
 </html>
