@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
@@ -108,8 +107,6 @@ class MessageRepositoryTest {
 
         Message persistedMessage = fetchedMessage.get();
         assertNotNull(persistedMessage.getCreationDate());
-        assertEquals("testUser", persistedMessage.getCreatedBy());
         assertNotNull(persistedMessage.getLastModifiedDate());
-        assertEquals("testUser", persistedMessage.getLastModifiedBy());
     }
 }

@@ -10,14 +10,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-
 <div class="navbar bg-base-100">
     <div class="flex-1">
         <a th:href="@{/web/home}" class="btn btn-ghost text-xl">definitely not x</a>
     </div>
     <div class="flex justify-end flex-1 px-2">
         <div class="flex items-stretch gap-3 ">
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/web/profile}">profile</a>
+            <a class="btn" th:if="${isAuthenticated}" th:href="@{/web/home}">home</a>
             <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
             <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
             <div class="dropdown dropdown-end">
@@ -29,10 +28,9 @@
         </div>
     </div>
 </div>
-
 <div class="hero min-h-screen bg-base-200">
     <div class="hero-content text-center">
-        <div class="max-w-md">public</div>
+        <div class="max-w-md">private</div>
     </div>
 </div>
 </body>
