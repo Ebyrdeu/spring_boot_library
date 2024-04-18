@@ -1,14 +1,13 @@
 package dev.ebrydeu.spring_boot_library.config;
 
-import dev.ebrydeu.spring_boot_library.providers.SwaggerAdminProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestClient;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
@@ -20,25 +19,38 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/home", "/oauth2/authorization/github", "/user-profile-page", "/api/public/**", "/swagger/login", "swagger-login").permitAll()
+                        .requestMatchers("/web/home", "/home", "/auth/login", "/oauth2/**").permitAll()
                         .requestMatchers(SWAGGER_PATHS).hasRole("ADMIN")
-                        .requestMatchers("/api/user/**", "/user-profile-page").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/web/user-profile-page"))
-                .httpBasic(withDefaults())
-                .formLogin(formLogin -> {
-                    formLogin.defaultSuccessUrl("/swagger-ui/index.html#/");
-                    formLogin.loginPage("/swagger/login");
+                .oauth2Login(oauth2 -> {
+                    oauth2.defaultSuccessUrl("/web/profile");
+                    oauth2.loginPage("/auth/login");
                 })
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
-                .logout(logout -> logout.logoutSuccessUrl("/home").permitAll())
-                .authenticationProvider(new SwaggerAdminProvider());
+                .logout(logout -> {
+                    logout.logoutUrl("/auth/logout");
+                    logout.logoutSuccessUrl("/auth/login");
+                    logout.deleteCookies("JSESSIONID");
+                    logout.clearAuthentication(true);
+                    logout.invalidateHttpSession(true);
+                });
 
         return http.build();
     }
+
     @Bean
-    public RestClient restClient() {
-        return RestClient.create(); // Instantiate the concrete subclass instead
+    RestClient restClient() {
+        return RestClient.create();
     }
+
+
+    @Bean
+    public static RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER\n" +
+                "ROLE_USER > ROLE_GUEST");
+        return hierarchy;
+    }
+
+
 }

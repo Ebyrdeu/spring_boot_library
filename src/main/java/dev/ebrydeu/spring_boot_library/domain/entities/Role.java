@@ -1,6 +1,6 @@
 package dev.ebrydeu.spring_boot_library.domain.entities;
 
-public enum Role{
-    USER,
-    ADMIN
+public enum Role {
+    ROLE_USER,
+    ROLE_ADMIN
 }

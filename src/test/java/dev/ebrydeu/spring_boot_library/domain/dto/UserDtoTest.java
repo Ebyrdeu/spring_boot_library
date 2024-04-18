@@ -24,8 +24,9 @@ class UserDtoTest {
         soft.assertThat(entity.getLastName()).isEqualTo(dto.lastName());
         soft.assertThat(entity.getAvatar()).isEqualTo(dto.avatar());
         soft.assertThat(entity.getEmail()).isEqualTo(dto.email());
-
         soft.assertThat(entity.getRole()).isEqualTo(dto.role());
+        soft.assertThat(entity.getGithubId()).isEqualTo(dto.githubId());
+
         soft.assertAll();
     }
 
@@ -44,6 +45,7 @@ class UserDtoTest {
         soft.assertThat(dto.avatar()).isEqualTo(entity.getAvatar());
         soft.assertThat(dto.email()).isEqualTo(entity.getEmail());
         soft.assertThat(dto.role()).isEqualTo(entity.getRole());
+        soft.assertThat(dto.githubId()).isEqualTo(entity.getGithubId());
         soft.assertAll();
     }
 }

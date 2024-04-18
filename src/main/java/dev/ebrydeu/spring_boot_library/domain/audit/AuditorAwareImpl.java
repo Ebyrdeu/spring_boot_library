@@ -1,15 +1,24 @@
 package dev.ebrydeu.spring_boot_library.domain.audit;
 
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
 public class AuditorAwareImpl implements AuditorAware<String> {
+
+
     @Override
     public Optional<String> getCurrentAuditor() {
-        // Placeholder for the current user
-        return Optional.of("testUser");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            return Optional.of(authentication.getName());
+        } else {
+            return Optional.empty();
+        }
     }
 }

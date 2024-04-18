@@ -9,14 +9,13 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends ListCrudRepository<User, Long> {
+    Optional<User> findByGithubId(Integer githubUserId);
+
+    List<User> findByUsername(String username);
 
     List<User> findByFirstName(String firstName);
 
     List<User> findByLastName(String lastName);
 
-    Optional<User> findByUserName(String userName);
-    Optional<User> findById(Integer id);
     Optional<User> findByEmail(String email);
-
-
 }
