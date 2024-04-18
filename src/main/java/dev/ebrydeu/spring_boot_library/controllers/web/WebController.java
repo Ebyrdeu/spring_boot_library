@@ -1,7 +1,9 @@
 package dev.ebrydeu.spring_boot_library.controllers.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
+import dev.ebrydeu.spring_boot_library.services.LibreTranslateService;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
 import dev.ebrydeu.spring_boot_library.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -15,11 +17,14 @@ import java.util.List;
 public class WebController {
     private final UserService userService;
     private final MessageService messageService;
+    private final LibreTranslateService translateService;
 
-    public WebController(UserService userService, MessageService messageService) {
+    public WebController(UserService userService, MessageService messageService, LibreTranslateService translateService) {
         this.userService = userService;
         this.messageService = messageService;
+        this.translateService = translateService;
     }
+
 
     @GetMapping("/home")
     public String home() {
@@ -79,6 +84,19 @@ public class WebController {
     public String deleteMessage(@PathVariable Long id) {
         messageService.delete(id);
         return "redirect:/web/messages";
+    }
+
+    @GetMapping("/messages/translate")
+    public String translateMessage(Model model, @PathVariable Long id, @ModelAttribute("message") MessageDto dto) throws JsonProcessingException {
+        MessageDto message = messageService.findById(id);
+        String translatedTitle = translateService.translate(message.title());
+        String translatedMessage = translateService.translate(message.body());
+
+        model.addAttribute("title", translatedTitle);
+        model.addAttribute("message", translatedMessage);
+        model.addAttribute("username", message.user().username());
+        model.addAttribute("date", message.date());
+        return "translate-message";
     }
 
 }
