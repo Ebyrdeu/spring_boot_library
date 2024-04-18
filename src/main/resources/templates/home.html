@@ -42,39 +42,30 @@
         .button:hover {
             border-color: #6B7E65;
         }
-
-        .dropdown-menu {
-            position: absolute;
-            top: calc(100% + 5px);
-            right: 0;
-            background-color: #f5f5f5;
+        .language-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #ccc;
             border-radius: 5px;
-            padding: 2px;
-            z-index: 1;
-            font-family: Georgia, serif;
-            color: #6B7E65;
-            display: none;
-        }
-
-        .button:hover + .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 5px 10px;
-            color: #6B7E65;
+            cursor: pointer;
+            margin: 5px;
             text-decoration: none;
+            color: #6B7E65;
+            background-color: #BEC8B6;
+            font-family: Georgia, serif;
+            position: relative;
         }
 
-        .dropdown-menu a:hover {
-            background-color: #BEC8B6;
+        .language-button:hover {
+            border-color: #6B7E65;
         }
+
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>Welcome to the site</h2>
+    <h1 class="welcome-message" th:text="#{welcome}"></h1>
     <form id="home">
         <div class="github-signin">
             <a class="button github-button" th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
@@ -85,13 +76,12 @@
     </form>
 </div>
 
-<div>
-    <label for="toggle-language" class="button translate-button">Translate</label>
-    <input id="toggle-language" type="checkbox" style="display: none;">
-    <div class="dropdown-menu language-menu">
-        <a class="language-button" th:href="@{/web/users(lang='en')}">English</a>
-        <a class="language-button" th:href="@{/web/users(lang='sv')}">Svenska</a>
-    </div>
+<div class="language-buttons">
+    <form id="translate-form" action="#" method="get">
+        <button class="language-button" type="submit" name="lang" value="en">English</button>
+        <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
+    </form>
+</div>
 </div>
 </body>
 </html>

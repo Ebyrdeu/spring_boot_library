@@ -71,6 +71,7 @@ public class WebController {
         return "messages"; //web page for all messages accessible for logged users
     }
 
+
     //method from 40-guest-login-page
 /*    @GetMapping("/public/messages")
     public String findPublicMessages(Model model) {
