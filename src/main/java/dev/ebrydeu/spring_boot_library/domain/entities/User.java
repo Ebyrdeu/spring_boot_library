@@ -24,7 +24,7 @@ public class User extends Auditable {
     private Long id;
 
     @Column(unique = true, nullable = false, name = "username")
-    private String userName;
+    private String username;
 
     @Column(name = "first_name")
     private String firstName;

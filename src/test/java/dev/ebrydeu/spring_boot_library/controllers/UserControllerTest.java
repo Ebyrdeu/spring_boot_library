@@ -357,7 +357,7 @@ class UserControllerTest {
 
             mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value(userTwo.getUserName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value(userTwo.getUsername()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value(userTwo.getFirstName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastName").value(userTwo.getLastName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.avatar").value(userTwo.getAvatar()))
@@ -383,7 +383,7 @@ class UserControllerTest {
 
             mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1").contentType(MediaType.APPLICATION_JSON).content(userJson))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value(user.getUserName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value(user.getUsername()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value(user.getFirstName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.lastName").value(user.getLastName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.avatar").value(user.getAvatar()))

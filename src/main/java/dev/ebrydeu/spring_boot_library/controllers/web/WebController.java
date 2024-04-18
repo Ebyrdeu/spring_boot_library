@@ -14,8 +14,9 @@ import dev.ebrydeu.spring_boot_library.services.UserService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/web")
@@ -27,7 +28,16 @@ public class WebController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
         model.addAttribute("isAuthenticated", isAuthenticated);
-        return "user-profile";
+        return "user-profile-page";
+    }
+
+
+    @GetMapping("/home")
+    public String home(Model model, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        return "home";
     }
     private final UserService userService;
     private final MessageService messageService;
@@ -38,15 +48,6 @@ public class WebController {
         this.messageService = messageService;
         this.translateService = translateService;
     }
-
-    @GetMapping("/home")
-    public String home(Model model, HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
-        model.addAttribute("isAuthenticated", isAuthenticated);
-        return "home";
-    }
-
 
     @GetMapping("/user-profile-page")
     public String userProfilePage() {

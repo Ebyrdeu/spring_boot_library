@@ -13,7 +13,7 @@ public class TestDataUtils {
     public static User createUserOne() {
         return User.builder()
                 .id(1L)
-                .userName("User One")
+                .username("User One")
                 .firstName("First One")
                 .lastName("Last One")
                 .avatar("One picture")
@@ -26,7 +26,7 @@ public class TestDataUtils {
     public static User createUserTwo() {
         return User.builder()
                 .id(2L)
-                .userName("User Two")
+                .username("User Two")
                 .firstName("First Two")
                 .lastName("Last Two")
                 .avatar("Two picture")

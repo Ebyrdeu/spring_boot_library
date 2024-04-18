@@ -19,7 +19,7 @@ class UserDtoTest {
         User entity = UserDto.map(dto);
 
         soft.assertThat(entity.getId()).isEqualTo(dto.id());
-        soft.assertThat(entity.getUserName()).isEqualTo(dto.username());
+        soft.assertThat(entity.getUsername()).isEqualTo(dto.username());
         soft.assertThat(entity.getFirstName()).isEqualTo(dto.firstName());
         soft.assertThat(entity.getLastName()).isEqualTo(dto.lastName());
         soft.assertThat(entity.getAvatar()).isEqualTo(dto.avatar());
@@ -39,7 +39,7 @@ class UserDtoTest {
         UserDto dto = UserDto.map(entity);
 
         soft.assertThat(dto.id()).isEqualTo(entity.getId());
-        soft.assertThat(dto.username()).isEqualTo(entity.getUserName());
+        soft.assertThat(dto.username()).isEqualTo(entity.getUsername());
         soft.assertThat(dto.firstName()).isEqualTo(entity.getFirstName());
         soft.assertThat(dto.lastName()).isEqualTo(entity.getLastName());
         soft.assertThat(dto.avatar()).isEqualTo(entity.getAvatar());

@@ -23,7 +23,7 @@ class MessageDtoTest {
         soft.assertThat(entity.getDate()).isEqualTo(dto.date());
 
         soft.assertThat(entity.getUser().getId()).isEqualTo(dto.user().id());
-        soft.assertThat(entity.getUser().getUserName()).isEqualTo(dto.user().username());
+        soft.assertThat(entity.getUser().getUsername()).isEqualTo(dto.user().username());
 
         soft.assertAll();
 
@@ -44,7 +44,7 @@ class MessageDtoTest {
         soft.assertThat(dto.isPrivate()).isEqualTo(entity.isPrivate());
 
         soft.assertThat(dto.user().id()).isEqualTo(entity.getUser().getId());
-        soft.assertThat(dto.user().username()).isEqualTo(entity.getUser().getUserName());
+        soft.assertThat(dto.user().username()).isEqualTo(entity.getUser().getUsername());
 
         soft.assertAll();
     }

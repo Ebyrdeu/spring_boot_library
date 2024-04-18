@@ -38,7 +38,7 @@ public record UserDto(
     public static UserDto map(User entity) {
         return new UserDto(
                 entity.getId(),
-                entity.getUserName(),
+                entity.getUsername(),
                 entity.getFirstName(),
                 entity.getLastName(),
                 entity.getAvatar(),
@@ -51,7 +51,7 @@ public record UserDto(
     public static User map(UserDto dto) {
         User user = new User();
         user.setId(dto.id);
-        user.setUserName(dto.username);
+        user.setUsername(dto.username);
         user.setFirstName(dto.firstName);
         user.setLastName(dto.lastName);
         user.setAvatar(dto.avatar);

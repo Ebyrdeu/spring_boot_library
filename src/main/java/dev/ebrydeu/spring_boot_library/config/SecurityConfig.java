@@ -38,11 +38,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    RestClient restClient() {
-        return RestClient.create();
-    }
-
 
     @Bean
     public static RoleHierarchy roleHierarchy() {
