@@ -41,8 +41,8 @@ public record MessageDto(
                 entity.getTitle(),
                 entity.getBody(),
                 entity.getDate(),
-                entity.isPrivate(),
-                UserDto.map(entity.getUser())
+                entity.isPrivate(), null
+                //UserDto.map(entity.getUser())
         );
     }
 
@@ -51,9 +51,9 @@ public record MessageDto(
         message.setId(dto.id);
         message.setTitle(dto.title);
         message.setBody(dto.body);
-        message.setDate(dto.date);
+        //message.setDate(dto.date);
         message.setPrivate(dto.isPrivate);
-        message.setUser(UserDto.map(dto.user));
+        //message.setUser(UserDto.map(dto.user));
 
         return message;
     }

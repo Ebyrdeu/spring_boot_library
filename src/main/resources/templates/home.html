@@ -22,6 +22,10 @@
             color: #6B7E65;
             font-family: Georgia, serif;
         }
+        .welcome-message {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
 
         .button {
             display: inline-block;
@@ -35,9 +39,7 @@
             color: #6B7E65;
             background-color: #BEC8B6;
             font-family: Georgia, serif;
-            position: fixed;
-            top: 25px;
-            right: 105px;
+            position: relative;
         }
 
         .button:hover {
@@ -70,33 +72,19 @@
         .language-button:hover {
             border-color: #6B7E65;
         }
-        .messageContainer {
-            margin-top: 120px; /* Adjust as needed */
-        }
+
 
     </style>
 </head>
 <body>
 <div class="container">
-    <h1 class="welcome-message" th:text="#{welcome}"></h1>
+    <h1 class="welcome-message">Welcome</h1>
     <form id="home">
         <div class="github-signin">
-            <a class="button github-button" th:if="${isAuthenticated}" th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
+            <a class="button github-button" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
+            <a class="button no-login-button" th:href="@{/public}">Continue without signing in</a>
         </div>
     </form>
-</div>
-<div class="container" id="messageContainer">
-    <!-- Sample Message -->
-    <div class="message">
-        <div class="title">
-            <span style="font-weight: bold;">Title: </span><span>Sample Message Title</span>
-        </div>
-        <div class="user">
-            <span style="font-weight: bold;">User: </span><span>John Doe</span>
-        </div>
-        <div class="content">This is a sample message content.</div>
-        <div class="visibility">Visibility: Public</div>
-    </div>
 </div>
 
 <div class="language-buttons">

@@ -38,7 +38,7 @@ public class Message extends Auditable {
     @CreationTimestamp
     private Instant date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

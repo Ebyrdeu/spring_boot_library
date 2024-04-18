@@ -56,7 +56,7 @@ public class WebController {
 
     @GetMapping("/guest-page")
     public String guestPage() {
-        return "guest-page";
+        return "public";
     }
 
     @PostMapping("/users")
@@ -91,7 +91,7 @@ public class WebController {
     public String findAllMessages(Model model) {
         List<MessageDto> messages = messageService.findAll();
         model.addAttribute("messages", messages);
-        return "messages"; //web page for all messages accessible for logged users
+        return "all-messages"; //web page for all messages accessible for logged users
     }
 
 

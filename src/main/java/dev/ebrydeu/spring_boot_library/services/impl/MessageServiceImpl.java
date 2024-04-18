@@ -3,8 +3,11 @@ package dev.ebrydeu.spring_boot_library.services.impl;
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import dev.ebrydeu.spring_boot_library.repositories.MessageRepository;
+import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
+import dev.ebrydeu.spring_boot_library.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class MessageServiceImpl implements MessageService {
     public MessageDto save(MessageDto dto) {
         try {
             Message message = MessageDto.map(dto);
+            var userId = SecurityContextHolder.getContext().getAuthentication().getName();
+            userRepository.findByGithubId(Integer.valueOf(userId)).ifPresent(message::setUser);
             Message savedMessage = repository.save(message);
             return MessageDto.map(savedMessage);
         } catch (Exception e) {
