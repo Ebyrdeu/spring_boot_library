@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Var;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,7 @@ import static dev.ebrydeu.spring_boot_library.libs.Utils.isNullable;
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository repository;
-
+    private final UserRepository userRepository;
     @Override
     @CacheEvict("messages")
     public MessageDto save(MessageDto dto) {

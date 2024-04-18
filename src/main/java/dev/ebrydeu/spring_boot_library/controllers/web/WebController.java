@@ -54,7 +54,7 @@ public class WebController {
         return "user-profile-page";
     }
 
-    @GetMapping("/guest-page")
+    @GetMapping("/public")
     public String guestPage() {
         return "public";
     }

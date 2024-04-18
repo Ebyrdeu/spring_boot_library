@@ -48,7 +48,9 @@ public record MessageDto(
 
     public static Message map(MessageDto dto) {
         Message message = new Message();
-        message.setId(dto.id);
+        if (dto.id != null) {
+            message.setId(dto.id);
+        }
         message.setTitle(dto.title);
         message.setBody(dto.body);
         //message.setDate(dto.date);

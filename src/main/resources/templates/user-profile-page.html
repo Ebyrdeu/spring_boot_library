@@ -163,7 +163,7 @@
             <!-- Create new message button -->
             <a th:href="@{/web/message-create}" class="new-message-button">Create New Message</a>
             <!-- Logout button -->
-            <button type="button" class="logout-button" th:onclick="'/logout'">Log Out</button>
+            <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
         </div>
     </div>
 
