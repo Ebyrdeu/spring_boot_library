@@ -7,6 +7,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestClient;
 
 
 @Configuration
@@ -35,6 +36,11 @@ public class SecurityConfig {
                 });
 
         return http.build();
+    }
+
+    @Bean
+    RestClient restClient() {
+        return RestClient.create();
     }
 
 
