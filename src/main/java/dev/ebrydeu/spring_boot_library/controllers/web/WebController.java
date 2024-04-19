@@ -12,8 +12,10 @@ import dev.ebrydeu.spring_boot_library.services.LibreTranslateService;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
 import dev.ebrydeu.spring_boot_library.services.UserService;
 
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -74,6 +76,17 @@ public class WebController {
     @GetMapping("/message-create")
     public String createMessage() {
         return "message-create";
+    }
+    @PostMapping("/myprofile/create")
+    public String createMessage(@Valid @ModelAttribute("formData") CreateMessageFormData messageForm,
+                                BindingResult bindingResult,
+                                @AuthenticationPrincipal OAuth2User principal) {
+        if (bindingResult.hasErrors())
+            return "message-create";
+
+        User user = (User) userService.findByUsername(principal.getAttribute("login"));
+        messageService.save(MessageDto.map(messageForm.toEntity(user)));
+        return "redirect:/web/myprofile";
     }
 
     @GetMapping("/user-edit")
