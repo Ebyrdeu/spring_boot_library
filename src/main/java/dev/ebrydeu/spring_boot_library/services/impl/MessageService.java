@@ -52,6 +52,8 @@ public class MessageService {
         return messageRepository.findAllByUser(user);
     }
 
+
+
     @CacheEvict(value = {"messages", "publicMessages"}, allEntries = true)
     public void save(Message message) {
         messageRepository.save(message);

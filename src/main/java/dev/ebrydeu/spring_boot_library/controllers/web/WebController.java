@@ -10,6 +10,7 @@ import dev.ebrydeu.spring_boot_library.services.impl.MessageService;
 import dev.ebrydeu.spring_boot_library.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -52,8 +53,15 @@ public class WebController {
     public String profile(Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+
+        // Adding messages to the model if the user is authenticated
+        if (isAuthenticated) {
+            List<MessageAndUsername> messages = messageService.findAllMessages();
+            model.addAttribute("messages", messages);
+        }
+
         model.addAttribute("isAuthenticated", isAuthenticated);
-        return "user-profile-page";
+        return "user-profile-page"; // Name of your Thymeleaf template
     }
 
     @GetMapping("/messages")
@@ -181,22 +189,32 @@ public class WebController {
         return "redirect:/web/myprofile";
     }
 
-    @GetMapping("/myprofile/create")
+    @GetMapping("/public-page")
+    public String guestPage(Model model, HttpServletRequest httpServletRequest) {
+        List<MessageAndUsername> publicMessages = messageService.findAllByPrivateMessageIsFalse();
+        int allPublicMessageCount = publicMessages.size(); // Efficiently use already fetched data
+
+        model.addAttribute("messages", publicMessages);
+        model.addAttribute("httpServletRequest", httpServletRequest);
+        model.addAttribute("totalPublicMessages", allPublicMessageCount);
+        return "public";
+    }
+    @GetMapping("/message-create")
     public String createMessage(Model model) {
         model.addAttribute("formData", new CreateMessageFormData());
-        return "createmessage";
+        return "message-create";
     }
 
-    @PostMapping("/myprofile/create")
+    @PostMapping("/message/new")
     public String createMessage(@Valid @ModelAttribute("formData") CreateMessageFormData messageForm,
                                 BindingResult bindingResult,
                                 @AuthenticationPrincipal OAuth2User principal) {
         if (bindingResult.hasErrors())
-            return "createmessage";
+            return "message-create";
 
         User user = userService.findByGitHubId(principal.getAttribute("id"));
         messageService.save(messageForm.toEntity(user));
-        return "redirect:/web/myprofile";
+        return "redirect:/web/public-page";
     }
 
     //GetMapping("/messages/translate")

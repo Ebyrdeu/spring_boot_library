@@ -25,6 +25,30 @@
             margin-bottom: 20px;
             color: #4F5E4A;
         }
+        .profile-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .profile-box {
+            text-align: center;
+        }
+        .button-container {
+            text-align: center;
+        }
+        .edit-profile-button, .new-message-button {
+            padding: 10px 20px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block; /* To align buttons in the container */
+        }
+        .edit-profile-button:hover, .new-message-button:hover {
+            background-color: #6B7E65;
+        }
         .message-board {
             max-height: 400px;
             overflow-y: auto;
@@ -39,105 +63,21 @@
             margin-bottom: 10px;
             border-radius: 5px;
             border-left: 5px solid #4F5E4A;
-            overflow: hidden;
         }
-        .message .title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
+        .language-buttons {
+            margin: 20px 0;
+            text-align: center;
         }
-        .message p {
-            margin: 0;
-        }
-        .profile-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .profile-box {
-            display: flex;
-            align-items: center;
-        }
-        .profile-box img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .profile-box h3 {
-            margin: 0;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-        }
-        .edit-profile-button, .logout-button, .new-message-button {
-            padding: 5px;
-            background-color: #4F5E4A;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 5px;
-        }
-        .edit-profile-button:hover, .logout-button:hover, .new-message-button:hover {
-            background-color: #6B7E65;
-        }
-        .edit-button {
-            padding: 5px;
-            background-color: #4F5E4A;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .edit-button:hover {
-            background-color: #6B7E65;
-        }
-        .button-container .new-message-button {
-            padding: 10px 20px;
-            background-color: #4F5E4A;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 5px;
-            text-decoration: none;
-            font-family: inherit;
-            font-size: inherit;
-        }
-        .button-container .new-message-button:hover {
-            background-color: #6B7E65;
-        }
-
         .language-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: 2px solid #ccc;
+            padding: 10px 15px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 5px;
             text-decoration: none;
-            color: #fff;
-            background-color: #4F5E4A;
-            font-family: Georgia, serif;
-            position: fixed;
-            top: 20px;
+            margin: 0 5px;
         }
-
-        .language-button:first-child {
-            left: 140px;
-        }
-
-        .language-button:nth-child(2) {
-            left: 250px;
-        }
-
         .language-button:hover {
             background-color: #6B7E65;
         }
@@ -147,40 +87,32 @@
 <div class="container">
     <h1>Welcome to Your Profile Home</h1>
 
-    <!-- Profile information and buttons -->
     <div class="profile-container">
-        <!-- Profile information -->
         <div class="profile-box">
-            <!-- Your profile picture -->
             <img th:src="@{/your-profile-picture.jpg}" alt="Your Profile Picture">
-            <!-- Your name -->
             <h3>Your Name</h3>
         </div>
-        <!-- Buttons -->
         <div class="button-container">
-            <!-- Edit profile button -->
             <a th:href="@{/web/user-edit}" class="edit-profile-button">Edit Profile</a>
-            <!-- Create new message button -->
             <a th:href="@{/web/message-create}" class="new-message-button">Create New Message</a>
-            <!-- Logout button -->
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
+            <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">Logout</a>
         </div>
     </div>
 
-
-    <div class="message-board" id="messageBoard">
-        <div class="message" th:each="message : ${messages}">
+    <div class="message-board" th:if="${isAuthenticated}">
+        <div th:each="message : ${messages}" class="message">
             <div class="title">
                 <span style="font-weight: bold;">Title: </span>
                 <span th:text="${message.title}"></span>
             </div>
             <div class="user">
                 <span style="font-weight: bold;">User: </span>
-                <span th:text="${message.user}"></span>
+                <span th:text="${message.userUserName}"></span>
             </div>
-            <div class="content" th:text="${message.content}"></div>
-            <div class="visibility" th:text="'Visibility: ' + (${message.visibility} ? 'Public' : 'Private')"></div>
-            <button class="edit-button" th:onclick="'/web/message-edit?id=' + ${message.id}">Edit</button>
+            <p th:text="${message.body}"></p>
+            <div class="visibility">
+                <span th:text="'Visibility: ' + (${message.privateMessage} ? 'Private' : 'Public')"></span>
+            </div>
         </div>
     </div>
 </div>

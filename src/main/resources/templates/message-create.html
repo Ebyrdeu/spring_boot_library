@@ -109,33 +109,26 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Create a New Message</h1>
-    <form id="messageForm" th:action="@{/web/messages/new}" method="post">
-        <div>
-            <label for="messageTitle">Title:</label><br>
-            <input type="text" id="messageTitle" name="title" placeholder="Enter message title" required>
-        </div>
-        <div>
-            <label for="messageContent">Content:</label><br>
-            <textarea id="messageContent" name="body" placeholder="Enter your message..." required></textarea>
-        </div>
-        <div>
-            <label for="messageVisibility">Visibility:</label><br>
-            <select id="messageVisibility" name="isPrivate">
-                <option value="true">Public</option>
-                <option value="false">Private</option>
-            </select>
-        </div>
-        <button type="submit">Post Message</button>
-    </form>
-    <button class="return-btn" onclick="window.history.back()">Return</button>
-</div>
-<div class="language-buttons">
-    <form id="translate-form" action="#" method="get">
-        <button class="language-button" type="submit" name="lang" value="en">English</button>
-        <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
-    </form>
-</div>
+<h1 th:text="#{newmessage}"></h1>
+<form action="#" th:action="@{/web/message/new}" th:object="${formData}" method="post">
+    <p><label for="title" th:text="#{title} + ':'"/>
+        <br><input id="title" type="text" th:field="*{title}"/>
+    <p th:if="${#fields.hasErrors('title')}"
+       th:text="${#strings.listJoin(#fields.errors('title'), ', ')}"></p>
+    <p><label for="body" th:text="#{messagebody} + ':'"/>
+        <br><textarea id="body" rows="7" cols="25" th:field="*{body}"></textarea>
+    <p th:if="${#fields.hasErrors('body')}"
+       th:text="${#strings.listJoin(#fields.errors('body'), ', ')}"></p>
+    <p><label for="privacy" th:text="#{messageprivacy} + ':'"/>
+        <select id="privacy" th:field="*{privateMessage}">
+            <option th:value="true" th:text="#{private}"></option>
+            <option th:value="false" th:text="#{public}"></option>
+        </select>
+    <p th:if="${#fields.hasErrors('privateMessage')}"
+       th:text="${#strings.listJoin(#fields.errors('privateMessage'), ', ')}"></p>
+    <p><input type="submit" th:value="#{submit}"/>
+        <input type="reset" th:value="#{reset}"/>
+        <input type="button" th:value="#{back}" onclick="history.back()"/></p>
+</form>
 </body>
 </html>

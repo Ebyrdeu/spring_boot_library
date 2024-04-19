@@ -81,8 +81,8 @@
     <h1 class="welcome-message">Welcome</h1>
     <form id="home">
         <div class="github-signin">
-            <a class="button github-button" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
-            <a class="button no-login-button" th:href="@{/public}">Continue without signing in</a>
+            <a class="button github-button" ${!isAuthenticated} th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
+            <a class="button no-login-button" th:href="@{/web/public-page}">Continue without signing in</a>
         </div>
     </form>
 </div>

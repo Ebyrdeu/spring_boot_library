@@ -14,6 +14,7 @@ public interface MessageRepository extends ListCrudRepository<Message, Long> {
     List<MessageAndUsername> findAllByPrivateMessageIsFalse();
 
 
+
     List<MessageAndUsername> findAllByUser(User user);
 
     @EntityGraph(attributePaths = "user.userName")
