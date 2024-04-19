@@ -1,7 +1,6 @@
 package dev.ebrydeu.spring_boot_library.services.impl.github;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.GithubEmailDto;
-import dev.ebrydeu.spring_boot_library.domain.entities.Role;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
 import dev.ebrydeu.spring_boot_library.services.GithubService;
@@ -30,8 +29,8 @@ public class GithubOAuth2ServiceImpl extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(request);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        Integer userId = (Integer) attributes.get("id");
-        Optional<User> existingUser = userRepository.findByGithubId(userId);
+        Integer githubId = (Integer) attributes.get("id");
+        Optional<User> existingUser = userRepository.findByGithubId(githubId);
 
         if (existingUser.isEmpty()) {
             User user = createUser(attributes, request);
@@ -42,29 +41,25 @@ public class GithubOAuth2ServiceImpl extends DefaultOAuth2UserService {
 
     private User createUser(Map<String, Object> attributes, OAuth2UserRequest request) {
         OAuth2AccessToken at = request.getAccessToken();
-        String username = (String) attributes.get("login");
-        String avatarUrl = (String) attributes.get("avatar_url");
-        String name = (String) attributes.get("name");
-        String email = (String) attributes.get("email");
-        Integer githubId = (Integer) attributes.get("id");
+        User user = new User();
+        user.setUserName((String) attributes.get("login"));
+        user.setProfileImage((String) attributes.get("avatar_url"));
+        user.setFullName((String) attributes.get("name"));
+        //user.setEmail((String) attributes.get("email"));
+        user.setGithubId((Integer) attributes.get("id"));
 
         User.UserBuilder userBuilder = User.builder()
-                .username(username)
-                .avatar(avatarUrl)
-                .githubId(githubId)
-                .role(Role.ROLE_USER);
+                .userName(user.getUserName())
+                .profileImage(user.getProfileImage())
+                .githubId(user.getGithubId());
+                //.role(Role.ROLE_USER);
 
-        if (name != null) {
-            String[] nameParts = name.split(" ");
-            userBuilder.firstName(nameParts.length > 0 ? nameParts[0] : "");
-            userBuilder.lastName(nameParts.length > 1 ? nameParts[1] : "");
+
+        if (user.getEmail() != null) {
+            userBuilder.email(user.getEmail());
         }
 
-        if (email != null) {
-            userBuilder.email(email);
-        }
-
-        User user = userBuilder.build();
+        user = userBuilder.build();
 
         List<GithubEmailDto> emails = githubService.getEmails(at);
 

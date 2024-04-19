@@ -26,13 +26,14 @@ public class CreateMessageFormData {
     private String body;
 
     @NotNull(message = "Set message to public or private")
-    private Boolean privateMessage;
+    private boolean privateMessage;
 
     public Message toEntity(User user) {
+
         Message message = new Message();
         message.setTitle(title);
         message.setBody(body);
-        message.setPrivate(privateMessage);
+        message.setPrivateMessage(privateMessage);
         message.setUser(user);
         return message;
     }

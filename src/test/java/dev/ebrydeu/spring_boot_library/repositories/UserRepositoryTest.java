@@ -88,12 +88,4 @@ class UserRepositoryTest {
         assertThat(result).isEmpty();
     }
 
-    @Test
-    @DisplayName("Auditing fields are populated")
-    void auditingFieldsArePopulated() {
-        User user = createUserOne();
-        user = repository.save(user);
-
-        assertNotNull(user.getCreationDate());
-    }
 }

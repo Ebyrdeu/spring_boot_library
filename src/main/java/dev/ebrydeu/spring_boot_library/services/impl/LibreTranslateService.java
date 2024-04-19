@@ -3,7 +3,6 @@ package dev.ebrydeu.spring_boot_library.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.ebrydeu.spring_boot_library.services.LibreTranslateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -15,7 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
 @RequiredArgsConstructor
-public class LibreTranslateServiceImpl implements LibreTranslateService {
+public class LibreTranslateService {
     private final RestClient restClient;
 
     @Override
