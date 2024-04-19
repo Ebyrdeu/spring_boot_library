@@ -2,7 +2,9 @@ package dev.ebrydeu.spring_boot_library.services.impl;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
+import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.repositories.MessageRepository;
+import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,12 +24,15 @@ import static dev.ebrydeu.spring_boot_library.libs.Utils.isNullable;
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository repository;
+    private final UserRepository userRepository;
 
     @Override
     @CacheEvict("messages")
     public MessageDto save(MessageDto dto) {
+        User exsitingUser = userRepository.findById(dto.user().id()).orElseThrow(() -> new NotFoundException("User not found with id: " + dto.user().id()));
         try {
             Message message = MessageDto.map(dto);
+            message.setUser(exsitingUser);
             Message savedMessage = repository.save(message);
             return MessageDto.map(savedMessage);
         } catch (Exception e) {

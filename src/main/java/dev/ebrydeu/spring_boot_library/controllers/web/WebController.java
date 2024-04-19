@@ -1,8 +1,5 @@
 package dev.ebrydeu.spring_boot_library.controllers.web;
 
-import dev.ebrydeu.spring_boot_library.domain.entities.User;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +18,7 @@ public class WebController {
         userInfo(model);
         return "user-profile";
     }
+
     @GetMapping("/home")
     public String home(Model model) {
         userInfo(model);
@@ -32,8 +30,7 @@ public class WebController {
         boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
 
         if (isAuthenticated) {
-            if (authentication.getPrincipal() instanceof OAuth2User) {
-                OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+            if (authentication.getPrincipal() instanceof OAuth2User oauthUser) {
                 Integer id = oauthUser.getAttribute("id");
                 model.addAttribute("githubId", id);
             }

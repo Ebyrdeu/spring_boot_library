@@ -8,9 +8,10 @@
     <title>document</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const githubId = [[${githubId}]];
+        let githubId = [[${githubId}]];
         /*]]>*/
     </script>
 
@@ -131,7 +132,7 @@
 </script>
 
 <script>
-    function submit(event) {
+    async function submit() {
         const formData = {};
 
         const username = document.querySelector(".edit-username").value;
@@ -158,8 +159,7 @@
             document.querySelector(".user-avatar").src = avatar;
             document.querySelector(".edit-avatar").placeholder = avatar;
         }
-
-        fetch(`/api/users/${githubId}`, {
+        await fetch(`/api/users/${githubId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/web/home", "/home", "/auth/login", "/oauth2/**").permitAll()
+                        .requestMatchers("/web/home", "/home", "/auth/login", "/oauth2/**", "/api/**").permitAll()
                         .requestMatchers(SWAGGER_PATHS).permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> {

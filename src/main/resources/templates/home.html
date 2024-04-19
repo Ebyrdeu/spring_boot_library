@@ -8,9 +8,10 @@
     <title>document</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script th:inline="javascript">
+
+    <script th:inline="javascript" th:if="${isAuthenticated}">
         /*<![CDATA[*/
-        const githubId = [[${githubId}]];
+        let githubId = [[${githubId}]];
         /*]]>*/
     </script>
 
@@ -23,7 +24,6 @@
     </div>
     <div class="flex justify-end flex-1 px-2">
         <div class="flex items-stretch gap-3 ">
-
             <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
             <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
             <div class="dropdown dropdown-end">
@@ -45,16 +45,159 @@
 
 
 <div class="hero min-h-screen bg-base-200">
-    <div class="hero-content text-center">
-        <div class="max-w-md">public</div>
+    <div>
+        <div th:if="${isAuthenticated}" class="card-body">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Body</span>
+                </label>
+                <input type="text" class="input input-bordered edit-body"/>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Title</span>
+                </label>
+                <input type="text" class="input input-bordered edit-title"/>
+            </div>
+            <div class="form-control">
+                <label class="label cursor-pointer">
+                    <span class="label-text">Set to Private</span>
+                    <input type="checkbox" checked="checked" class="checkbox checkbox-primary edit-checkbox"/>
+                </label>
+            </div>
+            <div class="form-control mt-6">
+                <button class="btn btn-primary" type="button" onclick="createMessage()">Create Message</button>
+            </div>
+
+        </div>
+        <div class="overflow-x-auto">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Body</th>
+                    <th>Username</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </body>
 
+<script th:if="${isAuthenticated}">
+    const user = fetch(`/api/users/${githubId}`).then(r => r.json());
+    const messages = fetch('/api/messages').then(response => response.json())
+</script>
 
-<script>
-    fetch(`/api/users/${githubId}`).then(r => r.json()).then(({data}) => {
-        document.querySelector(".user-avatar").src = data.avatar;
+<script th:if="${isAuthenticated}">
+    user.then(({data}) => document.querySelector(".user-avatar").src = data.avatar)
+</script>
+
+<script th:if="${isAuthenticated}">
+    const createMessage = () => {
+        const title = document.querySelector(".edit-title").value;
+        const body = document.querySelector(".edit-body").value;
+        const isPrivate = document.querySelector(".edit-checkbox").checked;
+        user.then(({data}) => {
+            const messageData = {
+                title: title,
+                body: body,
+                isPrivate: isPrivate,
+                user: {
+                    id: data.id
+                }
+            };
+
+            fetch('/api/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messageData)
+            })
+                .then(r => r.json())
+                .then(({data}) => {
+                    const row = tableBody.insertRow();
+                    row.id = "row-" + data.id;
+                    const deleteButtonHtml = data.user.githubId === githubId ?
+                        ` <button  id="deleteButton" class="btn btn-sm btn-circle btn-error"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg> </button> ` : '';
+
+                    row.innerHTML = `
+                        <td>${data.id}</td>
+                        <td>${data.title || 'N/A'}</td>
+                        <td>${data.body || 'N/A'}</td>
+                        <td>${data.user.username || 'N/A'}</td>
+                        <td>${data.date ? new Date(data.date).toLocaleDateString() : 'N/A'}</td>
+                        <td>${deleteButtonHtml}</td>
+                    `;
+
+                    if (data.user.githubId === githubId) {
+                        row.querySelector("#deleteButton").addEventListener("click", () => deleteMessage(data.id, row.id));
+                    }
+                })
+        })
+
+
+    }
+</script>
+<script th:if="${!isAuthenticated}" th:inline="javascript">
+    messages.then(({data}) => {
+        if (data && Array.isArray(data)) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            data.filter(item => item.isPrivate === false).forEach(item => {
+                const row = tableBody.insertRow();
+                const cell0 = row.insertCell(0);
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+
+                cell0.innerHTML = item.id;
+                cell1.innerHTML = item.title || 'N/A';
+                cell2.innerHTML = item.body || 'N/A';
+                cell3.innerHTML = item.user.username || 'N/A';
+                cell4.innerHTML = item.date ? new Date(item.date).toLocaleDateString() : 'N/A';
+            });
+        }
+    })
+</script>
+
+<script th:if="${isAuthenticated}" th:inline="javascript">
+    const deleteMessage = async (id, rowId) => {
+        await fetch(`/api/messages/${id}`, {method: 'DELETE'})
+
+        const row = document.getElementById(rowId);
+        row.parentNode.removeChild(row);
+    }
+
+    messages.then(({data}) => {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+        data.forEach(item => {
+            const row = tableBody.insertRow();
+            row.id = "row-" + item.id;
+            const deleteButtonHtml = item.user.githubId === githubId ?
+                ` <button  id="deleteButton" class="btn btn-sm btn-circle btn-error"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg> </button> ` : '';
+
+            row.innerHTML = `
+                        <td>${item.id}</td>
+                        <td>${item.title || 'N/A'}</td>
+                        <td>${item.body || 'N/A'}</td>
+                        <td>${item.user.username || 'N/A'}</td>
+                        <td>${item.date ? new Date(item.date).toLocaleDateString() : 'N/A'}</td>
+                        <td>${deleteButtonHtml}</td>
+                    `;
+
+            if (item.user.githubId === githubId) {
+                row.querySelector("#deleteButton").addEventListener("click", () => deleteMessage(item.id, row.id));
+            }
+        });
     });
 </script>
 <script>
