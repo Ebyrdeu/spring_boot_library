@@ -56,6 +56,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable("users")
+    public UserDto findByGithubId(Integer githubId) {
+        Optional<User> userOptional = repository.findByGithubId(githubId);
+        return userOptional.map(UserDto::map).orElseThrow(() -> new NotFoundException("User not found with id: " + githubId));
+    }
+
+    @Override
+    @Cacheable("users")
     public List<UserDto> findByFirstname(String firstname) {
         List<User> users = repository.findByFirstName(firstname);
         return users.stream().map(UserDto::map).toList();
@@ -89,8 +96,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable("users")
-    public void partialUpdate(Long id, UserDto dto) {
-        User exsitingUser = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+    public void partialUpdate(Integer id, UserDto dto) {
+        User exsitingUser = repository.findByGithubId(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
         isNullable(exsitingUser::setUsername, dto.username());
         isNullable(exsitingUser::setFirstName, dto.firstName());

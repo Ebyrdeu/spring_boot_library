@@ -8,16 +8,22 @@
     <title>document</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const githubId = [[${githubId}]];
+        /*]]>*/
+    </script>
+
 </head>
 <body>
 
 <div class="navbar bg-base-100">
     <div class="flex-1">
-        <a th:href="@{/web/home}" class="btn btn-ghost text-xl">definitely not x</a>
+        <a th:href="@{/web/home}" class="btn btn-ghost text-xl">Definitely not X</a>
     </div>
     <div class="flex justify-end flex-1 px-2">
         <div class="flex items-stretch gap-3 ">
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/web/profile}">profile</a>
+
             <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
             <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
             <div class="dropdown dropdown-end">
@@ -26,9 +32,17 @@
                     class="theme-list menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
                 </ul>
             </div>
+            <a th:if="${isAuthenticated}" th:href="@{/web/profile}">
+                <div class="avatar online">
+                    <div class="rounded-full w-12">
+                        <img class="user-avatar"/>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
+
 
 <div class="hero min-h-screen bg-base-200">
     <div class="hero-content text-center">
@@ -36,6 +50,13 @@
     </div>
 </div>
 </body>
+
+
+<script>
+    fetch(`/api/users/${githubId}`).then(r => r.json()).then(({data}) => {
+        document.querySelector(".user-avatar").src = data.avatar;
+    });
+</script>
 <script>
     const themes = [
         "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave",

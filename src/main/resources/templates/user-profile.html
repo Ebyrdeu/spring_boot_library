@@ -8,15 +8,21 @@
     <title>document</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const githubId = [[${githubId}]];
+        /*]]>*/
+    </script>
+
 </head>
 <body>
 <div class="navbar bg-base-100">
     <div class="flex-1">
-        <a th:href="@{/web/home}" class="btn btn-ghost text-xl">definitely not x</a>
+        <a th:href="@{/web/home}" class="btn btn-ghost text-xl">Definitely not X</a>
     </div>
     <div class="flex justify-end flex-1 px-2">
         <div class="flex items-stretch gap-3 ">
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/web/home}">home</a>
+
             <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
             <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
             <div class="dropdown dropdown-end">
@@ -25,12 +31,47 @@
                     class="theme-list menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
                 </ul>
             </div>
+            <a th:if="${isAuthenticated}" th:href="@{/web/profile}">
+                <div class="avatar online">
+                    <div class="rounded-full w-12">
+                        <img class="user-avatar"/>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
+
 <div class="hero min-h-screen bg-base-200">
     <div class="hero-content text-center">
-        <div class="max-w-md">private</div>
+        <div class="max-w-md">
+            <h1 class="text-4xl font-bold mb-5 username"></h1>
+            <div class="card  shadow-2xl bg-base-100">
+                <div class="card-body">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Name</span>
+                        </label>
+                        <input type="text" class="input input-bordered edit-username"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text">Firstname</span></label>
+                        <input type="text" class="input input-bordered edit-firstname"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text">Lastname</span></label>
+                        <input type="text" class="input input-bordered edit-lastname"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text">Avatar</span></label>
+                        <input type="text" class="input input-bordered edit-avatar"/>
+                    </div>
+                    <div class="form-control mt-6">
+                        <button class="btn btn-primary" type="button" onclick="submit(event)">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
@@ -76,5 +117,55 @@
 
     loadTheme();
 
+</script>
+
+<script>
+    fetch(`/api/users/${githubId}`).then(r => r.json()).then(({data}) => {
+        document.querySelector(".username").textContent = "Welcome Back " + data.username + " !";
+        document.querySelector(".user-avatar").src = data.avatar;
+        document.querySelector(".edit-username").placeholder = data.username;
+        document.querySelector(".edit-firstname").placeholder = data.firstName;
+        document.querySelector(".edit-lastname").placeholder = data.lastName;
+        document.querySelector(".edit-avatar").placeholder = data.avatar;
+    });
+</script>
+
+<script>
+    function submit(event) {
+        const formData = {};
+
+        const username = document.querySelector(".edit-username").value;
+        if (username) {
+            formData.username = username;
+            document.querySelector(".username").textContent = "Welcome Back " + username + " !";
+        }
+
+        const firstName = document.querySelector(".edit-firstname").value;
+        if (firstName) {
+            formData.firstName = firstName;
+            document.querySelector(".edit-firstname").placeholder = firstName;
+        }
+
+        const lastName = document.querySelector(".edit-lastname").value;
+        if (lastName) {
+            formData.lastname = lastName;
+            document.querySelector(".edit-lastname").placeholder = lastName;
+        }
+
+        const avatar = document.querySelector(".edit-avatar").value;
+        if (avatar) {
+            formData.avatar = avatar;
+            document.querySelector(".user-avatar").src = avatar;
+            document.querySelector(".edit-avatar").placeholder = avatar;
+        }
+
+        fetch(`/api/users/${githubId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+    }
 </script>
 </html>

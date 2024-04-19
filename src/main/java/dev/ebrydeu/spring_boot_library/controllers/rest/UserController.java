@@ -64,8 +64,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
     })
-    public JSendResponse findById(@Parameter(required = true, example = "1") @PathVariable Long id) {
-        UserDto user = service.findById(id);
+    public JSendResponse findById(@Parameter(required = true, example = "1") @PathVariable Integer id) {
+        UserDto user = service.findByGithubId(id);
         return JSendResponse.success(user);
     }
 
@@ -142,7 +142,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
     })
-    public void partialUpdate(@Parameter(required = true, example = "1") @PathVariable("id") Long id, @RequestBody UserDto dto) {
+    public void partialUpdate(@Parameter(required = true, example = "1") @PathVariable("id") Integer id, @RequestBody UserDto dto) {
         service.partialUpdate(id, dto);
     }
 

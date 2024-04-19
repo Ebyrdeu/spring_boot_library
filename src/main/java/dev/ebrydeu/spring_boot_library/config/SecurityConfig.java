@@ -19,7 +19,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/web/home", "/home", "/auth/login", "/oauth2/**").permitAll()
-                        .requestMatchers(SWAGGER_PATHS).hasRole("ADMIN")
+                        .requestMatchers(SWAGGER_PATHS).permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> {
                     oauth2.defaultSuccessUrl("/web/profile");
