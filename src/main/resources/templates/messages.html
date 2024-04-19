@@ -6,11 +6,17 @@
 </head>
 <body>
 <h1>All Messages</h1>
-<table>
+<div class="post">
+    <a href="/web/message-create" ></a>
+</div>
+<table class="styled-table">
     <thead>
     <tr>
-        <th>Title</th>
-        <th>Message Body</th>
+        <th th:text="#{title}"></th>
+        <th th:text="#{body}"></th>
+        <th class="author-cell-header" th:text="#{author}"></th>
+        <th class="date-cell-header" th:text="#{date}"></th>
+        <th class="edit-cell-header" th:text="#{lastedit}"></th>
     </tr>
     </thead>
     <tbody>
@@ -31,30 +37,5 @@
     </tr>
     </tbody>
 </table>
-
-
-<!-- JavaScript code -->
-<script type="text/javascript">
-    $(document).ready(function() {
-        // Make AJAX request to fetch all messages
-        $.ajax({
-            url: '/api/messages', // Your backend endpoint to retrieve messages
-            type: 'GET',
-            success: function(messages) {
-                // Loop through the messages and display them on the profile page
-                messages.forEach(function(message) {
-                    var messageHtml = '<div class="message">';
-                    messageHtml += '<h2>' + message.title + '</h2>';
-                    messageHtml += '<p>' + message.body + '</p>';
-                    messageHtml += '<p>Created by: ' + message.user.username + '</p>'; // Assuming user information is included in each message
-                    messageHtml += '<p>Date: ' + message.date + '</p>';
-                    messageHtml += '</div>';
-                    $('#messageBoard').append(messageHtml); // Assuming you have a <div id="messageBoard"> on your profile page to display messages
-                });
-            }
-        });
-    });
-</script>
-
 </body>
 </html>

@@ -1,9 +1,13 @@
 package dev.ebrydeu.spring_boot_library.controllers.web;
 
 
+import dev.ebrydeu.spring_boot_library.domain.dto.CreateMessageFormData;
+import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
@@ -74,7 +78,8 @@ public class WebController {
     }
 
     @GetMapping("/message-create")
-    public String createMessage() {
+    public String createMessage(Model model) {
+        model.addAttribute("message", new CreateMessageFormData());
         return "message-create";
     }
     @PostMapping("/myprofile/create")
@@ -104,7 +109,7 @@ public class WebController {
     public String findAllMessages(Model model) {
         List<MessageDto> messages = messageService.findAll();
         model.addAttribute("messages", messages);
-        return "all-messages"; //web page for all messages accessible for logged users
+        return "messages"; //web page for all messages accessible for logged users
     }
 
 
