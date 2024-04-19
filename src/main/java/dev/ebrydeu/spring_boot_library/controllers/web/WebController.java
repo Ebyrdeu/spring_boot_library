@@ -214,7 +214,7 @@ public class WebController {
 
         User user = userService.findByGitHubId(principal.getAttribute("id"));
         messageService.save(messageForm.toEntity(user));
-        return "redirect:/web/public-page";
+        return "redirect:/web/profile";
     }
 
     //GetMapping("/messages/translate")

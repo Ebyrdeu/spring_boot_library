@@ -12,123 +12,82 @@
             background-color: #f5f5f5;
         }
         .container {
-            width: 80%;
-            margin: 0 auto;
+            width: 60%;
+            margin: 40px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
         }
-        #messageForm {
-            display: inline-block;
-            text-align: left;
-        }
-        .message {
-            background-color: #f9f9f9;
-            padding: 10px;
+        .form-group {
             margin-bottom: 20px;
-            border-radius: 5px;
         }
-        .message .title {
+        label {
             font-weight: bold;
-            color: #333;
+            display: block;
             margin-bottom: 5px;
         }
-        .message .author {
-            font-style: italic;
-            color: #333;
-        }
-        .message .timestamp {
-            font-size: 12px;
-            color: #333;
-        }
-        .message .content {
-            margin-top: 10px;
-            color: #333;
-        }
-        .message .visibility {
-            font-size: 12px;
-            color: #666;
-        }
-        textarea {
+        input[type="text"],
+        textarea,
+        select {
             width: 100%;
-            height: 100px;
             padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            margin-top: 5px;
             border: 1px solid #ccc;
+            border-radius: 5px;
             resize: vertical;
         }
-        button {
+        button, input[type="submit"], input[type="reset"], input[type="button"] {
             padding: 10px 20px;
             background-color: #4F5E4A;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-right: 10px;
         }
-        button:hover {
+        button:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {
             background-color: #6B7E65;
         }
-        h1 {
-            margin-top: 20px;
+        .error {
+            color: #ff0000;
+            font-size: 0.875em;
+        }
+        .message-board-header {
             text-align: center;
             color: #4F5E4A;
-        }
-        .return-btn {
-            margin-top: 20px;
-        }
-        .language-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-            text-decoration: none;
-            color: #fff;
-            background-color: #4F5E4A;
-            font-family: Georgia, serif;
-            position: fixed;
-            top: 20px;
-        }
-
-        .language-button:first-child {
-            left: 140px;
-        }
-
-        .language-button:nth-child(2) {
-            left: 250px;
-        }
-
-        .language-button:hover {
-            background-color: #6B7E65;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-<h1 th:text="#{newmessage}"></h1>
-<form action="#" th:action="@{/web/message/new}" th:object="${formData}" method="post">
-    <p><label for="title" th:text="#{title} + ':'"/>
-        <br><input id="title" type="text" th:field="*{title}"/>
-    <p th:if="${#fields.hasErrors('title')}"
-       th:text="${#strings.listJoin(#fields.errors('title'), ', ')}"></p>
-    <p><label for="body" th:text="#{messagebody} + ':'"/>
-        <br><textarea id="body" rows="7" cols="25" th:field="*{body}"></textarea>
-    <p th:if="${#fields.hasErrors('body')}"
-       th:text="${#strings.listJoin(#fields.errors('body'), ', ')}"></p>
-    <p><label for="privacy" th:text="#{messageprivacy} + ':'"/>
-        <select id="privacy" th:field="*{privateMessage}">
-            <option th:value="true" th:text="#{private}"></option>
-            <option th:value="false" th:text="#{public}"></option>
-        </select>
-    <p th:if="${#fields.hasErrors('privateMessage')}"
-       th:text="${#strings.listJoin(#fields.errors('privateMessage'), ', ')}"></p>
-    <p><input type="submit" th:value="#{submit}"/>
-        <input type="reset" th:value="#{reset}"/>
-        <input type="button" th:value="#{back}" onclick="history.back()"/></p>
-</form>
+<div class="container">
+    <h1 class="message-board-header" th:text="#{newmessage}">New Message</h1>
+    <form th:action="@{/web/message/new}" th:object="${formData}" method="post">
+        <div class="form-group">
+            <label for="title" th:text="#{title}">Title:</label>
+            <input id="title" type="text" th:field="*{title}"/>
+            <span th:if="${#fields.hasErrors('title')}" th:text="${#strings.listJoin(#fields.errors('title'), ', ')}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="body" th:text="#{messagebody}">Message Body:</label>
+            <textarea id="body" th:field="*{body}"></textarea>
+            <span th:if="${#fields.hasErrors('body')}" th:text="${#strings.listJoin(#fields.errors('body'), ', ')}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="privacy" th:text="#{messageprivacy}">Privacy:</label>
+            <select id="privacy" th:field="*{privateMessage}">
+                <option th:value="true" th:text="#{private}">Private</option>
+                <option th:value="false" th:text="#{public}">Public</option>
+            </select>
+            <span th:if="${#fields.hasErrors('privateMessage')}" th:text="${#strings.listJoin(#fields.errors('privateMessage'), ', ')}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" th:value="#{submit}"/>
+            <input type="reset" th:value="#{reset}"/>
+            <input type="button" th:value="#{back}" onclick="history.back()"/>
+        </div>
+    </form>
+</div>
 </body>
 </html>
