@@ -44,7 +44,8 @@ public class MessageService {
                         message.getLastChanged(),
                         message.getTitle(),
                         message.getBody(),
-                        message.getUser().getUserName()))
+                        message.getUser().getUserName(),
+                        message.isPrivateMessage()))
                 .toList();
     }
 

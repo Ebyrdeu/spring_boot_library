@@ -21,18 +21,18 @@
     </thead>
     <tbody>
     <tr th:each="message : ${messages}">
-        <td th:text="${message.title()}">Important Announcement</td>
+        <td th:text="${message.title()}">Hello</td>
         <td class="messageContainer">
-            <span th:text="${message.body()}">Hello world.</span>
+            <span th:text="${message.body()}">Hello world!</span>
             <a th:href="'/web/messages/translate?id=' + ${message.id()}">
                 <h5 class="translateBtn" th:text="#{translate}">translate</h5>
             </a>
         </td>
-        <td class="author-cell" th:text="${message.user()}">John Doe</td>
-        <td class="date-cell" th:text="${message.date()}">2024-02-27</td>
+        <td class="author-cell" th:text="${message.userUserName()}">John Doe</td>
+        <td class="date-cell" th:text="${message.date()}">2024-04-19</td>
         <td>
-            <p th:text="${auditable.lastModified()}"></p>
-            <p th:if="${auditable.lastModified() != null}" th:text="#{editedby} + ': ' + ${message.user()}"></p>
+            <p th:text="${message.lastChanged()}"></p>
+            <p th:if="${message.lastChanged() != null}" th:text="#{editedby} + ': ' + ${message.userUserName()}"></p>
         </td>
     </tr>
     </tbody>
