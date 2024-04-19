@@ -17,7 +17,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class LibreTranslateService {
     private final RestClient restClient;
 
-    @Override
+
     @Retryable(value = RestClientException.class, maxAttempts = 3, backoff = @Backoff(delay = 2000))
     public String detectLanguage(String text) throws JsonProcessingException {
         String jsonInput = String.format("{\"q\":\"%s\"}", text);
@@ -34,7 +34,7 @@ public class LibreTranslateService {
         return rootNode.get(0).get("language").asText();
     }
 
-    @Override
+
     @Retryable(value = RestClientException.class, maxAttempts = 3, backoff = @Backoff(delay = 2000))
     public String translate(String text) throws JsonProcessingException {
         String sourceLang = detectLanguage(text);

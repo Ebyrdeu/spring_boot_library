@@ -3,9 +3,10 @@ package dev.ebrydeu.spring_boot_library.domain.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
