@@ -1,8 +1,8 @@
 package dev.ebrydeu.spring_boot_library.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.config.SecurityConfigTest;
+import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.services.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static dev.ebrydeu.spring_boot_library.TestDataUtils.*;
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserOne;
+import static dev.ebrydeu.spring_boot_library.TestDataUtils.createUserTwo;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -51,7 +52,7 @@ class UserControllerTest {
         @DisplayName("On successfully User get returns Http status 200 Ok")
         void onSuccessfullyUserGetReturnsHttpStatus200Ok() throws Exception {
             User userOne = createUserOne();
-            userOne.setId(null);
+            userOne.setId(1L);
 
             service.save(UserDto.map(userOne));
 
@@ -259,7 +260,7 @@ class UserControllerTest {
             User userOne = createUserOne();
             userOne.setId(null);
 
-            service.save(UserDto.map(userOne));
+             service.save(UserDto.map(userOne));
 
             mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNumber())
