@@ -114,27 +114,25 @@
         <div class="card-body">
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text modal-edit-body">Body</span>
+                    <span class="label-text modal-edit-body"></span>
                 </label>
                 <input type="text" class="input input-bordered edit-body"/>
             </div>
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text modal-edit-title">Title</span>
+                    <span class="label-text modal-edit-title"></span>
                 </label>
                 <input type="text" class="input input-bordered edit-title"/>
             </div>
             <div class="form-control">
                 <label class="label cursor-pointer">
-                    <span class="label-text modal-edit-title">Set to Private</span>
+                    <span class="label-text modal-edit-private"></span>
                     <input type="checkbox" checked="checked" class="checkbox checkbox-primary edit-checkbox"/>
                 </label>
             </div>
             <div class="form-control mt-6">
-                <button id="edit-message" class="btn btn-primary modal-edit-private" type="button"
-                        onclick="my_modal_3.close()">
-                    Edit Message
-                </button>
+                <button id="edit-message" class="btn btn-primary modal-edit-btn" type="button"
+                        onclick="my_modal_3.close()"></button>
             </div>
 
         </div>
@@ -166,7 +164,7 @@
     const modalEditBody = document.querySelector(".modal-edit-body");
     const modalEditTitle = document.querySelector(".modal-edit-title");
     const modalEditPrivate = document.querySelector(".modal-edit-private");
-    const modalBtnEdit = document.querySelector(".modal-edit-private");
+    const modalBtnEdit = document.querySelector(".modal-edit-btn");
 
     const loadLanguage = (lang) => {
         fetch('/lang/lang.json')
@@ -182,7 +180,7 @@
                     modalCreateBody.textContent = data.modal[lang].body;
 
                     modalEditPrivate.textContent = data.modal[lang].toPrivate;
-                    modalBtnEdit.textContent = data.modal[lang].create;
+                    modalBtnEdit.textContent = data.modal[lang].edit;
                     modalEditTitle.textContent = data.modal[lang].title;
                     modalEditBody.textContent = data.modal[lang].body;
 
@@ -257,8 +255,8 @@
 
 <script th:if="${isAuthenticated}">
     const createMessage = () => {
-        const title = document.querySelector(".create-title").value;
-        const body = document.querySelector(".create-body").value;
+        const title = document.querySelector(".modal-create-title").value;
+        const body = document.querySelector(".modal-create-body").value;
         const isPrivate = document.querySelector(".create-checkbox").checked;
         user.then(({data}) => {
             const messageData = {
@@ -279,21 +277,30 @@
             })
                 .then(r => r.json())
                 .then(({data}) => {
+                    const tableBody = document.getElementById('tableBody');
                     const row = tableBody.insertRow();
                     row.id = "row-" + data.id;
                     const deleteButtonHtml = data.user.githubId === githubId ?
                         ` <button  id="deleteButton" class="btn btn-sm btn-circle btn-error"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg> </button> ` : '';
+
+                    const editButtonHtml = data.user.githubId === githubId ? `<button onclick="my_modal_3.showModal()" id="editButton" class="btn btn-sm btn-circle btn-primary mr-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24"><path fill="currentColor" d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></svg> </button>` : '';
                     row.innerHTML = `
                         <td>${data.id}</td>
                         <td>${data.title || 'N/A'}</td>
                         <td>${data.body || 'N/A'}</td>
                         <td>${data.user.username || 'N/A'}</td>
                         <td>${data.date ? new Date(data.date).toLocaleDateString() : 'N/A'}</td>
-                        <td>${deleteButtonHtml}</td>
+                        <td>
+                        ${editButtonHtml}
+                        ${deleteButtonHtml}
+                        </td>
                     `;
 
                     if (data.user.githubId === githubId) {
                         row.querySelector("#deleteButton").addEventListener("click", () => deleteMessage(data.id, row.id));
+                        row.querySelector("#editButton").addEventListener("click", () => {
+                            document.querySelector("#edit-message").addEventListener("click", () => editMessage(data.id, row.id));
+                        })
                     }
                 }).then(() => {
                 document.querySelector(".edit-title").value = null;
@@ -387,7 +394,9 @@
 
             if (item.user.githubId === githubId) {
                 row.querySelector("#deleteButton").addEventListener("click", () => deleteMessage(item.id, row.id));
-                document.querySelector("#edit-message").addEventListener("click", () => editMessage(item.id, row.id));
+                row.querySelector("#editButton").addEventListener("click", () => {
+                    document.querySelector("#edit-message").addEventListener("click", () => editMessage(item.id, row.id));
+                })
             }
 
         });
