@@ -7,10 +7,7 @@ import dev.ebrydeu.spring_boot_library.repositories.MessageRepository;
 import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,7 +16,6 @@ import static dev.ebrydeu.spring_boot_library.exception.Exceptions.NotFoundExcep
 import static dev.ebrydeu.spring_boot_library.libs.Utils.isNullable;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
@@ -27,7 +23,6 @@ public class MessageServiceImpl implements MessageService {
     private final UserRepository userRepository;
 
     @Override
-    @CacheEvict("messages")
     public MessageDto save(MessageDto dto) {
         User exsitingUser = userRepository.findById(dto.user().id()).orElseThrow(() -> new NotFoundException("User not found with id: " + dto.user().id()));
         try {
@@ -41,7 +36,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    @Cacheable("messages")
     public List<MessageDto> findAll() {
         return repository.findAll().stream()
                 .map(MessageDto::map)
@@ -55,7 +49,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    @Cacheable("messages")
     public List<MessageDto> findByTitle(String title) {
         return repository.findByTitle(title).stream()
                 .map(MessageDto::map)
@@ -68,7 +61,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    @CacheEvict("messages")
     public void partialUpdate(Long id, MessageDto dto) {
         Message existingMessage = repository.findById(id).orElseThrow(() -> new NotFoundException("Message not found with id: " + id));
 
@@ -84,7 +76,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    @CacheEvict("messages")
     public void delete(Long id) {
         Message messageToDelete = repository.findById(id).orElseThrow(() -> new NotFoundException("Message not found with id: " + id));
 
