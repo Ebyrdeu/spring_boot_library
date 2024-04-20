@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
 
     @GetMapping("/login")
-    public String login(Model model, HttpServletRequest request) {
+    public String login(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
         model.addAttribute("isAuthenticated", isAuthenticated);

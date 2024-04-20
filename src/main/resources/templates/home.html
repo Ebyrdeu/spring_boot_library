@@ -11,27 +11,36 @@
 
     <script th:inline="javascript" th:if="${isAuthenticated}">
         /*<![CDATA[*/
+        /**
+         *
+         * @param {number} githubId
+         */
         let githubId = [[${githubId}]];
         /*]]>*/
     </script>
 
 </head>
 <body>
-
 <div class="navbar bg-base-100">
     <div class="flex-1">
         <a th:href="@{/web/home}" class="btn btn-ghost text-xl">Definitely not X</a>
     </div>
     <div class="flex justify-end flex-1 px-2">
         <div class="flex items-stretch gap-3 ">
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
-            <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
+            <button th:if="${isAuthenticated}" class="btn message-btn" onclick="my_modal_2.showModal()"></button>
+            <a class="btn logout-btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}"></a>
+            <a class="btn login-btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}"></a>
             <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">Themes</div>
+                <div tabindex="0" role="button" class="btn btn-ghost rounded-btn themes-btn"></div>
                 <ul tabindex="0"
                     class="theme-list menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
                 </ul>
             </div>
+            <label class="swap">
+                <input type="checkbox" class="swap-lang"/>
+                <div class="swap-on">SV</div>
+                <div class="swap-off">EN</div>
+            </label>
             <a th:if="${isAuthenticated}" th:href="@{/web/profile}">
                 <div class="avatar online">
                     <div class="rounded-full w-12">
@@ -45,40 +54,52 @@
 
 
 <div class="hero min-h-screen bg-base-200">
-    <div>
-        <div th:if="${isAuthenticated}" class="card-body">
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">Body</span>
-                </label>
-                <input type="text" class="input input-bordered edit-body"/>
-            </div>
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">Title</span>
-                </label>
-                <input type="text" class="input input-bordered edit-title"/>
-            </div>
-            <div class="form-control">
-                <label class="label cursor-pointer">
-                    <span class="label-text">Set to Private</span>
-                    <input type="checkbox" checked="checked" class="checkbox checkbox-primary edit-checkbox"/>
-                </label>
-            </div>
-            <div class="form-control mt-6">
-                <button class="btn btn-primary" type="button" onclick="createMessage()">Create Message</button>
-            </div>
 
-        </div>
+    <div>
+
+        <dialog th:if="${isAuthenticated}" id="my_modal_2" class="modal">
+            <div class="modal-box">
+                <div class="card-body">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text modal-body">Body</span>
+                        </label>
+                        <input type="text" class="input input-bordered modal-create-body"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text modal-title">Title</span>
+                        </label>
+                        <input type="text" class="input input-bordered modal-create-title"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text modal-create-private">Set to Private</span>
+                            <input type="checkbox" checked="checked" class="checkbox checkbox-primary create-checkbox"/>
+                        </label>
+                    </div>
+                    <div class="form-control mt-6">
+                        <button class="btn btn-primary modal-create-btn" type="button"
+                                onclick="createMessage(); my_modal_2.close()">
+                            Create Message
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
+        </dialog>
         <div class="overflow-x-auto">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Body</th>
-                    <th>Username</th>
-                    <th>Date</th>
+                    <th class="table-id">ID</th>
+                    <th class="table-title">Title</th>
+                    <th class="table-body">Body</th>
+                    <th class="table-username">Username</th>
+                    <th class="table-date">Date</th>
                 </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -87,11 +108,147 @@
         </div>
     </div>
 </div>
+
+<dialog th:if="${isAuthenticated}" id="my_modal_3" class="modal">
+    <div class="modal-box">
+        <div class="card-body">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text modal-edit-body">Body</span>
+                </label>
+                <input type="text" class="input input-bordered edit-body"/>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text modal-edit-title">Title</span>
+                </label>
+                <input type="text" class="input input-bordered edit-title"/>
+            </div>
+            <div class="form-control">
+                <label class="label cursor-pointer">
+                    <span class="label-text modal-edit-title">Set to Private</span>
+                    <input type="checkbox" checked="checked" class="checkbox checkbox-primary edit-checkbox"/>
+                </label>
+            </div>
+            <div class="form-control mt-6">
+                <button id="edit-message" class="btn btn-primary modal-edit-private" type="button"
+                        onclick="my_modal_3.close()">
+                    Edit Message
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
 </body>
 
+<script>
+    const swapLangCheckbox = document.querySelector(".swap-lang");
+    const logoutBtn = document.querySelector(".logout-btn");
+    const loginBtn = document.querySelector(".login-btn");
+    const newMessageBtn = document.querySelector(".message-btn");
+    const themesBtn = document.querySelector(".themes-btn")
+
+    const tableId = document.querySelector(".table-id");
+    const tableTitle = document.querySelector(".table-title");
+    const tableBody = document.querySelector(".table-body");
+    const tableUsername = document.querySelector(".table-username");
+    const tableDate = document.querySelector(".table-date");
+
+    const modalCreateBody = document.querySelector(".modal-create-body");
+    const modalCreateTitle = document.querySelector(".modal-create-title");
+    const modalCreatePrivate = document.querySelector(".modal-create-private");
+    const modalCreateBtn = document.querySelector(".modal-create-btn");
+
+    const modalEditBody = document.querySelector(".modal-edit-body");
+    const modalEditTitle = document.querySelector(".modal-edit-title");
+    const modalEditPrivate = document.querySelector(".modal-edit-private");
+    const modalBtnEdit = document.querySelector(".modal-edit-private");
+
+    const loadLanguage = (lang) => {
+        fetch('/lang/lang.json')
+            .then(response => response.json())
+            .then(data => {
+                if ([[${isAuthenticated}]]) {
+                    newMessageBtn.textContent = data.navbar[lang].create;
+                    logoutBtn.textContent = data.navbar[lang].logout;
+
+                    modalCreatePrivate.textContent = data.modal[lang].toPrivate;
+                    modalCreateBtn.textContent = data.modal[lang].create;
+                    modalCreateTitle.textContent = data.modal[lang].title;
+                    modalCreateBody.textContent = data.modal[lang].body;
+
+                    modalEditPrivate.textContent = data.modal[lang].toPrivate;
+                    modalBtnEdit.textContent = data.modal[lang].create;
+                    modalEditTitle.textContent = data.modal[lang].title;
+                    modalEditBody.textContent = data.modal[lang].body;
+
+                } else {
+                    loginBtn.textContent = data.navbar[lang].login;
+                }
+                themesBtn.textContent = data.navbar[lang].themes;
+                tableId.textContent = data.table[lang].id;
+                tableTitle.textContent = data.table[lang].title;
+                tableBody.textContent = data.table[lang].body;
+                tableUsername.textContent = data.table[lang].username;
+                tableDate.textContent = data.table[lang].date;
+
+            });
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+        const currentLang = localStorage.getItem('language') || 'en';
+        swapLangCheckbox.checked = currentLang === 'sv';
+        loadLanguage(currentLang);
+    });
+
+
+    swapLangCheckbox.addEventListener("click", () => {
+        const selectedLang = swapLangCheckbox.checked ? 'sv' : 'en';
+        loadLanguage(selectedLang);
+        localStorage.setItem('language', selectedLang); // Save the current language to local storage
+    });
+</script>
 <script th:if="${isAuthenticated}">
+    /**
+     *
+     *
+     * @param {Object} data
+     * @param {number} data.id
+     * @param {string} data.username
+     * @param {string} data.firstName
+     * @param {string} data.lastName
+     * @param {string} data.avatar
+     * @param {string} data.email
+     * @param {string} data.role
+     * @param {number} data.githubId
+     */
     const user = fetch(`/api/users/${githubId}`).then(r => r.json());
-    const messages = fetch('/api/messages').then(response => response.json())
+</script>
+
+<script>
+    /**
+     *
+     *
+     * @param {Object} data
+     * @param {number} data.id
+     * @param {string} data.title
+     * @param {string} data.body
+     * @param {string} data.date
+     * @param {boolean} data.isPrivate
+     * @param {Object} data.user
+     * @param {number} data.user.id
+     * @param {string} data.user.username
+     * @param {string} data.user.firstName
+     * @param {string} data.user.lastName
+     * @param {string} data.user.avatar
+     * @param {string} data.user.email
+     * @param {string} data.user.role
+     * @param {number} data.user.githubId
+     */
+    const messages = fetch('/api/messages').then(response => response.json());
 </script>
 
 <script th:if="${isAuthenticated}">
@@ -100,9 +257,9 @@
 
 <script th:if="${isAuthenticated}">
     const createMessage = () => {
-        const title = document.querySelector(".edit-title").value;
-        const body = document.querySelector(".edit-body").value;
-        const isPrivate = document.querySelector(".edit-checkbox").checked;
+        const title = document.querySelector(".create-title").value;
+        const body = document.querySelector(".create-body").value;
+        const isPrivate = document.querySelector(".create-checkbox").checked;
         user.then(({data}) => {
             const messageData = {
                 title: title,
@@ -126,7 +283,6 @@
                     row.id = "row-" + data.id;
                     const deleteButtonHtml = data.user.githubId === githubId ?
                         ` <button  id="deleteButton" class="btn btn-sm btn-circle btn-error"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg> </button> ` : '';
-
                     row.innerHTML = `
                         <td>${data.id}</td>
                         <td>${data.title || 'N/A'}</td>
@@ -139,67 +295,105 @@
                     if (data.user.githubId === githubId) {
                         row.querySelector("#deleteButton").addEventListener("click", () => deleteMessage(data.id, row.id));
                     }
-                })
+                }).then(() => {
+                document.querySelector(".edit-title").value = null;
+                document.querySelector(".edit-body").value = null;
+            })
         })
 
 
     }
 </script>
+
 <script th:if="${!isAuthenticated}" th:inline="javascript">
     messages.then(({data}) => {
         if (data && Array.isArray(data)) {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
-            data.filter(item => item.isPrivate === false).forEach(item => {
+            data.filter(p => p.isPrivate === false).forEach((m) => {
                 const row = tableBody.insertRow();
-                const cell0 = row.insertCell(0);
-                const cell1 = row.insertCell(1);
-                const cell2 = row.insertCell(2);
-                const cell3 = row.insertCell(3);
-                const cell4 = row.insertCell(4);
+                row.innerHTML = `
+                        <td>${m.id}</td>
+                        <td>${m.title || 'N/A'}</td>
+                        <td>${m.body || 'N/A'}</td>
+                        <td>${m.user.username || 'N/A'}</td>
+                        <td>${m.date ? new Date(m.date).toLocaleDateString() : 'N/A'}</td>
+                    `;
 
-                cell0.innerHTML = item.id;
-                cell1.innerHTML = item.title || 'N/A';
-                cell2.innerHTML = item.body || 'N/A';
-                cell3.innerHTML = item.user.username || 'N/A';
-                cell4.innerHTML = item.date ? new Date(item.date).toLocaleDateString() : 'N/A';
             });
         }
     })
 </script>
 
 <script th:if="${isAuthenticated}" th:inline="javascript">
-    const deleteMessage = async (id, rowId) => {
-        await fetch(`/api/messages/${id}`, {method: 'DELETE'})
-
+    /**
+     *
+     * @param {number} id
+     * @param {string} rowId
+     */
+    const deleteMessage = (id, rowId) => {
+        fetch(`/api/messages/${id}`, {method: 'DELETE'})
         const row = document.getElementById(rowId);
         row.parentNode.removeChild(row);
     }
 
+    /**
+     *
+     * @param {number} id
+     * @param {string} rowId
+     */
+    const editMessage = (id, rowId) => {
+        const formData = {};
+
+        const body = document.querySelector(".edit-body").value;
+        if (body) formData.body = body;
+
+        const title = document.querySelector(".edit-title").value;
+        if (title) formData.title = title;
+
+        fetch(`/api/messages/${id}`, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json',},
+            body: JSON.stringify(formData)
+        }).then(() => {
+            const row = document.getElementById(rowId);
+            row.cells[1].textContent = formData.body;
+            row.cells[2].textContent = formData.title;
+        })
+    }
     messages.then(({data}) => {
         const tableBody = document.getElementById('tableBody');
         tableBody.innerHTML = '';
+
         data.forEach(item => {
             const row = tableBody.insertRow();
             row.id = "row-" + item.id;
+
             const deleteButtonHtml = item.user.githubId === githubId ?
                 ` <button  id="deleteButton" class="btn btn-sm btn-circle btn-error"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg> </button> ` : '';
 
+            const editButtonHtml = item.user.githubId === githubId ? `<button onclick="my_modal_3.showModal()" id="editButton" class="btn btn-sm btn-circle btn-primary mr-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24"><path fill="currentColor" d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></svg> </button>` : '';
             row.innerHTML = `
                         <td>${item.id}</td>
                         <td>${item.title || 'N/A'}</td>
                         <td>${item.body || 'N/A'}</td>
                         <td>${item.user.username || 'N/A'}</td>
                         <td>${item.date ? new Date(item.date).toLocaleDateString() : 'N/A'}</td>
-                        <td>${deleteButtonHtml}</td>
+                        <td>
+                        ${editButtonHtml}
+                        ${deleteButtonHtml}
+                        </td>
                     `;
 
             if (item.user.githubId === githubId) {
                 row.querySelector("#deleteButton").addEventListener("click", () => deleteMessage(item.id, row.id));
+                document.querySelector("#edit-message").addEventListener("click", () => editMessage(item.id, row.id));
             }
+
         });
     });
 </script>
+
 <script>
     const themes = [
         "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave",
@@ -243,4 +437,5 @@
     loadTheme();
 
 </script>
+
 </html>

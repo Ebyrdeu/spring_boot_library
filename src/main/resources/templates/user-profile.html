@@ -14,25 +14,28 @@
         let githubId = [[${githubId}]];
         /*]]>*/
     </script>
-
 </head>
 <body>
+
 <div class="navbar bg-base-100">
     <div class="flex-1">
         <a th:href="@{/web/home}" class="btn btn-ghost text-xl">Definitely not X</a>
     </div>
     <div class="flex justify-end flex-1 px-2">
         <div class="flex items-stretch gap-3 ">
-
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
-            <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
+            <a class="btn logout-btn" th:href="@{/auth/logout}"></a>
             <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">Themes</div>
+                <div tabindex="0" role="button" class="btn btn-ghost rounded-btn themes-btn"></div>
                 <ul tabindex="0"
                     class="theme-list menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
                 </ul>
             </div>
-            <a th:if="${isAuthenticated}" th:href="@{/web/profile}">
+            <label class="swap">
+                <input type="checkbox" class="swap-lang"/>
+                <div class="swap-on">SV</div>
+                <div class="swap-off">EN</div>
+            </label>
+            <a th:href="@{/web/profile}">
                 <div class="avatar online">
                     <div class="rounded-full w-12">
                         <img class="user-avatar"/>
@@ -46,29 +49,28 @@
 <div class="hero min-h-screen bg-base-200">
     <div class="hero-content text-center">
         <div class="max-w-md">
-            <h1 class="text-4xl font-bold mb-5 username"></h1>
             <div class="card  shadow-2xl bg-base-100">
                 <div class="card-body">
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">Name</span>
+                            <span class="label-text form-name"></span>
                         </label>
                         <input type="text" class="input input-bordered edit-username"/>
                     </div>
                     <div class="form-control">
-                        <label class="label"><span class="label-text">Firstname</span></label>
+                        <label class="label"><span class="label-text form-first-name"></span></label>
                         <input type="text" class="input input-bordered edit-firstname"/>
                     </div>
                     <div class="form-control">
-                        <label class="label"><span class="label-text">Lastname</span></label>
+                        <label class="label"><span class="label-text form-last-name"></span></label>
                         <input type="text" class="input input-bordered edit-lastname"/>
                     </div>
                     <div class="form-control">
-                        <label class="label"><span class="label-text">Avatar</span></label>
+                        <label class="label"><span class="label-text form-avatar"></span></label>
                         <input type="text" class="input input-bordered edit-avatar"/>
                     </div>
                     <div class="form-control mt-6">
-                        <button class="btn btn-primary" type="button" onclick="submit(event)">Edit</button>
+                        <button class="btn btn-primary form-edit" type="button" onclick="submit(event)"></button>
                     </div>
                 </div>
             </div>
@@ -76,6 +78,43 @@
     </div>
 </div>
 </body>
+
+
+<script>
+    const swapLangCheckbox = document.querySelector(".swap-lang");
+    const logoutBtn = document.querySelector(".logout-btn");
+    const themesBtn = document.querySelector(".themes-btn")
+    const formName = document.querySelector(".form-name");
+    const formFirstName = document.querySelector(".form-first-name");
+    const formLastName = document.querySelector(".form-last-name");
+    const formAvatar = document.querySelector(".form-avatar");
+    const formEdit = document.querySelector(".form-edit");
+    const loadLanguage = (lang) => {
+        fetch('/lang/lang.json')
+            .then(response => response.json())
+            .then(data => {
+                logoutBtn.textContent = data.navbar[lang].logout;
+                themesBtn.textContent = data.navbar[lang].themes;
+                formName.textContent = data.profile[lang].name;
+                formFirstName.textContent = data.profile[lang].firstname;
+                formLastName.textContent = data.profile[lang].lastname;
+                formAvatar.textContent = data.profile[lang].avatar;
+                formEdit.textContent = data.profile[lang].edit;
+            })
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+        const currentLang = localStorage.getItem('language') || 'en';
+        swapLangCheckbox.checked = currentLang === 'sv';
+        loadLanguage(currentLang);
+    });
+
+
+    swapLangCheckbox.addEventListener("click", () => {
+        const selectedLang = swapLangCheckbox.checked ? 'sv' : 'en';
+        loadLanguage(selectedLang);
+        localStorage.setItem('language', selectedLang); // Save the current language to local storage
+    });
+</script>
 <script>
     const themes = [
         "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave",
@@ -122,7 +161,6 @@
 
 <script>
     fetch(`/api/users/${githubId}`).then(r => r.json()).then(({data}) => {
-        document.querySelector(".username").textContent = "Welcome Back " + data.username + " !";
         document.querySelector(".user-avatar").src = data.avatar;
         document.querySelector(".edit-username").placeholder = data.username;
         document.querySelector(".edit-firstname").placeholder = data.firstName;
