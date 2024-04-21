@@ -44,12 +44,14 @@ public class GithubOAuth2ServiceImpl extends DefaultOAuth2UserService {
         User user = new User();
         user.setUserName((String) attributes.get("login"));
         user.setProfileImage((String) attributes.get("avatar_url"));
-        user.setFullName((String) attributes.get("name"));
-        //user.setEmail((String) attributes.get("email"));
+        user.setFirstName((String) attributes.get("first_name"));
+        user.setLastName((String) attributes.get("last_name"));
         user.setGithubId((Integer) attributes.get("id"));
 
         User.UserBuilder userBuilder = User.builder()
                 .userName(user.getUserName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .profileImage(user.getProfileImage())
                 .githubId(user.getGithubId());
                 //.role(Role.ROLE_USER);

@@ -63,16 +63,21 @@ public class WebController {
 
 
     @GetMapping("/profile")
-    public String profile(Model model, HttpServletRequest request) {
+    public String profile(Model model, HttpServletRequest request, @AuthenticationPrincipal OAuth2User principal) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
 
         // Adding messages to the model if the user is authenticated
         if (isAuthenticated) {
+            User user = userService.findByGitHubId(principal.getAttribute("id"));
             List<MessageAndUsername> messages = messageService.findAllMessages();
             model.addAttribute("messages", messages);
+            model.addAttribute("isAuthenticated", isAuthenticated);
+            model.addAttribute("username", user.getUserName());
+            model.addAttribute("fullName", user.getFirstName() + " " + user.getLastName());
+            model.addAttribute("profileImage", user.getProfileImage());
+            model.addAttribute("email", user.getEmail());
         }
-
         model.addAttribute("isAuthenticated", isAuthenticated);
         return "user-profile-page";
     }
