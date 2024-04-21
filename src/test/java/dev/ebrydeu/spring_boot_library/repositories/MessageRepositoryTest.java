@@ -22,22 +22,29 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class MessageRepositoryTest {
 
-    private final MessageRepository repository;
+    private final MessageRepository messageRepository;
+
+    private final UserRepository userRepository;
+
 
     @Autowired
-    public MessageRepositoryTest(MessageRepository repository) {
-        this.repository = repository;
+    public MessageRepositoryTest(MessageRepository messageRepository, UserRepository userRepository) {
+        this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
     }
 
     @Test
     @DisplayName("Message can be created and recalled")
     void messageCanBeCreatedAndRecalled() {
         User userOne = createUserOne();
-        Message messageOne = createMessageOne(userOne);
 
-        messageOne = repository.save(messageOne);
+        User user = userRepository.save(userOne);
 
-        Optional<Message> result = repository.findById(messageOne.getId());
+        Message messageOne = createMessageOne(user);
+
+        messageOne = messageRepository.save(messageOne);
+
+        Optional<Message> result = messageRepository.findById(messageOne.getId());
 
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(messageOne);
@@ -47,13 +54,16 @@ class MessageRepositoryTest {
     @DisplayName("Multiply Messages can be created and recalled")
     void multiplyMessagesCanBeCreatedAndRecalled() {
         User userOne = createUserOne();
-        Message messageOne = createMessageOne(userOne);
-        repository.save(messageOne);
+
+        User user = userRepository.save(userOne);
+
+        Message messageOne = createMessageOne(user);
+        messageRepository.save(messageOne);
 
         Message messageTwo = createMessageTwo(userOne);
-        repository.save(messageTwo);
+        messageRepository.save(messageTwo);
 
-        List<Message> result = repository.findAll();
+        List<Message> result = messageRepository.findAll();
 
         assertThat(result)
                 .hasSize(2)
@@ -64,13 +74,16 @@ class MessageRepositoryTest {
     @DisplayName("Message can be updated")
     void messageCanBeUpdated() {
         User userOne = createUserOne();
-        Message messageOne = createMessageOne(userOne);
-        messageOne = repository.save(messageOne);
+
+        User user = userRepository.save(userOne);
+
+        Message messageOne = createMessageOne(user);
+        messageOne = messageRepository.save(messageOne);
 
         messageOne.setPrivate(true);
-        repository.save(messageOne);
+        messageRepository.save(messageOne);
 
-        Optional<Message> result = repository.findById(messageOne.getId());
+        Optional<Message> result = messageRepository.findById(messageOne.getId());
 
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(messageOne);
@@ -82,13 +95,16 @@ class MessageRepositoryTest {
     void messageCanBeDeleted() {
 
         User userOne = createUserOne();
-        Message messageOne = createMessageOne(userOne);
 
-        messageOne = repository.save(messageOne);
+        User user = userRepository.save(userOne);
 
-        repository.deleteById(messageOne.getId());
+        Message messageOne = createMessageOne(user);
 
-        Optional<Message> result = repository.findById(messageOne.getId());
+        messageOne = messageRepository.save(messageOne);
+
+        messageRepository.deleteById(messageOne.getId());
+
+        Optional<Message> result = messageRepository.findById(messageOne.getId());
 
         assertThat(result).isEmpty();
     }
@@ -96,13 +112,14 @@ class MessageRepositoryTest {
     @Test
     @DisplayName("Auditing fields are populated for Message")
     void auditingFieldsArePopulatedForMessage() {
-        User user = createUserOne();
+        User userOne = createUserOne();
+        User user = userRepository.save(userOne);
 
         Message message = createMessageOne(user);
 
-        message = repository.save(message);
+        message = messageRepository.save(message);
 
-        Optional<Message> fetchedMessage = repository.findById(message.getId());
+        Optional<Message> fetchedMessage = messageRepository.findById(message.getId());
         assertThat(fetchedMessage).isPresent();
 
         Message persistedMessage = fetchedMessage.get();

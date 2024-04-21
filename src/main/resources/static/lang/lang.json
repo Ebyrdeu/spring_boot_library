@@ -1,0 +1,64 @@
+{
+  "navbar": {
+    "en": {
+      "create": "New Message",
+      "logout": "Logout",
+      "login": "Login with Github",
+      "themes": "Themes"
+    },
+    "sv": {
+      "create": "Nytt Meddelande",
+      "logout": "Logga ut",
+      "login": "Logga in med Github",
+      "themes": "Teman"
+    }
+  },
+  "modal": {
+    "en": {
+      "title": "Title",
+      "body": "Body",
+      "toPrivate": "Set to Private",
+      "create": "Create Message",
+      "edit": "Edit Message"
+    },
+    "sv": {
+      "title": "Titel",
+      "body": "Innehåll",
+      "toPrivate": "Gör Privat",
+      "create": "Skapa Meddelande",
+      "edit": "Redigera Meddelande"
+    }
+  },
+  "table": {
+    "en": {
+      "id": "ID",
+      "title": "Title",
+      "body": "Body",
+      "username": "Username",
+      "date": "Date"
+    },
+    "sv": {
+      "id": "ID",
+      "title": "Titel",
+      "body": "Innehåll",
+      "username": "Användarnamn",
+      "date": "Datum"
+    }
+  },
+  "profile": {
+    "en": {
+      "name": "Name",
+      "firstname": "First name",
+      "lastname": "Last name",
+      "avatar": "Avatar",
+      "edit": "Edit"
+    },
+    "sv": {
+      "name": "Namn",
+      "firstname": "Förnamn",
+      "lastname": "Efternamn",
+      "avatar": "Avatar",
+      "edit": "Redigera"
+    }
+  }
+}

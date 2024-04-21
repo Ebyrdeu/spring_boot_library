@@ -37,7 +37,7 @@ public class Message extends Auditable {
     @CreationTimestamp
     private Instant date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
 

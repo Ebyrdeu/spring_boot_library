@@ -10,6 +10,7 @@ public interface UserService {
     List<UserDto> findAll();
 
     UserDto findById(Long userId);
+    UserDto findByGithubId(Integer githubId);
 
     List<UserDto> findByFirstname(String firstname);
 
@@ -21,7 +22,7 @@ public interface UserService {
 
     boolean isExists(Long id);
 
-    void partialUpdate(Long id, UserDto dto);
+    void partialUpdate(Integer id, UserDto dto);
 
     void delete(Long id);
 }

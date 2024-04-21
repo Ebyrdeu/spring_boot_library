@@ -8,32 +8,171 @@
     <title>document</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
+
+
 </head>
 <body>
+
 <div class="navbar bg-base-100">
     <div class="flex-1">
-        <a th:href="@{/web/home}" class="btn btn-ghost text-xl">definitely not x</a>
+        <a th:href="@{/web/home}" class="btn btn-ghost text-xl">Definitely not X</a>
     </div>
     <div class="flex justify-end flex-1 px-2">
         <div class="flex items-stretch gap-3 ">
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/web/home}">home</a>
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
-            <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
+            <a class="btn logout-btn" th:href="@{/auth/logout}"></a>
             <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">Themes</div>
+                <div tabindex="0" role="button" class="btn btn-ghost rounded-btn themes-btn"></div>
                 <ul tabindex="0"
                     class="theme-list menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
                 </ul>
             </div>
+            <label class="swap">
+                <input type="checkbox" class="swap-lang"/>
+                <div class="swap-on">SV</div>
+                <div class="swap-off">EN</div>
+            </label>
+            <a th:href="@{/web/profile}">
+                <div class="avatar online">
+                    <div class="rounded-full w-12">
+                        <img class="user-avatar"/>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
+
 <div class="hero min-h-screen bg-base-200">
     <div class="hero-content text-center">
-        <div class="max-w-md">private</div>
+        <div class="max-w-md">
+            <div class="card  shadow-2xl bg-base-100">
+                <div class="card-body">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text form-name"></span>
+                        </label>
+                        <input type="text" class="input input-bordered edit-username"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text form-first-name"></span></label>
+                        <input type="text" class="input input-bordered edit-firstname"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text form-last-name"></span></label>
+                        <input type="text" class="input input-bordered edit-lastname"/>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text form-avatar"></span></label>
+                        <input type="text" class="input input-bordered edit-avatar"/>
+                    </div>
+                    <div class="form-control mt-6">
+                        <button class="btn btn-primary form-edit" type="button" onclick="submit()"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
+
+<!--Client Translation-->
+<script>
+    const swapLangCheckbox = document.querySelector(".swap-lang");
+    const logoutBtn = document.querySelector(".logout-btn");
+    const themesBtn = document.querySelector(".themes-btn")
+    const formName = document.querySelector(".form-name");
+    const formFirstName = document.querySelector(".form-first-name");
+    const formLastName = document.querySelector(".form-last-name");
+    const formAvatar = document.querySelector(".form-avatar");
+    const formEdit = document.querySelector(".form-edit");
+
+    const loadLanguage = async (lang) => {
+        try {
+            const response = await fetch('/lang/lang.json');
+            const data = await response.json();
+            logoutBtn.textContent = data.navbar[lang].logout;
+            themesBtn.textContent = data.navbar[lang].themes;
+            formName.textContent = data.profile[lang].name;
+            formFirstName.textContent = data.profile[lang].firstname;
+            formLastName.textContent = data.profile[lang].lastname;
+            formAvatar.textContent = data.profile[lang].avatar;
+            formEdit.textContent = data.profile[lang].edit;
+        } catch (error) {
+            console.error('Failed to load language data:', error);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const currentLang = localStorage.getItem('language') || 'en';
+        swapLangCheckbox.checked = currentLang === 'sv';
+        loadLanguage(currentLang);
+    });
+
+    swapLangCheckbox.addEventListener("click", () => {
+        const selectedLang = swapLangCheckbox.checked ? 'sv' : 'en';
+        loadLanguage(selectedLang);
+        localStorage.setItem('language', selectedLang);
+    });
+</script>
+
+
+<!--Fetch All User Details-->
+<script>
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`/api/users/${[[${githubId}]]}`);
+            const {data} = await response.json();
+            document.querySelector(".user-avatar").src = data.avatar;
+            document.querySelector(".edit-username").placeholder = data.username;
+            document.querySelector(".edit-firstname").placeholder = data.firstName;
+            document.querySelector(".edit-lastname").placeholder = data.lastName;
+            document.querySelector(".edit-avatar").placeholder = data.avatar;
+        } catch (error) {
+            console.error('Failed to fetch user data:', error);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchUserData);
+</script>
+
+<script>
+    const submit = async () => {
+        const formData = {};
+        const username = document.querySelector(".edit-username").value;
+        const firstName = document.querySelector(".edit-firstname").value;
+        const lastName = document.querySelector(".edit-lastname").value;
+        const avatar = document.querySelector(".edit-avatar").value;
+
+        if (username) formData.username = username;
+        if (firstName) formData.firstName = firstName;
+        if (lastName) formData.lastName = lastName;
+        if (avatar) formData.avatar = avatar;
+
+        try {
+            await fetch(`/api/users/${[[${githubId}]]}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (username) document.querySelector(".edit-username").placeholder = firstName;
+            if (firstName) document.querySelector(".edit-firstname").placeholder = firstName;
+            if (lastName) document.querySelector(".edit-lastname").placeholder = lastName;
+            if (avatar) {
+                document.querySelector(".user-avatar").src = avatar;
+                document.querySelector(".edit-avatar").placeholder = avatar;
+            }
+
+        } catch (error) {
+            console.error('Failed to update user data:', error);
+        }
+    }
+</script>
+
+
+<!--Theme Loader-->
 <script>
     const themes = [
         "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave",
@@ -48,33 +187,40 @@
 
     const loadTheme = () => {
         const savedTheme = sessionStorage.getItem('selectedTheme');
-        if (savedTheme) htmlTag.setAttribute('data-theme', savedTheme);
-    }
+        if (savedTheme) {
+            htmlTag.setAttribute('data-theme', savedTheme);
+        }
+    };
 
-    const saveTheme = (theme) => {
+    const saveTheme = theme => {
         sessionStorage.setItem('selectedTheme', theme);
         htmlTag.setAttribute('data-theme', theme);
-    }
+    };
 
-    themes.forEach(theme => {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.textContent = theme;
-        a.className = "mb-2";
-        a.href = "#";
-        a.addEventListener("click", (e) => {
-            e.preventDefault();
-            saveTheme(theme);
+    const populateThemeList = () => {
+        themes.forEach(theme => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.textContent = theme;
+            a.className = "mb-2 cursor-pointer";
+            a.href = "#";
+            li.appendChild(a);
+            themeList.appendChild(li);
         });
 
-        li.appendChild(a);
-        themeList.appendChild(li);
+        themeList.style.maxHeight = "200px";
+        themeList.style.overflowY = "auto";
+    }
+
+    themeList.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = e.target;
+        if (target.tagName === 'A') {
+            saveTheme(target.textContent);
+        }
     });
 
-    themeList.style.maxHeight = "200px";
-    themeList.style.overflowY = "auto";
-
+    populateThemeList();
     loadTheme();
-
 </script>
 </html>
