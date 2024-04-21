@@ -1,6 +1,5 @@
 package dev.ebrydeu.spring_boot_library.controllers.web;
 
-
 import dev.ebrydeu.spring_boot_library.domain.dto.CreateMessageFormData;
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageAndUsername;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserData;
@@ -10,7 +9,6 @@ import dev.ebrydeu.spring_boot_library.services.impl.MessageService;
 import dev.ebrydeu.spring_boot_library.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,6 +47,21 @@ public class WebController {
         return "home";
     }
 
+    @GetMapping("/user-edit")
+    public String editUserProfile(Model model, @AuthenticationPrincipal OAuth2User principal) {
+        User user = userService.findByGitHubId(principal.getAttribute("id"));
+
+        model.addAttribute("formData", new UserData(
+                user.getUserName(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getProfileImage()));
+        return "user-edit";
+    }
+
+
+
     @GetMapping("/profile")
     public String profile(Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,7 +74,7 @@ public class WebController {
         }
 
         model.addAttribute("isAuthenticated", isAuthenticated);
-        return "user-profile-page"; // Name of your Thymeleaf template
+        return "user-profile-page";
     }
 
     @GetMapping("/messages")
@@ -82,63 +95,8 @@ public class WebController {
         return "messages";
     }
 
-    @GetMapping("/myprofile")
-    public String userProfile(@RequestParam(value = "page", defaultValue = "0") String page,
-                              Model model,
-                              @AuthenticationPrincipal OAuth2User principal,
-                              HttpServletRequest httpServletRequest) {
-        int p = Integer.parseInt(page);
-        if (p < 0) p = 0;
-        User user = userService.findByGitHubId(principal.getAttribute("id"));
-        List<MessageAndUsername> messages = messageService.findAllMessagesByUser(user);
-        int allMessageCount = messageService.findAllMessagesByUser(user).size();
-
-        model.addAttribute("messages", messages);
-        model.addAttribute("currentPage", p);
-        model.addAttribute("totalMessages", allMessageCount);
-        model.addAttribute("httpServletRequest", httpServletRequest);
-        model.addAttribute("name", user.getFirstName() + " " + user.getLastName());
-        model.addAttribute("userName", user.getUserName());
-        model.addAttribute("profilepic", user.getProfileImage());
-        model.addAttribute("email", user.getEmail());
-        return "userprofile";
-    }
-
-    @GetMapping("/myprofile/edit")
-    public String editUserProfile(Model model, @AuthenticationPrincipal OAuth2User principal) {
-        User user = userService.findByGitHubId(principal.getAttribute("id"));
-
-        model.addAttribute("formData", new UserData(
-                user.getUserName(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getProfileImage()));
-        return "edituser";
-    }
-
     private boolean checkIfUsernameAlreadyExists(String userName, User user) {
         return userService.findByUserName(userName).isPresent() && !userName.equals(user.getUserName());
-    }
-
-    @PostMapping("/myprofile/edit")
-    public String editUserProfile(@Valid @ModelAttribute("formData") UserData userForm,
-                                  BindingResult bindingResult,
-                                  @AuthenticationPrincipal OAuth2User principal) {
-        User user = userService.findByGitHubId(principal.getAttribute("id"));
-
-        if (checkIfUsernameAlreadyExists(userForm.getUserName(), user))
-            bindingResult.rejectValue("userName", "duplicate", "Username needs to be unique");
-        if (bindingResult.hasErrors())
-            return "edituser";
-
-        user.setUserName(userForm.getUserName());
-        user.setFirstName(userForm.getFirstName());
-        user.setLastName(userForm.getLastName());
-        user.setEmail(userForm.getEmail());
-        user.setProfileImage(userForm.getProfileImage());
-        userService.save(user);
-        return "redirect:/web/myprofile";
     }
 
 
@@ -214,6 +172,26 @@ public class WebController {
 
         User user = userService.findByGitHubId(principal.getAttribute("id"));
         messageService.save(messageForm.toEntity(user));
+        return "redirect:/web/profile";
+    }
+
+    @PostMapping("/user-edit")
+    public String editUserProfile(@Valid @ModelAttribute("formData") UserData userForm,
+                                  BindingResult bindingResult,
+                                  @AuthenticationPrincipal OAuth2User principal) {
+        User user = userService.findByGitHubId(principal.getAttribute("id"));
+
+        if (checkIfUsernameAlreadyExists(userForm.getUserName(), user))
+            bindingResult.rejectValue("userName", "duplicate", "Username needs to be unique");
+        if (bindingResult.hasErrors())
+            return "user-edit";
+
+        user.setUserName(userForm.getUserName());
+        user.setFirstName(userForm.getFirstName());
+        user.setLastName(userForm.getLastName());
+        user.setEmail(userForm.getEmail());
+        user.setProfileImage(userForm.getProfileImage());
+        userService.save(user);
         return "redirect:/web/profile";
     }
 
