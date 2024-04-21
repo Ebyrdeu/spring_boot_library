@@ -7,6 +7,9 @@ import dev.ebrydeu.spring_boot_library.repositories.MessageRepository;
 import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
 import dev.ebrydeu.spring_boot_library.services.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,10 +39,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<MessageDto> findAll() {
-        return repository.findAll().stream()
-                .map(MessageDto::map)
-                .toList();
+    public Page<MessageDto> findAll(Integer page) {
+        Pageable pageable = PageRequest.of(page, 5);
+
+        return repository.findAll(pageable).map(MessageDto::map);
     }
 
     @Override

@@ -3,6 +3,7 @@ package dev.ebrydeu.spring_boot_library.controllers.rest;
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import dev.ebrydeu.spring_boot_library.responses.JSendResponse;
+import dev.ebrydeu.spring_boot_library.responses.PaginatedResponse;
 import dev.ebrydeu.spring_boot_library.responses.dto.InternalServerJSendResponse;
 import dev.ebrydeu.spring_boot_library.responses.dto.NotFoundJSendResponse;
 import dev.ebrydeu.spring_boot_library.responses.dto.message.MessageJSendResponse;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -50,9 +52,15 @@ public class MessageController {
     @GetMapping
     @Operation(summary = "Find all Messages")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MessagesJSendResponse.class)))
-    public JSendResponse findAll() {
-        List<MessageDto> messages = service.findAll();
-        return JSendResponse.success(messages);
+    public PaginatedResponse findAll(@RequestParam(name = "page", defaultValue = "0") Integer page) {
+        Page<MessageDto> messages = service.findAll(page);
+
+        return PaginatedResponse.success(
+                messages.stream().toList(),
+                messages.getNumber(),
+                messages.getTotalElements(),
+                messages.getTotalPages()
+        );
     }
 
     @GetMapping("/{id}")
