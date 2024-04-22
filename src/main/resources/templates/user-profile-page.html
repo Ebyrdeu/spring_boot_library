@@ -96,7 +96,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Welcome to Your Profile Home</h1>
+    <h1 class="welcome-message" th:text="#{profile.welcome}">Welcome to Your Profile Home</h1>
 
     <div class="profile-container">
         <div class="profile-box">
@@ -106,9 +106,9 @@
             <p id="email" th:text="${email}">Your Email</p>
         </div>
         <div class="button-container">
-            <a th:href="@{/web/user-edit}" class="edit-profile-button">Edit Profile</a>
-            <a th:href="@{/web/message-create}" class="new-message-button">Create New Message</a>
-            <a class="logout-button" th:if="${isAuthenticated}" th:href="@{/auth/logout}">Logout</a>
+            <a th:href="@{/web/user-edit}" class="edit-profile-button" th:text="#{profile.edit}">Edit Profile</a>
+            <a th:href="@{/web/message-create}" class="new-message-button" th:text="#{profile.createmessage}">Create New Message</a>
+            <a class="logout-button" th:if="${isAuthenticated}" th:href="@{/auth/logout}" th:text="#{logout}">Logout</a>
 
         </div>
     </div>
@@ -116,29 +116,31 @@
     <div class="message-board" th:if="${isAuthenticated}">
         <div th:each="message : ${messages}" class="message">
             <div class="title">
-                <span style="font-weight: bold;">Title: </span>
+                <span style="font-weight: bold;" th:text="#{title}">Title: </span>
                 <span th:text="${message.title}"></span>
             </div>
             <div class="user">
-                <span style="font-weight: bold;">User: </span>
+                <span style="font-weight: bold;" th:text="#{user}">User: </span>
                 <span th:text="${message.userUserName}"></span>
             </div>
             <p th:text="${message.body}"></p>
             <div class="visibility">
-                <span th:text="'Visibility: ' + (${message.privateMessage} ? 'Private' : 'Public')"></span>
+                <span> <strong th:text="#{visibility}">Visibility</strong>
+                <span th:text="' ' + (${message.privateMessage} ? 'Private' : 'Public')">Public</span></span>
             </div>
             <div class="timestamp">
-                <span>Created: <span th:text="${#temporals.format(message.date(), 'dd MMM yyyy')}"></span></span>
-                <span>Last Modified: <span th:text="${#temporals.format(message.lastChanged(), 'dd MMM yyyy')}"></span></span>
+                <span><strong th:text="#{created}">Created</strong>:</span> <span th:text="${#temporals.format(message.date(), 'dd MMM yyyy')}">22 Apr 2024</span>
+                <span><strong th:text="#{last.modified}">Last Modified</strong>:</span> <span th:text="${#temporals.format(message.lastChanged(), 'dd MMM yyyy')}"></span>
             </div>
             <a th:href="@{/web/messages/edit/{id}(id=${message.id})}" class="edit-button">Edit</a>
         </div>
     </div>
 <div class="language-buttons">
     <form id="translate-form" action="#" method="get">
-        <button class="language-button" type="submit" name="lang" value="en">English</button>
-        <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
+        <a href="https://localhost:8443/web/profile?lang=en" class="language-button">English</a>
+        <a href="https://localhost:8443/web/profile?lang=sv" class="language-button">Svenska</a>
     </form>
+
 </div>
 </div>
 </body>
