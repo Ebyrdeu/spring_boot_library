@@ -165,7 +165,7 @@ public class WebController {
 
         model.addAttribute("messages", publicMessages);
         model.addAttribute("httpServletRequest", httpServletRequest);
-        model.addAttribute("totalPublicMessages", allPublicMessageCount);
+        model.addAttribute("totalPublicMessages", publicMessages.size());
         return "public";
     }
     @GetMapping("/message-create")

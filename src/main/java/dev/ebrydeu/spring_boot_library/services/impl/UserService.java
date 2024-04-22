@@ -3,6 +3,7 @@ package dev.ebrydeu.spring_boot_library.services.impl;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.exception.Exceptions;
 import dev.ebrydeu.spring_boot_library.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,6 +44,14 @@ public class UserService {
     public User findByGitHubId(Integer githubId) {
         return userRepository.findByGithubId(githubId);
 
+    }
+    public User findById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new EntityNotFoundException("User not found with ID: " + id);
+        }
     }
     @Cacheable("email")
     public User findByEmail(String email) {

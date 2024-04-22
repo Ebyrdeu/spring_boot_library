@@ -70,8 +70,9 @@ public class MessageService {
         return messageRepository.findMessagesByUserId(userId);
     }
     @CacheEvict(value = {"messages", "publicMessages"}, allEntries = true)
-    public void save(Message message) {
+    public Message save(Message message) {
         messageRepository.save(message);
+        return message;
     }
 
     @CacheEvict(value = {"messages", "publicMessages"}, allEntries = true)

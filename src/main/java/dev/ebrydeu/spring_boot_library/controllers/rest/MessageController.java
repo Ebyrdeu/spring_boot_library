@@ -1,122 +1,77 @@
-//package dev.ebrydeu.spring_boot_library.controllers.rest;
-//
-//import dev.ebrydeu.spring_boot_library.domain.entities.Message;
-//import dev.ebrydeu.spring_boot_library.responses.JSendResponse;
-//import dev.ebrydeu.spring_boot_library.responses.dto.InternalServerJSendResponse;
-//import dev.ebrydeu.spring_boot_library.responses.dto.NotFoundJSendResponse;
-//import dev.ebrydeu.spring_boot_library.responses.dto.message.MessageJSendResponse;
-//import dev.ebrydeu.spring_boot_library.responses.dto.message.MessagesJSendResponse;
-//import dev.ebrydeu.spring_boot_library.responses.dto.user.UserJSendResponse;
-//import dev.ebrydeu.spring_boot_library.services.impl.MessageService;
-//import io.swagger.v3.oas.annotations.Operation;
-//import io.swagger.v3.oas.annotations.Parameter;
-//import io.swagger.v3.oas.annotations.media.Content;
-//import io.swagger.v3.oas.annotations.media.Schema;
-//import io.swagger.v3.oas.annotations.responses.ApiResponse;
-//import io.swagger.v3.oas.annotations.responses.ApiResponses;
-//import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-//import io.swagger.v3.oas.annotations.tags.Tag;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.server.ResponseStatusException;
-//
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/api/messages")
-//@RequiredArgsConstructor
-//@SecurityRequirement(name = "security_auth")
-//@Tag(name = "Message", description = "provides api to manipulate messages")
-//
-//public class MessageController {
-//
-//    private final MessageService service;
-//
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @Operation(summary = "Create single Message", description = "User is required")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = UserJSendResponse.class))),
-//            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
-//            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
-//    })
-//    public JSendResponse createMessage(@RequestBody MessageDto dto) {
-//        MessageDto messages = service.save(dto);
-//        return JSendResponse.success(messages);
-//    }
-//
-//    @GetMapping
-//    @Operation(summary = "Find all Messages")
-//    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MessagesJSendResponse.class)))
-//    public JSendResponse findAll() {
-//        List<MessageDto> messages = service.findAll();
-//        return JSendResponse.success(messages);
-//    }
-//
-//    @GetMapping("/{id}")
-//    @Operation(summary = "Find Message by ID", description = "User Must Exist")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MessageJSendResponse.class))),
-//            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
-//            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
-//    })
-//    public JSendResponse findById(@Parameter(description = "id", required = true, example = "1") @PathVariable Long id) {
-//        MessageDto message = service.findById(id);
-//        return JSendResponse.success(message);
-//    }
-//
-//    @GetMapping("/title/{title}")
-//    @Operation(summary = "Find Message  by title")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = MessageJSendResponse.class))),
-//            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
-//            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
-//    })
-//    public JSendResponse findByTitle(@Parameter(required = true, example = "Message Title") @PathVariable String title) {
-//        List<MessageDto> messages = service.findByTitle(title);
-//        return JSendResponse.success(messages);
-//    }
-//
-//
-//    @PutMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @Operation(summary = "Update an existing Message", description = "All fields are required for update")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "No Content"),
-//            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
-//            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
-//    })
-//    public void fullUpdate(@Parameter(description = "id", required = true, example = "1") @PathVariable("id") Long id, @RequestBody MessageDto dto) {
-//        if (!service.isExists(id)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//
-//        Message message = MessageDto.map(dto);
-//        message.setId(id);
-//
-//        service.save(MessageDto.map(message));
-//    }
-//
-//    @PatchMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @Operation(summary = "Update an existing Message")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
-//            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
-//    })
-//    public void partialUpdate(@Parameter(description = "id", required = true, example = "1") @PathVariable("id") Long id, @RequestBody MessageDto dto) {
-//        service.partialUpdate(id, dto);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "No Content"),
-//            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = NotFoundJSendResponse.class))),
-//            @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = InternalServerJSendResponse.class)))
-//    })
-//    public void delete(@Parameter(required = true, example = "1") @PathVariable Long id) {
-//        service.delete(id);
-//    }
-//}
-//
-//
+package dev.ebrydeu.spring_boot_library.controllers.rest;
+
+import dev.ebrydeu.spring_boot_library.domain.dto.CreateMessageFormData;
+import dev.ebrydeu.spring_boot_library.domain.dto.MessageAndUsername;
+import dev.ebrydeu.spring_boot_library.domain.entities.Message;
+import dev.ebrydeu.spring_boot_library.domain.entities.User;
+import dev.ebrydeu.spring_boot_library.services.impl.MessageService;
+import dev.ebrydeu.spring_boot_library.services.impl.UserService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/messages")
+public class MessageController {
+
+    private final MessageService messageService;
+    private final UserService userService;
+    @Autowired
+    public MessageController(MessageService messageService, UserService userService) {
+        this.messageService = messageService;
+        this.userService = userService;
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<MessageAndUsername>> getAllMessages() {
+        List<MessageAndUsername> messages = messageService.findAllMessages();
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+
+    @GetMapping("/public")
+    public ResponseEntity<List<MessageAndUsername>> getPublicMessages() {
+        List<MessageAndUsername> messages = messageService.findAllByPrivateMessageIsFalse();
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MessageAndUsername> getMessageById(@PathVariable Long id) {
+        Optional<MessageAndUsername> message = messageService.getMessageById(id);
+        return message.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<Message> createMessage(@Valid @RequestBody CreateMessageFormData messageData, @RequestParam("userId") Long userId) {
+        User user = userService.findById(userId);
+        Message newMessage = messageService.save(messageData.toEntity(user));
+        return new ResponseEntity<>(newMessage, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Message> updateMessage(@PathVariable Long id,
+                                                 @Valid @RequestBody CreateMessageFormData messageData) {
+        try {
+            Message updatedMessage = messageService.updateMessage(id, messageData.getTitle(), messageData.getBody(), messageData.isPrivateMessage());
+            return new ResponseEntity<>(updatedMessage, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
+        try {
+            Message message = messageService.findById(id);
+            messageService.delete(message);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+}
