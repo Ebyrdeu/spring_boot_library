@@ -17,6 +17,7 @@ public interface UserRepository extends ListCrudRepository<User, Long> {
 
     User findByGithubId(Integer githubId);
 
+
     Optional<User> findByEmail(String email);
 
 

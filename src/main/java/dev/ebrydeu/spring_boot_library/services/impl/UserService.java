@@ -26,15 +26,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // @Cacheable("firstName")
-    public List<User> findByFirstName(String firstName) {
-        return userRepository.findByFirstName(firstName);
-    }
-
-    // @Cacheable("lastName")
-    public List<User> findByLastName(String lastName) {
-        return userRepository.findByLastName(lastName);
-    }
 
     @Cacheable("username")
     public Optional<User> findByUserName(String userName) {
@@ -53,11 +44,6 @@ public class UserService {
             throw new EntityNotFoundException("User not found with ID: " + id);
         }
     }
-    @Cacheable("email")
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
-
 
     @CacheEvict(value = {"email", "username"}, allEntries = true)
     public void save(User user) {

@@ -33,12 +33,6 @@ public class User {
     private String email;
     private Integer githubId;
 
-    public void setFullName(String fullName) {
-        String[] firstAndLastName = fullName.trim().split("\\s");
-        firstName = firstAndLastName.length >= 1 ? firstAndLastName[0].trim() : "";
-        lastName = firstAndLastName.length >= 2 ? firstAndLastName[1].trim() : "";
-    }
-
         @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

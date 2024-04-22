@@ -55,7 +55,7 @@ public class MessageController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Message> updateMessage(@PathVariable Long id,
-                                                 @Valid @RequestBody CreateMessageFormData messageData) {
+                                                @Valid @RequestBody CreateMessageFormData messageData) {
         try {
             Message updatedMessage = messageService.updateMessage(id, messageData.getTitle(), messageData.getBody(), messageData.isPrivateMessage());
             return new ResponseEntity<>(updatedMessage, HttpStatus.OK);

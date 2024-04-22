@@ -38,10 +38,6 @@ public class MessageService {
         return messageRepository.findAllByPrivateMessageIsFalse(pageable);
     }
 
-    @Cacheable("publicMessages")
-    public List<MessageAndUsername> findAllByUserIdAndPrivateMessageIsFalse(Long id) {
-        return messageRepository.findAllByUserIdAndPrivateMessageIsFalse(id);
-    }
     public Optional<MessageAndUsername> getMessageById(Long id) {
         return messageRepository
                 .findById(id)
@@ -83,12 +79,6 @@ public class MessageService {
                 .toList();
     }
 
-    public List<MessageAndUsername> findAllMessagesByUser(User user) {
-        return messageRepository.findAllByUser(user);
-    }
-    public List<MessageAndUsername> getMessagesByUserId(Long userId) {
-        return messageRepository.findMessagesByUserId(userId);
-    }
     @CacheEvict(value = {"messages", "publicMessages"}, allEntries = true)
     public Message save(Message message) {
         messageRepository.save(message);
@@ -110,6 +100,7 @@ public class MessageService {
 
     public Message updateMessage(Long messageId, String title, String body, boolean privateMessage) throws Exception {
         Optional<Message> messageOptional = messageRepository.findById(messageId);
+
         if (messageOptional.isPresent()) {
             Message message = messageOptional.get();
             message.setTitle(title);

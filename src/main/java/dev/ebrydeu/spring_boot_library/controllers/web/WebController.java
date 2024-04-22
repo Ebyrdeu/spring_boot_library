@@ -113,53 +113,6 @@ public class WebController {
     }
 
 
-    @GetMapping("/myprofile/editmessage")
-    public String editMessage(Model model, @RequestParam("id") Long id, @AuthenticationPrincipal OAuth2User principal) {
-        Message message = messageService.findById(id);
-        User currentUser = userService.findByGitHubId(principal.getAttribute("id"));
-
-        if (!message.getUser().getId().equals(currentUser.getId()))
-            return "redirect:/web/myprofile";
-
-        model.addAttribute("messageId", message.getId());
-        model.addAttribute("formData", new CreateMessageFormData(
-                message.getTitle(),
-                message.getBody(),
-                message.isPrivateMessage()));
-        return "editmessage";
-    }
-
-    @GetMapping("/myprofile/deletemessage")
-    public String deleteMessage(@RequestParam("id") Long id, @AuthenticationPrincipal OAuth2User principal) {
-        Message message = messageService.findById(id);
-        User currentUser = userService.findByGitHubId(principal.getAttribute("id"));
-
-        if (!message.getUser().getId().equals(currentUser.getId()))
-            return "redirect:/web/myprofile";
-
-        messageService.delete(message);
-        return "redirect:/web/myprofile";
-    }
-
-    @PostMapping("/myprofile/editmessage")
-    public String editMessage(@Valid @ModelAttribute("formData") CreateMessageFormData messageForm,
-                              BindingResult bindingResult,
-                              @RequestParam("id") Long id,
-                              RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addAttribute("id", id);
-            return "redirect:/web/myprofile/editmessage";
-        }
-
-        Message message = messageService.findById(id);
-        message.setBody(messageForm.getBody());
-        message.setTitle(messageForm.getTitle());
-        message.setPrivateMessage(messageForm.isPrivateMessage());
-        message.setLastChanged(LocalDate.now());
-        messageService.save(message);
-        return "redirect:/web/myprofile";
-    }
-
     @GetMapping("/public-page")
     public String guestPage(@RequestParam(value = "page", defaultValue = "0") String page,
                             Model model, HttpServletRequest httpServletRequest) {
@@ -213,34 +166,31 @@ public class WebController {
     }
     @GetMapping("/messages/edit/{id}")
     public String editMessage(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal OAuth2User principal) {
-        Message message = messageService.findById(id); // Changed to retrieve the entity
+        Message message = messageService.findById(id);
 
         if (message == null) {
             model.addAttribute("errorMessage", "Message not found");
-            return "errorPage"; // Redirect to an error page or similar
+            return "errorPage";
         }
-
         CreateMessageFormData formData = new CreateMessageFormData(
                 message.getTitle(),
                 message.getBody(),
                 message.isPrivateMessage()
         );
-
         model.addAttribute("messageId", message.getId());
         model.addAttribute("formData", formData);
-        return "message-edit"; // Name of the Thymeleaf template for editing messages
+        return "message-edit";
     }
 
-    // POST method to update a message
     @PostMapping("/messages/edit/{id}")
     public String updateMessage(@PathVariable("id") Long messageId,
                                 @ModelAttribute("formData") CreateMessageFormData formData,
                                 RedirectAttributes redirectAttributes,
                                 @AuthenticationPrincipal OAuth2User principal) {
-        try {
-            messageService.updateMessage(messageId, formData.getTitle(), formData.getBody(), formData.isPrivateMessage());
+        try {messageService.updateMessage(messageId, formData.getTitle(), formData.getBody(), formData.isPrivateMessage());
+
             redirectAttributes.addFlashAttribute("success", "Message updated successfully!");
-            return "redirect:/web/profile"; // Redirect to a profile or confirmation page
+            return "redirect:/web/profile";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error updating message: " + e.getMessage());
             return "redirect:/web/messages/edit/" + messageId;

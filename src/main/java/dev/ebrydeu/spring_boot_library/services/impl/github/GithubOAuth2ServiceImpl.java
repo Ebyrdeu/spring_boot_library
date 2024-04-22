@@ -56,7 +56,6 @@ public class GithubOAuth2ServiceImpl extends DefaultOAuth2UserService {
                 .lastName(user.getLastName())
                 .profileImage(user.getProfileImage())
                 .githubId(user.getGithubId());
-                //.role(Role.ROLE_USER);
 
 
         if (user.getEmail() != null) {
