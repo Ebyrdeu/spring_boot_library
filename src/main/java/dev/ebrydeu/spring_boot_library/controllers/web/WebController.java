@@ -105,7 +105,7 @@ public class WebController {
         model.addAttribute("httpServletRequest", httpServletRequest);
         model.addAttribute("currentPage", p);
         model.addAttribute("totalPublicMessages", allMessageCount);
-        return "messages";
+        return "public";
     }
 
     private boolean checkIfUsernameAlreadyExists(String userName, User user) {

@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -72,15 +72,6 @@
     </style>
 </head>
 <body>
-<div class="arrows">
-    <a class="left" th:if="${currentPage > 0}" th:href="'/web/public?page=' + ${currentPage - 1}">
-        <i class="gg-arrow-left-r"></i>
-    </a>
-    <a class="right" th:if="${messages.size() == 5 && totalPublicMessages - 1 >= 5}"
-       th:href="'/web/public?page=' + ${currentPage + 1}">
-        <i class="gg-arrow-right-r"></i>
-    </a>
-</div>
 <div class="container">
     <h1>Public Messages</h1>
     <div th:if="${messages.isEmpty()}">
@@ -91,11 +82,21 @@
         <p th:text="${message.body}">Message content goes here...</p>
         <small>Posted by: <span th:text="${message.userUserName}">Username</span></small>
     </div>
+    <div class="arrows">
+        <a class="left" th:if="${currentPage > 0}" th:href="'/web/public?page=' + ${currentPage - 1}">
+            <i class="gg-arrow-left-r"></i>
+        </a>
+        <span th:each="page,iterStat : ${#numbers.sequence(0, totalPublicMessages/5 - 1)}">
+            <a th:href="'/web/messages?page=' + ${iterStat.index}" th:text="${iterStat.index} + 1"
+               th:class="${iterStat.index == currentPage ? 'active' : ''}"></a>
+        </span>
+        <a class="right" th:if="${totalPublicMessages > (currentPage + 1) * 5}" th:href="'/web/public?page=' + ${currentPage + 1}">
+            <i class="gg-arrow-right-r"></i>
+        </a>
+    </div>
     <div class="return-button">
         <button type="button" onclick="window.history.back()">Return</button>
     </div>
 </div>
-</div>
-
-    </body>
-    </html>
+</body>
+</html>
