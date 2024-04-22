@@ -98,11 +98,11 @@
         }
 
         .language-button:first-child {
-            left: 140px;
+            left: 100px;
         }
 
         .language-button:nth-child(2) {
-            left: 250px;
+            left: 210px;
         }
 
         .language-button:hover {
@@ -118,25 +118,32 @@
 </head>
 <body>
 <div class="container">
-    <h1>Edit Profile</h1>
+    <h1 class="welcome-message" th:text="#{profile.edit}">Edit Profile</h1>
     <form th:action="@{/web/user-edit}" th:object="${userData}" method="post">
-        <label for="userName">Username:</label>
+        <label for="userName" th:text="#{username}">Username:</label>
         <input type="text" id="userName" th:field="*{userName}" readonly>
-        <label for="firstName">First Name:</label>
+        <label for="firstName" th:text="#{firstname}">First Name:</label>
         <input type="text" id="firstName" th:field="*{firstName}">
-        <label for="lastName">Last Name:</label>
+        <label for="lastName" th:text="#{lastname}">Last Name:</label>
         <input type="text" id="lastName" th:field="*{lastName}">
-        <label for="email">Email:</label>
+        <label for="email" th:text="#{email}">Email:</label>
         <input type="email" id="email" th:field="*{email}">
-        <label for="profileUrl">Profile Image URL:</label>
+        <label for="profileUrl" th:text="#{profile.picture}">Profile Image URL:</label>
         <input type="url" id="profileUrl" th:field="*{profileImage}" oninput="updateImagePreview()">
         <img id="imagePreview" th:src="${userData.profileImage}" alt="Profile Image Preview" />
 
         <div class="button-container">
-            <button type="submit">Save Changes</button>
-            <button type="button" onclick="window.history.back()">Return</button>
+            <button type="submit" th:text="#{submit}">Save Changes</button>
+            <button type="button" onclick="window.history.back()" th:text="#{return}">Return</button>
         </div>
     </form>
+</div>
+<div class="language-buttons">
+    <form id="translate-form" action="#" method="get">
+        <a href="https://localhost:8443/web/user-edit?lang=en" class="language-button">English</a>
+        <a href="https://localhost:8443/web/user-edit?lang=sv" class="language-button">Svenska</a>
+    </form>
+
 </div>
 </body>
 </html>
