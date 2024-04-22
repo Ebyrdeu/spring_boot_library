@@ -29,7 +29,8 @@
             margin-bottom: 5px;
         }
         input[type="text"],
-        input[type="email"] {
+        input[type="email"],
+        input[type="url"] { /* Added input[type="url"] for URL input */
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -108,13 +109,18 @@
             background-color: #6B7E65;
         }
     </style>
+    <script>
+        function updateImagePreview() {
+            var imageUrl = document.getElementById('profileUrl').value;
+            document.getElementById('imagePreview').src = imageUrl;
+        }
+    </script>
 </head>
 <body>
 <div class="container">
     <h1>Edit Profile</h1>
-    <form action ="#" th:action="@{/web/user-edit}" th:object="${userData}" method="post">
-
-        <label for="userName" th:text="username"></label>
+    <form th:action="@{/web/user-edit}" th:object="${userData}" method="post">
+        <label for="userName">Username:</label>
         <input type="text" id="userName" th:field="*{userName}" readonly>
         <label for="firstName">First Name:</label>
         <input type="text" id="firstName" th:field="*{firstName}">
@@ -122,23 +128,15 @@
         <input type="text" id="lastName" th:field="*{lastName}">
         <label for="email">Email:</label>
         <input type="email" id="email" th:field="*{email}">
+        <label for="profileUrl">Profile Image URL:</label>
+        <input type="url" id="profileUrl" th:field="*{profileImage}" oninput="updateImagePreview()">
+        <img id="imagePreview" th:src="${userData.profileImage}" alt="Profile Image Preview" />
 
-
-
-
-
-    <div class="button-container">
-        <button type="submit">Save Changes</button>
-        <button type="button" onclick="window.history.back()">Return</button>
-    </div>
+        <div class="button-container">
+            <button type="submit">Save Changes</button>
+            <button type="button" onclick="window.history.back()">Return</button>
+        </div>
     </form>
 </div>
-<div class="language-buttons">
-    <form id="translate-form" action="#" method="get">
-        <button class="language-button" type="submit" name="lang" value="en">English</button>
-        <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
-    </form>
-</div>div>
-
 </body>
 </html>

@@ -29,19 +29,20 @@ public class UserData {
     @Size(min = 1, max = 50)
     private String lastName;
 
+    @Email
+    private String email;
+
     @URL
     private String profileImage;
 
-    @Email
-    private String email;
 
     public User toEntity() {
         User user = new User();
         user.setUserName(userName);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setProfileImage(profileImage);
         user.setEmail(email);
+        user.setProfileImage(profileImage);
         return user;
     }
 }

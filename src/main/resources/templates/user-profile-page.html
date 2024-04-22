@@ -61,6 +61,12 @@
             margin-bottom: 20px;
             margin-top: 100px;
         }
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
         .message {
             background-color: #f9f9f9;
             padding: 10px;
@@ -94,11 +100,10 @@
 
     <div class="profile-container">
         <div class="profile-box">
-            <img th:src="@{/your-profile-picture.jpg}" alt="Your Profile Picture">
+            <img th:src="${profileImage}" alt="Your Profile Picture" class="profile-picture">
             <p id="full-name" th:text="${fullName}">Your Name</p>
             <p id="user-name" th:text="${username}">Your Profile Name</p>
             <p id="email" th:text="${email}">Your Email</p>
-            <p id="profile-image" th:text="${profileImage}">Your Profile Image</p>
         </div>
         <div class="button-container">
             <a th:href="@{/web/user-edit}" class="edit-profile-button">Edit Profile</a>
