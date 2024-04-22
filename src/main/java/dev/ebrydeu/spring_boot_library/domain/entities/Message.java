@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
@@ -11,26 +12,31 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "messages")
+@EntityListeners(AuditingEntityListener.class)
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 public class Message {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        @CreatedDate
-        private LocalDate date;
-        private LocalDate lastChanged;
-        private String title;
-        private String body;
-        private boolean privateMessage;
-        @ManyToOne
-        @JoinColumn(name = "user_id")
-        private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @CreatedDate
+    private LocalDate date;
+
+    @LastModifiedDate
+    private LocalDate lastChanged;
+
+    private String title;
+    private String body;
+    private boolean privateMessage;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
         @Override
     public final boolean equals(Object o) {

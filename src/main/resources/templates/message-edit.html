@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Message</title>
+    <title>Edit Your Messages</title>
     <style>
         body {
             font-family: "Georgia", serif;
@@ -13,7 +13,7 @@
         }
         .container {
             width: 80%;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
@@ -24,81 +24,44 @@
             margin-bottom: 20px;
             color: #4F5E4A;
         }
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
+        .form-group {
+            margin-bottom: 20px;
         }
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            resize: vertical;
-        }
-        button {
+        .edit-button {
             padding: 10px 20px;
             background-color: #4F5E4A;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-        }
-        button:hover {
-            background-color: #6B7E65;
-        }
-        .return-btn {
-            float: right;
-        }
-        .language-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
             text-decoration: none;
-            color: #fff;
-            background-color: #4F5E4A;
-            font-family: Georgia, serif;
-            position: fixed;
-            top: 20px;
+            display: inline-block;
         }
-
-        .language-button:first-child {
-            left: 140px;
-        }
-
-        .language-button:nth-child(2) {
-            left: 250px;
-        }
-
-        .language-button:hover {
+        .edit-button:hover {
             background-color: #6B7E65;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Edit Message</h1>
-    <form th:action="@{/web/messages/edit}" method="post">
-        <label for="editMessageTitle">Title:</label>
-        <input type="text" id="editMessageTitle" name="title" placeholder="Enter the new title">
-
-        <label for="editMessageContent">Message:</label>
-        <textarea id="editMessageContent" name="content" placeholder="Enter the new message text"></textarea>
-
-        <button type="submit">Save Changes</button>
-        <button type="button" th:onclick="|window.history.back()|" class="return-btn">Return</button>
-        <button type="button" id="deleteMessageBtn">Delete Message</button>
-    </form>
-</div>
-<div class="language-buttons">
-    <form id="translate-form" action="#" method="get">
-        <button class="language-button" type="submit" name="lang" value="en">English</button>
-        <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
+    <h1>Edit Your Message</h1>
+    <form th:action="@{/web/messages/edit/{id}(id=${messageId})}" th:object="${formData}" method="post">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" th:field="*{title}" id="title" required />
+        </div>
+        <div class="form-group">
+            <label for="body">Message Body:</label>
+            <textarea th:field="*{body}" id="body" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="privateMessage">Privacy:</label>
+            <select th:field="*{privateMessage}" id="privateMessage" required>
+                <option value="true">Private</option>
+                <option value="false">Public</option>
+            </select>
+        </div>
+        <input type="submit" value="Edit Message">
     </form>
 </div>
 </body>

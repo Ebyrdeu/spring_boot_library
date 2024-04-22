@@ -30,9 +30,9 @@ public class GithubOAuth2ServiceImpl extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         Integer githubId = (Integer) attributes.get("id");
-        Optional<User> existingUser = userRepository.findByGithubId(githubId);
+        User existingUser = userRepository.findByGithubId(githubId);
 
-        if (existingUser.isEmpty()) {
+        if (existingUser == (null)) {
             User user = createUser(attributes, request);
             userRepository.save(user);
         }
@@ -49,6 +49,8 @@ public class GithubOAuth2ServiceImpl extends DefaultOAuth2UserService {
         user.setGithubId((Integer) attributes.get("id"));
 
         User.UserBuilder userBuilder = User.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .userName(user.getUserName())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

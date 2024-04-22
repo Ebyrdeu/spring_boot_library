@@ -41,9 +41,9 @@ public class UserService {
     }
 
     public User findByGitHubId(Integer githubId) {
-        return userRepository.findByGithubId(githubId).orElse(null);
-    }
+        return userRepository.findByGithubId(githubId);
 
+    }
     @Cacheable("email")
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);

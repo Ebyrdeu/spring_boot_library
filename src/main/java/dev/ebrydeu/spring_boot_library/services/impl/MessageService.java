@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,18 @@ public class MessageService {
     public List<MessageAndUsername> findAllByUserIdAndPrivateMessageIsFalse(Long id) {
         return messageRepository.findAllByUserIdAndPrivateMessageIsFalse(id);
     }
+    public Optional<MessageAndUsername> getMessageById(Long id) {
+        return messageRepository
+                .findById(id)
+                .map(message -> new MessageAndUsername(
+                        message.getId(),
+                        message.getDate(),
+                        message.getLastChanged(),
+                        message.getTitle(),
+                        message.getBody(),
+                        message.getUser().getUserName(),
+                        message.isPrivateMessage()));
+    }
 
     @Cacheable("messages")
     public List<MessageAndUsername> findAllMessages() {
@@ -53,8 +66,9 @@ public class MessageService {
         return messageRepository.findAllByUser(user);
     }
 
-
-
+    public List<MessageAndUsername> getMessagesByUserId(Long userId) {
+        return messageRepository.findMessagesByUserId(userId);
+    }
     @CacheEvict(value = {"messages", "publicMessages"}, allEntries = true)
     public void save(Message message) {
         messageRepository.save(message);
@@ -73,5 +87,18 @@ public class MessageService {
         messageRepository.delete(message);
     }
 
+    public Message updateMessage(Long messageId, String title, String body, boolean privateMessage) throws Exception {
+        Optional<Message> messageOptional = messageRepository.findById(messageId);
+        if (messageOptional.isPresent()) {
+            Message message = messageOptional.get();
+            message.setTitle(title);
+            message.setBody(body);
+            message.setPrivateMessage(privateMessage);
+            message.setLastChanged(LocalDate.now());  // Manually setting lastChanged
+            return messageRepository.save(message);
+        } else {
+            throw new EntityNotFoundException("No message found with ID: " + messageId);
+        }
+    }
 }
 

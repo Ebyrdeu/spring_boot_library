@@ -103,8 +103,9 @@
         <div class="button-container">
             <a th:href="@{/web/user-edit}" class="edit-profile-button">Edit Profile</a>
             <a th:href="@{/web/message-create}" class="new-message-button">Create New Message</a>
-            <button class="edit-button">Edit Message</button>
+            <a th:href="@{/web/messages/edit}" class="edit-button">Edit Message</a>
             <a class="logout-button" th:if="${isAuthenticated}" th:href="@{/auth/logout}">Logout</a>
+
         </div>
     </div>
 
@@ -122,6 +123,7 @@
             <div class="visibility">
                 <span th:text="'Visibility: ' + (${message.privateMessage} ? 'Private' : 'Public')"></span>
             </div>
+            <a th:href="@{/web/messages/edit/{id}(id=${message.id})}">Edit</a>
         </div>
     </div>
 </div>

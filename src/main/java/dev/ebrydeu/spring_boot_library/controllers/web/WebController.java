@@ -199,7 +199,41 @@ public class WebController {
         userService.save(user);
         return "redirect:/web/profile";
     }
+    @GetMapping("/messages/edit/{id}")
+    public String editMessage(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal OAuth2User principal) {
+        Message message = messageService.findById(id); // Changed to retrieve the entity
 
+        if (message == null) {
+            model.addAttribute("errorMessage", "Message not found");
+            return "errorPage"; // Redirect to an error page or similar
+        }
+
+        CreateMessageFormData formData = new CreateMessageFormData(
+                message.getTitle(),
+                message.getBody(),
+                message.isPrivateMessage()
+        );
+
+        model.addAttribute("messageId", message.getId());
+        model.addAttribute("formData", formData);
+        return "message-edit"; // Name of the Thymeleaf template for editing messages
+    }
+
+    // POST method to update a message
+    @PostMapping("/messages/edit/{id}")
+    public String updateMessage(@PathVariable("id") Long messageId,
+                                @ModelAttribute("formData") CreateMessageFormData formData,
+                                RedirectAttributes redirectAttributes,
+                                @AuthenticationPrincipal OAuth2User principal) {
+        try {
+            messageService.updateMessage(messageId, formData.getTitle(), formData.getBody(), formData.isPrivateMessage());
+            redirectAttributes.addFlashAttribute("success", "Message updated successfully!");
+            return "redirect:/web/profile"; // Redirect to a profile or confirmation page
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error updating message: " + e.getMessage());
+            return "redirect:/web/messages/edit/" + messageId;
+        }
+    }
     //GetMapping("/messages/translate")
     //ublic String translateMessage(Model model, @RequestParam("id") Long id) {
     //   Message message = messageService.findById(id);

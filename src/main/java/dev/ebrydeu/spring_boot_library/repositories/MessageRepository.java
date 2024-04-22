@@ -13,7 +13,8 @@ import java.util.List;
 public interface MessageRepository extends ListCrudRepository<Message, Long> {
     List<MessageAndUsername> findAllByPrivateMessageIsFalse();
 
-
+    List<MessageAndUsername> findMessagesByUserId(Long userId);
+    List<MessageAndUsername> findMessageByUserUserName(String username);
 
     List<MessageAndUsername> findAllByUser(User user);
 
