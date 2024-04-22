@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -23,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -50,13 +50,19 @@ public class WebController {
     @GetMapping("/user-edit")
     public String editUserProfile(Model model, @AuthenticationPrincipal OAuth2User principal) {
         User user = userService.findByGitHubId(principal.getAttribute("id"));
-
-        model.addAttribute("formData", new UserData(
+        Optional<User> userOptional = userService.findByUserName(user.getUserName());
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        }
+        UserData userData = new UserData(
                 user.getUserName(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getProfileImage()));
+                user.getProfileImage());
+
+        model.addAttribute("userData", user);
+        model.addAttribute("userData", userData);
         return "user-edit";
     }
 

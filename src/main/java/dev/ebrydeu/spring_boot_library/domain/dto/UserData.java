@@ -3,6 +3,7 @@ package dev.ebrydeu.spring_boot_library.domain.dto;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,12 +18,15 @@ import org.hibernate.validator.constraints.URL;
 public class UserData {
 
     @NotNull
+    @Size(min = 1, max = 50)
     private String userName;
 
     @NotNull
+    @Size(min = 1, max = 50)
     private String firstName;
 
     @NotNull
+    @Size(min = 1, max = 50)
     private String lastName;
 
     @URL
