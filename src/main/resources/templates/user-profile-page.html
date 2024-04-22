@@ -122,10 +122,13 @@
             <div class="visibility">
                 <span th:text="'Visibility: ' + (${message.privateMessage} ? 'Private' : 'Public')"></span>
             </div>
-            <a th:href="@{/web/messages/edit/{id}(id=${message.id})}">Edit</a>
+            <div class="timestamp">
+                <span>Created: <span th:text="${#temporals.format(message.date(), 'dd MMM yyyy')}"></span></span>
+                <span>Last Modified: <span th:text="${#temporals.format(message.lastChanged(), 'dd MMM yyyy')}"></span></span>
+            </div>
+            <a th:href="@{/web/messages/edit/{id}(id=${message.id})}" class="edit-button">Edit</a>
         </div>
     </div>
-</div>
 <div class="language-buttons">
     <form id="translate-form" action="#" method="get">
         <button class="language-button" type="submit" name="lang" value="en">English</button>

@@ -94,7 +94,7 @@ public class MessageService {
             message.setTitle(title);
             message.setBody(body);
             message.setPrivateMessage(privateMessage);
-            message.setLastChanged(LocalDate.now());  // Manually setting lastChanged
+            message.setLastChanged(LocalDate.now());
             return messageRepository.save(message);
         } else {
             throw new EntityNotFoundException("No message found with ID: " + messageId);
