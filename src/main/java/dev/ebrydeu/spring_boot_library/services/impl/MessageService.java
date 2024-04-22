@@ -9,6 +9,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
+
 
 
 import java.time.LocalDate;
@@ -29,6 +31,11 @@ public class MessageService {
     @Cacheable("publicMessages")
     public List<MessageAndUsername> findAllByPrivateMessageIsFalse() {
         return messageRepository.findAllByPrivateMessageIsFalse();
+    }
+
+    @Cacheable("publicMessages")
+    public List<MessageAndUsername> findAllByPrivateMessageIsFalse(Pageable pageable) {
+        return messageRepository.findAllByPrivateMessageIsFalse(pageable);
     }
 
     @Cacheable("publicMessages")
@@ -62,10 +69,23 @@ public class MessageService {
                 .toList();
     }
 
+    @Cacheable("messages")
+    public List<MessageAndUsername> findAllMessages(Pageable pageable) {
+        return messageRepository.findAll(pageable).stream()
+                .map(message -> new MessageAndUsername(
+                        message.getId(),
+                        message.getDate(),
+                        message.getLastChanged(),
+                        message.getTitle(),
+                        message.getBody(),
+                        message.getUser().getUserName(),
+                        message.isPrivateMessage()))
+                .toList();
+    }
+
     public List<MessageAndUsername> findAllMessagesByUser(User user) {
         return messageRepository.findAllByUser(user);
     }
-
     public List<MessageAndUsername> getMessagesByUserId(Long userId) {
         return messageRepository.findMessagesByUserId(userId);
     }

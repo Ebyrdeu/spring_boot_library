@@ -53,9 +53,34 @@
             color: #4F5E4A;
             font-family: "Georgia", serif;
         }
+
+        .arrows {
+            text-align: center;
+        }
+
+        .arrows a {
+            color: #4F5E4A;
+            text-decoration: none;
+            font-size: 24px;
+            margin: 0 10px;
+        }
+
+        .arrows a:hover {
+            color: #6B7E65;
+        }
+
     </style>
 </head>
 <body>
+<div class="arrows">
+    <a class="left" th:if="${currentPage > 0}" th:href="'/web/public?page=' + ${currentPage - 1}">
+        <i class="gg-arrow-left-r"></i>
+    </a>
+    <a class="right" th:if="${messages.size() == 5 && totalPublicMessages - 1 >= 5}"
+       th:href="'/web/public?page=' + ${currentPage + 1}">
+        <i class="gg-arrow-right-r"></i>
+    </a>
+</div>
 <div class="container">
     <h1>Public Messages</h1>
     <div th:if="${messages.isEmpty()}">
@@ -70,5 +95,7 @@
         <button type="button" onclick="window.history.back()">Return</button>
     </div>
 </div>
+</div>
+
     </body>
     </html>

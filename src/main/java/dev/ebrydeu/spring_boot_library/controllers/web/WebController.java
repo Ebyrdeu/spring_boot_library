@@ -9,6 +9,8 @@ import dev.ebrydeu.spring_boot_library.services.impl.MessageService;
 import dev.ebrydeu.spring_boot_library.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -159,13 +161,17 @@ public class WebController {
     }
 
     @GetMapping("/public-page")
-    public String guestPage(Model model, HttpServletRequest httpServletRequest) {
-        List<MessageAndUsername> publicMessages = messageService.findAllByPrivateMessageIsFalse();
-        int allPublicMessageCount = publicMessages.size(); // Efficiently use already fetched data
+    public String guestPage(@RequestParam(value = "page", defaultValue = "0") String page,
+                            Model model, HttpServletRequest httpServletRequest) {
+        int p = Integer.parseInt(page);
+        if (p < 0) p = 0;
+        List<MessageAndUsername> publicMessages = messageService.findAllByPrivateMessageIsFalse(PageRequest.of(p, 5));
+        int allPublicMessageCount = messageService.findAllByPrivateMessageIsFalse().size(); // Efficiently use already fetched data
 
         model.addAttribute("messages", publicMessages);
         model.addAttribute("httpServletRequest", httpServletRequest);
-        model.addAttribute("totalPublicMessages", publicMessages.size());
+        model.addAttribute("totalPublicMessages", allPublicMessageCount);
+        model.addAttribute("currentPage", p);
         return "public";
     }
     @GetMapping("/message-create")
