@@ -19,6 +19,11 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
         h1 {
             text-align: center;
             margin-bottom: 20px;
@@ -27,19 +32,67 @@
         .form-group {
             margin-bottom: 20px;
         }
-        .edit-button {
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        input[type="submit"] {
             padding: 10px 20px;
             background-color: #4F5E4A;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
         }
-        .edit-button:hover {
+        input[type="submit"]:hover {
             background-color: #6B7E65;
         }
+        .delete-button {
+            padding: 10px 20px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #6B7E65;
+        }
+        .language-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #4F5E4A;
+            font-family: Georgia, serif;
+            position: fixed;
+            top: 20px;
+        }
+
+        .language-button:first-child {
+            left: 140px;
+        }
+
+        .language-button:nth-child(2) {
+            left: 250px;
+        }
+
+        .language-button:hover {
+            background-color: #6B7E65;
+        }
+
     </style>
 </head>
 <body>
@@ -62,7 +115,14 @@
             </select>
         </div>
         <input type="submit" value="Edit Message">
+        <a class="delete-button" th:href="@{/web/messages/delete/{id}(id=${messageId})}">Delete Message</a>
     </form>
+    <div class="language-buttons">
+        <form id="translate-form" action="#" method="get">
+            <button class="language-button" type="submit" name="lang" value="en">English</button>
+            <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
+        </form>
+</div>
 </div>
 </body>
 </html>
