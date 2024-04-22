@@ -249,7 +249,7 @@ public class WebController {
         }
     }
 
-    @GetMapping("/messages/translate")
+    @GetMapping("/public-page/translate")
     public String translateMessage(Model model, @RequestParam("id") Long id) throws JsonProcessingException {
         Message message = messageService.findById(id);
         String translatedTitle = libreTranslateService.translate(message.getTitle());
@@ -260,6 +260,6 @@ public class WebController {
         model.addAttribute("userName", message.getUser().getUserName());
         model.addAttribute("date", message.getDate());
         model.addAttribute("lastChanged", message.getLastChanged());
-        return "message-translated";
+        return "translation";
     }
 }
