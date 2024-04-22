@@ -2,7 +2,6 @@ package dev.ebrydeu.spring_boot_library.services.impl;
 
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageAndUsername;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
-import dev.ebrydeu.spring_boot_library.domain.entities.User;
 import dev.ebrydeu.spring_boot_library.repositories.MessageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.cache.annotation.CacheEvict;
@@ -94,8 +93,13 @@ public class MessageService {
     }
 
     @CacheEvict(value = {"messages", "publicMessages"}, allEntries = true)
-    public void delete(Message message) {
-        messageRepository.delete(message);
+    public void deleteMessageById(Long id) {
+        Optional<Message> optionalMessage = messageRepository.findById(id);
+        if (optionalMessage.isPresent()) {
+            messageRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Message with ID " + id + " not found");
+        }
     }
 
     public Message updateMessage(Long messageId, String title, String body, boolean privateMessage) throws Exception {

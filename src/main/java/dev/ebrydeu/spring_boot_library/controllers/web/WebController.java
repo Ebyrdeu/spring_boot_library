@@ -152,7 +152,7 @@ public class WebController {
         User user = userService.findByGitHubId(principal.getAttribute("id"));
 
         if (checkIfUsernameAlreadyExists(userForm.getUserName(), user))
-            bindingResult.rejectValue("userName", "duplicate", "Username needs to be unique");
+            bindingResult.rejectValue("userName", "AlreadyExists", "Username already exists");
         if (bindingResult.hasErrors())
             return "user-edit";
 
@@ -189,12 +189,19 @@ public class WebController {
                                 @AuthenticationPrincipal OAuth2User principal) {
         try {messageService.updateMessage(messageId, formData.getTitle(), formData.getBody(), formData.isPrivateMessage());
 
-            redirectAttributes.addFlashAttribute("success", "Message updated successfully!");
+            redirectAttributes.addFlashAttribute("success", "Updated successfully");
             return "redirect:/web/profile";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error updating message: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
             return "redirect:/web/messages/edit/" + messageId;
         }
+    }
+
+    @GetMapping("/messages/delete/{id}")
+    public String deleteMessage(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        messageService.deleteMessageById(id);
+        redirectAttributes.addFlashAttribute("success", "Deleted successfully");
+        return "redirect:/web/profile";
     }
     //GetMapping("/messages/translate")
     //ublic String translateMessage(Model model, @RequestParam("id") Long id) {

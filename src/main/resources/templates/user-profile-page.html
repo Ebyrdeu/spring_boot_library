@@ -36,7 +36,7 @@
         .button-container {
             text-align: center;
         }
-        .edit-profile-button, .new-message-button, .logout-button, .edit-button {
+        .edit-profile-button, .new-message-button, .logout-button, .edit-button, delete-button {
             padding: 10px 20px;
             background-color: #4F5E4A;
             color: #fff;
@@ -48,7 +48,7 @@
             font-family: Georgia, serif;
             font-size: 16px;
         }
-        .edit-profile-button:hover, .new-message-button:hover, .logout-button:hover, edit-button:hover {
+        .edit-profile-button:hover, .new-message-button:hover, .logout-button:hover, edit-button:hover, delete-button:hover {
             background-color: #6B7E65;
         }
         .message-board {
@@ -132,6 +132,7 @@
                 <span>Last Modified: <span th:text="${#temporals.format(message.lastChanged(), 'dd MMM yyyy')}"></span></span>
             </div>
             <a th:href="@{/web/messages/edit/{id}(id=${message.id})}" class="edit-button">Edit</a>
+            <a th:href="@{/web/messages/delete/{id}(id=${message.id})}" class="delete-button">Delete</a>
         </div>
     </div>
 <div class="language-buttons">

@@ -64,14 +64,4 @@ public class MessageController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
-        try {
-            Message message = messageService.findById(id);
-            messageService.delete(message);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }
