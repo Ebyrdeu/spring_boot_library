@@ -53,15 +53,6 @@ public class MessageController {
         return new ResponseEntity<>(newMessage, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Message> updateMessage(@PathVariable Long id,
-                                                @Valid @RequestBody CreateMessageFormData messageData) {
-        try {
-            Message updatedMessage = messageService.updateMessage(id, messageData.getTitle(), messageData.getBody(), messageData.isPrivateMessage());
-            return new ResponseEntity<>(updatedMessage, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+
 
 }
