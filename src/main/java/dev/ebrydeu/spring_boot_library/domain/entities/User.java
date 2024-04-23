@@ -4,8 +4,10 @@ import dev.ebrydeu.spring_boot_library.domain.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -16,36 +18,22 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class User extends Auditable {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "user_id")
+    @Column(name = "user_id")
     private Long id;
-
-    @Column(unique = true, nullable = false, name = "username")
-    private String username;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "avatar")
-    private String avatar;
-
     @Column(unique = true)
+    private String userName;
+    @Column(name = "image")
+    private String profileImage;
+    private String firstName;
+    private String lastName;
     private String email;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Role role = Role.ROLE_USER;
-
-    @Column(nullable = false, name = "github_id")
     private Integer githubId;
 
-    @Override
+        @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;

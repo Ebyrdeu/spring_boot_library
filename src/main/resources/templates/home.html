@@ -1,82 +1,98 @@
-<!doctype html>
-<html lang="en" data-theme="forest">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>document</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            font-family: Georgia, serif;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 20vh;
+            color: #6B7E65;
+            font-family: Georgia, serif;
+        }
+        .welcome-message {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            color: #6B7E65;
+            background-color: #BEC8B6;
+            font-family: Georgia, serif;
+            position: relative;
+        }
+
+        .button:hover {
+            border-color: #6B7E65;
+        }
+        .language-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            color: #6B7E65;
+            background-color: #BEC8B6;
+            font-family: Georgia, serif;
+            position: fixed;
+            top: 25px;
+        }
+
+        .language-button:first-child {
+            left: 35px;
+        }
+
+        .language-button:nth-child(2) {
+            left: 150px;
+        }
+
+        .language-button:hover {
+            border-color: #6B7E65;
+        }
+
+
+    </style>
 </head>
 <body>
-
-<div class="navbar bg-base-100">
-    <div class="flex-1">
-        <a th:href="@{/web/home}" class="btn btn-ghost text-xl">definitely not x</a>
-    </div>
-    <div class="flex justify-end flex-1 px-2">
-        <div class="flex items-stretch gap-3 ">
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/web/profile}">profile</a>
-            <a class="btn" th:if="${isAuthenticated}" th:href="@{/auth/logout}">logout</a>
-            <a class="btn" th:if="${!isAuthenticated}" th:href="@{/oauth2/authorization/github}">login with github</a>
-            <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">Themes</div>
-                <ul tabindex="0"
-                    class="theme-list menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
-                </ul>
-            </div>
+<div class="container">
+    <h1 class="welcome-message" th:text="#{welcome}">Welcome</h1>
+    <form id="home">
+        <div class="github-signin">
+            <a class="button github-button" ${!isAuthenticated} th:href="@{/oauth2/authorization/github}" th:text="#{login}">Sign in with GitHub</a>
+            <a class="button no-login-button" th:href="@{/web/public-page}" th:text="#{continue}">Continue without signing in</a>
         </div>
-    </div>
+    </form>
 </div>
 
-<div class="hero min-h-screen bg-base-200">
-    <div class="hero-content text-center">
-        <div class="max-w-md">public</div>
-    </div>
+<div class="language-buttons">
+    <form id="translate-form" action="#" method="get">
+        <a href="https://localhost:8443/web/home?lang=en" class="language-button">English</a>
+        <a href="https://localhost:8443/web/home?lang=sv" class="language-button">Svenska</a>
+    </form>
 </div>
 </body>
-<script>
-    const themes = [
-        "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave",
-        "retro", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua",
-        "lofi", "pastel", "fantasy", "wireframe", "black", "luxury", "dracula",
-        "cmyk", "autumn", "business", "acid", "lemonade", "night", "coffee", "winter",
-        "dim", "nord", "sunset",
-    ];
-
-    const htmlTag = document.querySelector("html");
-    const themeList = document.querySelector(".theme-list");
-
-    const loadTheme = () => {
-        const savedTheme = sessionStorage.getItem('selectedTheme');
-        if (savedTheme) htmlTag.setAttribute('data-theme', savedTheme);
-    }
-
-    const saveTheme = (theme) => {
-        sessionStorage.setItem('selectedTheme', theme);
-        htmlTag.setAttribute('data-theme', theme);
-    }
-
-    themes.forEach(theme => {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.textContent = theme;
-        a.className = "mb-2";
-        a.href = "#";
-        a.addEventListener("click", (e) => {
-            e.preventDefault();
-            saveTheme(theme);
-        });
-
-        li.appendChild(a);
-        themeList.appendChild(li);
-    });
-
-    themeList.style.maxHeight = "200px";
-    themeList.style.overflowY = "auto";
-
-    loadTheme();
-
-</script>
 </html>
+

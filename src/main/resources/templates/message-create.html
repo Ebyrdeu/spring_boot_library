@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Board</title>
+    <style>
+        body {
+            font-family: "Georgia", serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 60%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        button, input[type="submit"], input[type="reset"], input[type="button"] {
+            padding: 10px 20px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {
+            background-color: #6B7E65;
+        }
+        .error {
+            color: #ff0000;
+            font-size: 0.875em;
+        }
+        .message-board-header {
+            text-align: center;
+            color: #4F5E4A;
+            margin-bottom: 20px;
+        }
+        .language-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .language-button {
+            padding: 10px 15px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .language-button:hover {
+            background-color: #6B7E65;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="message-board-header" th:text="#{newmessage}">New Message</h1>
+    <form th:action="@{/web/message/new}" th:object="${formData}" method="post">
+        <div class="form-group">
+            <label for="title" th:text="#{title}">Title:</label>
+            <input id="title" type="text" th:field="*{title}"/>
+            <span th:if="${#fields.hasErrors('title')}" th:text="${#strings.listJoin(#fields.errors('title'), ', ')}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="body" th:text="#{messagebody}">Message Body:</label>
+            <textarea id="body" th:field="*{body}"></textarea>
+            <span th:if="${#fields.hasErrors('body')}" th:text="${#strings.listJoin(#fields.errors('body'), ', ')}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="privacy" th:text="#{messageprivacy}">Privacy:</label>
+            <select id="privacy" th:field="*{privateMessage}">
+                <option th:value="true" th:text="#{private}">Private</option>
+                <option th:value="false" th:text="#{public}">Public</option>
+            </select>
+            <span th:if="${#fields.hasErrors('privateMessage')}" th:text="${#strings.listJoin(#fields.errors('privateMessage'), ', ')}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" th:value="#{submit}"/>
+            <input type="reset" th:value="#{reset}"/>
+            <input type="button" th:value="#{return}" onclick="history.back()"/>
+        </div>
+    </form>
+</div>
+<div class="language-buttons">
+    <form id="translate-form" action="#" method="get">
+        <button class="language-button" type="submit" name="lang" value="en">English</button>
+        <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
+    </form>
+</div>
+</body>
+</html>

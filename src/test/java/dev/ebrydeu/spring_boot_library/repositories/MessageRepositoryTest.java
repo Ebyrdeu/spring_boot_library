@@ -67,7 +67,7 @@ class MessageRepositoryTest {
         Message messageOne = createMessageOne(userOne);
         messageOne = repository.save(messageOne);
 
-        messageOne.setPrivate(true);
+        messageOne.setPrivateMessage(true);
         repository.save(messageOne);
 
         Optional<Message> result = repository.findById(messageOne.getId());
@@ -106,7 +106,7 @@ class MessageRepositoryTest {
         assertThat(fetchedMessage).isPresent();
 
         Message persistedMessage = fetchedMessage.get();
-        assertNotNull(persistedMessage.getCreationDate());
-        assertNotNull(persistedMessage.getLastModifiedDate());
+        assertNotNull(persistedMessage.getDate());
+        assertNotNull(persistedMessage.getLastChanged());
     }
 }

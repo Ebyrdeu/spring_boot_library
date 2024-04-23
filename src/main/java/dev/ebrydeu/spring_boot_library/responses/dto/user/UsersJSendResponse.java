@@ -1,6 +1,6 @@
 package dev.ebrydeu.spring_boot_library.responses.dto.user;
 
-import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
+import dev.ebrydeu.spring_boot_library.domain.dto.UserData;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
@@ -9,6 +9,6 @@ import java.util.List;
 public record UsersJSendResponse(
         @Schema(example = "success")
         String status,
-        List<UserDto> data
+        List<UserData> data
 ) {
 }

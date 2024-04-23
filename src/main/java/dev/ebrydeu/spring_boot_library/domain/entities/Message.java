@@ -1,47 +1,44 @@
 package dev.ebrydeu.spring_boot_library.domain.entities;
 
-import dev.ebrydeu.spring_boot_library.domain.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "messages")
+@EntityListeners(AuditingEntityListener.class)
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Message extends Auditable {
+public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "message_id")
     private Long id;
 
-    @Column(nullable = false)
+    @CreatedDate
+    private LocalDate date;
+
+    @LastModifiedDate
+    private LocalDate lastChanged;
+
     private String title;
-
-    @Column(nullable = false)
     private String body;
+    private boolean privateMessage;
 
-    @Column(name = "is_private", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isPrivate;
-
-    @CreationTimestamp
-    private Instant date;
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Override
+        @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;

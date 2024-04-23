@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        body {
+            font-family: "Georgia", serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4F5E4A;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="url"] { /* Added input[type="url"] for URL input */
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6B7E65;
+        }
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button-container button:hover {
+            background-color: #6B7E65;
+        }
+
+        .button-container button:first-child {
+            background-color: #4F5E4A;
+            color: #fff;
+            border: none;
+        }
+
+        .button-container button:first-child:hover {
+            background-color: #6B7E65;
+        }
+
+        .language-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #4F5E4A;
+            font-family: Georgia, serif;
+            position: fixed;
+            top: 20px;
+        }
+
+        .language-button:first-child {
+            left: 140px;
+        }
+
+        .language-button:nth-child(2) {
+            left: 250px;
+        }
+
+        .language-button:hover {
+            background-color: #6B7E65;
+        }
+    </style>
+    <script>
+        function updateImagePreview() {
+            var imageUrl = document.getElementById('profileUrl').value;
+            document.getElementById('imagePreview').src = imageUrl;
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Edit Profile</h1>
+    <form th:action="@{/web/user-edit}" th:object="${userData}" method="post">
+        <label for="userName">Username:</label>
+        <input type="text" id="userName" th:field="*{userName}" readonly>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" th:field="*{firstName}">
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" th:field="*{lastName}">
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}">
+        <label for="profileUrl">Profile Image URL:</label>
+        <input type="url" id="profileUrl" th:field="*{profileImage}" oninput="updateImagePreview()">
+        <img id="imagePreview" th:src="${userData.profileImage}" alt="Profile Image Preview" />
+
+        <div class="button-container">
+            <button type="submit">Save Changes</button>
+            <button type="button" onclick="window.history.back()">Return</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

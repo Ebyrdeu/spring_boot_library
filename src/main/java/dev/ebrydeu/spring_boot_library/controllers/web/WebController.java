@@ -1,42 +1,43 @@
 package dev.ebrydeu.spring_boot_library.controllers.web;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import dev.ebrydeu.spring_boot_library.domain.dto.CreateMessageFormData;
+import dev.ebrydeu.spring_boot_library.domain.dto.MessageAndUsername;
+import dev.ebrydeu.spring_boot_library.domain.dto.UserData;
+import dev.ebrydeu.spring_boot_library.domain.entities.Message;
+import dev.ebrydeu.spring_boot_library.domain.entities.User;
+import dev.ebrydeu.spring_boot_library.services.impl.LibreTranslateService;
+import dev.ebrydeu.spring_boot_library.services.impl.MessageService;
+import dev.ebrydeu.spring_boot_library.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import dev.ebrydeu.spring_boot_library.domain.dto.MessageDto;
-import dev.ebrydeu.spring_boot_library.domain.dto.UserDto;
-import dev.ebrydeu.spring_boot_library.services.LibreTranslateService;
-import dev.ebrydeu.spring_boot_library.services.MessageService;
-import dev.ebrydeu.spring_boot_library.services.UserService;
-
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/web")
 public class WebController {
 
-
-    @GetMapping("/profile")
-    public String profile(Model model, HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
-        model.addAttribute("isAuthenticated", isAuthenticated);
-        return "user-profile";
-    }
-    private final UserService userService;
     private final MessageService messageService;
-    private final LibreTranslateService translateService;
+    private final UserService userService;
+    private final LibreTranslateService libreTranslateService;
 
-    public WebController(UserService userService, MessageService messageService, LibreTranslateService translateService) {
-        this.userService = userService;
+    public WebController(MessageService messageService, UserService userService, LibreTranslateService libreTranslateService) {
         this.messageService = messageService;
-        this.translateService = translateService;
+        this.userService = userService;
+        this.libreTranslateService = libreTranslateService;
     }
 
     @GetMapping("/home")
@@ -47,72 +48,171 @@ public class WebController {
         return "home";
     }
 
+    @GetMapping("/user-edit")
+    public String editUserProfile(Model model, @AuthenticationPrincipal OAuth2User principal) {
+        User user = userService.findByGitHubId(principal.getAttribute("id"));
+        Optional<User> userOptional = userService.findByUserName(user.getUserName());
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        }
+        UserData userData = new UserData(
+                user.getUserName(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getProfileImage());
 
-    @GetMapping("/user-profile-page")
-    public String userProfilePage() {
+        model.addAttribute("userData", user);
+        model.addAttribute("userData", userData);
+        return "user-edit";
+    }
+
+
+
+    @GetMapping("/profile")
+    public String profile(Model model, HttpServletRequest request, @AuthenticationPrincipal OAuth2User principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+
+        // Adding messages to the model if the user is authenticated
+        if (isAuthenticated) {
+            User user = userService.findByGitHubId(principal.getAttribute("id"));
+            List<MessageAndUsername> messages = messageService.findAllMessages();
+            model.addAttribute("messages", messages);
+            model.addAttribute("isAuthenticated", isAuthenticated);
+            model.addAttribute("username", user.getUserName());
+            model.addAttribute("fullName", user.getFirstName() + " " + user.getLastName());
+            model.addAttribute("profileImage", user.getProfileImage());
+            model.addAttribute("email", user.getEmail());
+        }
+        model.addAttribute("isAuthenticated", isAuthenticated);
         return "user-profile-page";
     }
 
-    @GetMapping("/guest-page")
-    public String guestPage() {
-        return "guest-page";
-    }
-
-    @PostMapping("/users")
-    public String saveUser(@ModelAttribute("user") UserDto dto) {
-        userService.save(dto);
-        return "redirect:/web/users";// can be any other pathway of our choice
-    }
-
-    @PatchMapping("/userprofile/")
-    public String partialUpdateUser(@PathVariable Long id, @ModelAttribute("user") UserDto dto) {
-        userService.partialUpdate(id, dto);
-        return "redirect:/web/users";
-    }
-
-    @PostMapping("/messages/new")
-    public String createMessage(@ModelAttribute("message") MessageDto messageDto) {
-        messageService.save(messageDto);
-        return "redirect:/web/messages";
-    }
-
     @GetMapping("/messages")
-    public String findAllMessages(Model model) {
-        List<MessageDto> messages = messageService.findAll();
+    public String messagePage(@RequestParam(value = "page", defaultValue = "0") String page,
+                              Model model,
+                              HttpServletRequest httpServletRequest) {
+        int p = Integer.parseInt(page);
+        if (p < 0) p = 0;
+        List<MessageAndUsername> messages = messageService.findAllMessages();
+        List<String> distinctUserNames = userService.findAll().stream().map(User::getUserName).toList();
+        int allMessageCount = messageService.findAllMessages().size();
+
+        model.addAttribute("userList", distinctUserNames);
         model.addAttribute("messages", messages);
-        return "messages"; //web page for all messages accessible for logged users
+        model.addAttribute("httpServletRequest", httpServletRequest);
+        model.addAttribute("currentPage", p);
+        model.addAttribute("totalPublicMessages", allMessageCount);
+        return "public";
     }
 
-    //method from 40-guest-login-page
-/*    @GetMapping("/public/messages")
-    public String findPublicMessages(Model model) {
-        List<MessageDto> publicMessages = messageService.findPublicMessages();
-        model.addAttribute("publicMessages", publicMessages);
-        return "public-messages"; // "public-messages.html" is only for not-logged users
-    }*/
-
-    @PatchMapping("/messages/edit")
-    public String partialUpdateMessage(@PathVariable Long id, @ModelAttribute("message") MessageDto dto) {
-        messageService.partialUpdate(id, dto);
-        return "redirect:/web/messages";
+    private boolean checkIfUsernameAlreadyExists(String userName, User user) {
+        return userService.findByUserName(userName).isPresent() && !userName.equals(user.getUserName());
     }
 
-    @DeleteMapping("/messages/delete")
-    public String deleteMessage(@PathVariable Long id) {
-        messageService.delete(id);
-        return "redirect:/web/messages";
+
+    @GetMapping("/public-page")
+    public String guestPage(@RequestParam(value = "page", defaultValue = "0") String page,
+                            Model model, HttpServletRequest httpServletRequest) {
+        int p = Integer.parseInt(page);
+        if (p < 0) p = 0;
+        List<MessageAndUsername> publicMessages = messageService.findAllByPrivateMessageIsFalse(PageRequest.of(p, 5));
+        int allPublicMessageCount = messageService.findAllByPrivateMessageIsFalse().size(); // Efficiently use already fetched data
+
+        model.addAttribute("messages", publicMessages);
+        model.addAttribute("httpServletRequest", httpServletRequest);
+        model.addAttribute("totalPublicMessages", allPublicMessageCount);
+        model.addAttribute("currentPage", p);
+        return "public";
+    }
+    @GetMapping("/message-create")
+    public String createMessage(Model model) {
+        model.addAttribute("formData", new CreateMessageFormData());
+        return "message-create";
     }
 
-    @GetMapping("/messages/translate")
-    public String translateMessage(Model model, @PathVariable Long id, @ModelAttribute("message") MessageDto dto) throws JsonProcessingException {
-        MessageDto message = messageService.findById(id);
-        String translatedTitle = translateService.translate(message.title());
-        String translatedMessage = translateService.translate(message.body());
+    @PostMapping("/message/new")
+    public String createMessage(@Valid @ModelAttribute("formData") CreateMessageFormData messageForm,
+                                BindingResult bindingResult,
+                                @AuthenticationPrincipal OAuth2User principal) {
+        if (bindingResult.hasErrors())
+            return "message-create";
+
+        User user = userService.findByGitHubId(principal.getAttribute("id"));
+        messageService.save(messageForm.toEntity(user));
+        return "redirect:/web/profile";
+    }
+
+    @PostMapping("/user-edit")
+    public String editUserProfile(@Valid @ModelAttribute("formData") UserData userForm,
+                                  BindingResult bindingResult,
+                                  @AuthenticationPrincipal OAuth2User principal) {
+        User user = userService.findByGitHubId(principal.getAttribute("id"));
+
+        if (checkIfUsernameAlreadyExists(userForm.getUserName(), user))
+            bindingResult.rejectValue("userName", "AlreadyExists", "Username already exists");
+        if (bindingResult.hasErrors())
+            return "user-edit";
+
+        user.setUserName(userForm.getUserName());
+        user.setFirstName(userForm.getFirstName());
+        user.setLastName(userForm.getLastName());
+        user.setEmail(userForm.getEmail());
+        user.setProfileImage(userForm.getProfileImage());
+        userService.save(user);
+        return "redirect:/web/profile";
+    }
+    @GetMapping("/messages/edit/{id}")
+    public String editMessage(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal OAuth2User principal) {
+        Message message = messageService.findById(id);
+
+        if (message == null) {
+            model.addAttribute("errorMessage", "Message not found");
+            return "errorPage";
+        }
+        CreateMessageFormData formData = new CreateMessageFormData(
+                message.getTitle(),
+                message.getBody(),
+                message.isPrivateMessage()
+        );
+        model.addAttribute("messageId", message.getId());
+        model.addAttribute("formData", formData);
+        return "message-edit";
+    }
+
+    @PostMapping("/messages/edit/{id}")
+    public String updateMessage(@PathVariable("id") Long messageId,
+                                @ModelAttribute("formData") CreateMessageFormData formData,
+                                RedirectAttributes redirectAttributes,
+                                @AuthenticationPrincipal OAuth2User principal) {
+        try {messageService.updateMessage(messageId, formData.getTitle(), formData.getBody(), formData.isPrivateMessage());
+
+            redirectAttributes.addFlashAttribute("success", "Updated successfully");
+            return "redirect:/web/profile";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            return "redirect:/web/messages/edit/" + messageId;
+        }
+    }
+
+    @GetMapping("/messages/delete/{id}")
+    public String deleteMessage(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        messageService.deleteMessageById(id);
+        redirectAttributes.addFlashAttribute("success", "Deleted successfully");
+        return "redirect:/web/profile";
+    }
+    @GetMapping("/public-page/translate")
+    public String translateMessage(Model model, @RequestParam("id") Long id) throws JsonProcessingException {
+        Message message = messageService.findById(id);
+        String translatedTitle = libreTranslateService.translate(message.getTitle());
+        String translatedMessage = libreTranslateService.translate(message.getBody());
 
         model.addAttribute("title", translatedTitle);
         model.addAttribute("message", translatedMessage);
-        model.addAttribute("username", message.user().username());
-        model.addAttribute("date", message.date());
-        return "translate-message";
+        model.addAttribute("userName", message.getUser().getUserName());
+        model.addAttribute("date", message.getDate());
+        model.addAttribute("lastChanged", message.getLastChanged());
+        return "translation";
     }
 }

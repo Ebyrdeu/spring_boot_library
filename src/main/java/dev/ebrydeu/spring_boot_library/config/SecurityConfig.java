@@ -7,7 +7,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.client.RestClient;
 
 
 @Configuration
@@ -19,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/web/home", "/home", "/auth/login", "/oauth2/**").permitAll()
+                        .requestMatchers("/web/home", "/web/public","/web/public-page", "/auth/login", "/oauth2/**", "/logout","/public").permitAll()
                         .requestMatchers(SWAGGER_PATHS).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> {
@@ -36,11 +35,6 @@ public class SecurityConfig {
                 });
 
         return http.build();
-    }
-
-    @Bean
-    RestClient restClient() {
-        return RestClient.create();
     }
 
 

@@ -13,12 +13,12 @@ public class TestDataUtils {
     public static User createUserOne() {
         return User.builder()
                 .id(1L)
-                .username("User One")
+                .userName("User One")
                 .firstName("First One")
                 .lastName("Last One")
-                .avatar("One picture")
+                .profileImage("One picture")
                 .email("one@gmail.com")
-                .role(Role.ROLE_USER)
+                //.role(Role.ROLE_USER)
                 .githubId(123123123)
                 .build();
     }
@@ -26,11 +26,11 @@ public class TestDataUtils {
     public static User createUserTwo() {
         return User.builder()
                 .id(2L)
-                .username("User Two")
+                .userName("User Two")
                 .firstName("First Two")
                 .lastName("Last Two")
-                .avatar("Two picture")
-                .role(Role.ROLE_ADMIN)
+                .profileImage("Two picture")
+                //.role(Role.ROLE_ADMIN)
                 .email("two@gmail.com")
                 .githubId(32131231)
                 .build();
