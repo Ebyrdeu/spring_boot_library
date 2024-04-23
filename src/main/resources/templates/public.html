@@ -66,6 +66,9 @@
         <h2 th:text="${message.title}">Message Title</h2>
         <p th:text="${message.body}">Message content goes here...</p>
         <small>Posted by: <span th:text="${message.userUserName}">Username</span></small>
+        <a th:href="'/web/public-page/translate?id=' + ${message.id()}">
+            <h5 class="translateBtn" th:text="#{translate}">translate</h5>
+        </a>
     </div>
     <div class="return-button">
         <button type="button" onclick="window.history.back()">Return</button>

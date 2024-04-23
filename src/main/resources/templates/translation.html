@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Messages</title>
+    <title>Translate Message</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style>
         body {
             margin: 0;
@@ -56,10 +56,10 @@
             justify-content: space-between;
             align-items: center;
         }
-        .return-btn, .language-button {
+        .return-btn {
             padding: 10px 20px;
             font-family: Georgia, serif;
-            font-size: 16px;
+            font-size: 14px;
             border-radius: 5px;
             cursor: pointer;
             background-color: #4F5E4A;
@@ -68,60 +68,39 @@
             text-decoration: none;
             text-align: center;
         }
-        .return-btn:hover, .language-button:hover {
+        .return-btn:hover {
             background-color: #6B7E65;
-        }
-        .language-buttons {
-            display: flex;
-        }
-        .language-button {
-            margin: 0 5px;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1 class="welcome-message" th:text="#{allmessages}">All Messages</h1>
-    <div class="post">
-        <a href="/web/message-create" ></a>
-    </div>
-    <table class="styled-table">
+    <h1 class="welcome-message" th:text="#{translatedmessage}">Message</h1>
+    <table class="styled-table" >
         <thead>
         <tr>
-            <th th:text="#{title}"></th>
-            <th th:text="#{body}"></th>
-            <th class="author-cell-header" th:text="#{author}"></th>
-            <th class="date-cell-header" th:text="#{date}"></th>
-            <th class="edit-cell-header" th:text="#{lastedit}"></th>
+            <th th:text="#{title}">Title</th>
+            <th th:text="#{body}">Message</th>
+            <th class="author-cell-header" th:text="#{author}">Author</th>
+            <th class="date-cell-header" th:text="#{date}">Date</th>
+            <th class="edit-cell-header" th:text="#{lastedit}">Last Edited</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="message : ${messages}">
-            <td th:text="${message.title()}">Hello</td>
-            <td class="messageContainer">
-                <span th:text="${message.body()}">What a beatiful day</span>
-                <a th:href="'/web/messages/translate?id=' + ${message.id()}">
-                    <h5 class="translateBtn" th:text="#{translate}">translate</h5>
-                </a>
-            </td>
-            <td class="author-cell" th:text="${message.userUserName()}">Mister X</td>
-            <td class="date-cell" th:text="${message.date()}">2024-04-22</td>
+        <tr>
+            <td th:text="${title}">Latest news</td>
+            <td th:text="${message}">What a beatiful day.</td>
+            <td class="author-cell" th:text="${userName}">Mister X</td>
+            <td class="date-cell" th:text="${date}">2024-02-27</td>
             <td>
-                <p th:text="${message.lastChanged()}"></p>
-                <p th:if="${message.lastChanged() != null}" th:text="#{editedby} + ': ' + ${message.userUserName()}"></p>
+                <p th:text="${lastChanged}"></p>
+                <p th:if="${lastChanged != null}" th:text="#{editedby} + ': ' + ${userName}"></p>
             </td>
         </tr>
         </tbody>
     </table>
     <div class="button-container">
         <button type="button" onclick="history.back()" class="return-btn">Go Back</button>
-
-        <div class="language-buttons">
-            <form id="translate-form" action="#" method="get">
-                <a href="https://localhost:8443/web/messages?lang=en" class="language-button">English</a>
-                <a href="https://localhost:8443/web/messages?lang=sv" class="language-button">Svenska</a>
-            </form>
-        </div>
     </div>
 </div>
 </body>

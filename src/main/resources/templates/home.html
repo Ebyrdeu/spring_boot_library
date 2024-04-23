@@ -78,21 +78,20 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="welcome-message">Welcome</h1>
+    <h1 class="welcome-message" th:text="#{welcome}">Welcome</h1>
     <form id="home">
         <div class="github-signin">
-            <a class="button github-button" ${!isAuthenticated} th:href="@{/oauth2/authorization/github}">Sign in with GitHub</a>
-            <a class="button no-login-button" th:href="@{/web/public-page}">Continue without signing in</a>
+            <a class="button github-button" ${!isAuthenticated} th:href="@{/oauth2/authorization/github}" th:text="#{login}">Sign in with GitHub</a>
+            <a class="button no-login-button" th:href="@{/web/public-page}" th:text="#{continue}">Continue without signing in</a>
         </div>
     </form>
 </div>
 
 <div class="language-buttons">
     <form id="translate-form" action="#" method="get">
-        <button class="language-button" type="submit" name="lang" value="en">English</button>
-        <button class="language-button" type="submit" name="lang" value="sv">Svenska</button>
+        <a href="https://localhost:8443/web/home?lang=en" class="language-button">English</a>
+        <a href="https://localhost:8443/web/home?lang=sv" class="language-button">Svenska</a>
     </form>
-</div>
 </div>
 </body>
 </html>

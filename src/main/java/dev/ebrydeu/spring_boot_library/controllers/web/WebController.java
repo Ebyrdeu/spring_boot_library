@@ -1,16 +1,17 @@
 package dev.ebrydeu.spring_boot_library.controllers.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.ebrydeu.spring_boot_library.domain.dto.CreateMessageFormData;
 import dev.ebrydeu.spring_boot_library.domain.dto.MessageAndUsername;
 import dev.ebrydeu.spring_boot_library.domain.dto.UserData;
 import dev.ebrydeu.spring_boot_library.domain.entities.Message;
 import dev.ebrydeu.spring_boot_library.domain.entities.User;
+import dev.ebrydeu.spring_boot_library.services.impl.LibreTranslateService;
 import dev.ebrydeu.spring_boot_library.services.impl.MessageService;
 import dev.ebrydeu.spring_boot_library.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,10 +23,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/web")
@@ -33,12 +32,12 @@ public class WebController {
 
     private final MessageService messageService;
     private final UserService userService;
-    //private final LibreTranslateService libreTranslateService;
+    private final LibreTranslateService libreTranslateService;
 
-    public WebController(MessageService messageService, UserService userService) {
+    public WebController(MessageService messageService, UserService userService, LibreTranslateService libreTranslateService) {
         this.messageService = messageService;
         this.userService = userService;
-        //this.libreTranslateService = libreTranslateService;
+        this.libreTranslateService = libreTranslateService;
     }
 
     @GetMapping("/home")
@@ -203,18 +202,17 @@ public class WebController {
         redirectAttributes.addFlashAttribute("success", "Deleted successfully");
         return "redirect:/web/profile";
     }
-    //GetMapping("/messages/translate")
-    //ublic String translateMessage(Model model, @RequestParam("id") Long id) {
-    //   Message message = messageService.findById(id);
-    //   String translatedTitle = libreTranslateService.translateTitle(message.getTitle());
-    //   String translatedMessage = libreTranslateService.translateMessage(message.getBody());
-    //
-    //   model.addAttribute("title", translatedTitle);
-    //   model.addAttribute("message", translatedMessage);
-    //   model.addAttribute("userName", message.getUser().getUserName());
-    //   model.addAttribute("date", message.getDate());
-    //   model.addAttribute("lastChanged", message.getLastChanged());
-    //   return "translatemessage";
-    //
+    @GetMapping("/public-page/translate")
+    public String translateMessage(Model model, @RequestParam("id") Long id) throws JsonProcessingException {
+        Message message = messageService.findById(id);
+        String translatedTitle = libreTranslateService.translate(message.getTitle());
+        String translatedMessage = libreTranslateService.translate(message.getBody());
 
+        model.addAttribute("title", translatedTitle);
+        model.addAttribute("message", translatedMessage);
+        model.addAttribute("userName", message.getUser().getUserName());
+        model.addAttribute("date", message.getDate());
+        model.addAttribute("lastChanged", message.getLastChanged());
+        return "translation";
+    }
 }
