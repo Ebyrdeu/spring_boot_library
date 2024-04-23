@@ -54,21 +54,6 @@
             font-family: "Georgia", serif;
         }
 
-        .arrows {
-            text-align: center;
-        }
-
-        .arrows a {
-            color: #4F5E4A;
-            text-decoration: none;
-            font-size: 24px;
-            margin: 0 10px;
-        }
-
-        .arrows a:hover {
-            color: #6B7E65;
-        }
-
     </style>
 </head>
 <body>
@@ -81,18 +66,6 @@
         <h2 th:text="${message.title}">Message Title</h2>
         <p th:text="${message.body}">Message content goes here...</p>
         <small>Posted by: <span th:text="${message.userUserName}">Username</span></small>
-    </div>
-    <div class="arrows">
-        <a class="left" th:if="${currentPage > 0}" th:href="'/web/public?page=' + ${currentPage - 1}">
-            <i class="gg-arrow-left-r"></i>
-        </a>
-        <span th:each="page,iterStat : ${#numbers.sequence(0, totalPublicMessages/5 - 1)}">
-            <a th:href="'/web/messages?page=' + ${iterStat.index}" th:text="${iterStat.index} + 1"
-               th:class="${iterStat.index == currentPage ? 'active' : ''}"></a>
-        </span>
-        <a class="right" th:if="${totalPublicMessages > (currentPage + 1) * 5}" th:href="'/web/public?page=' + ${currentPage + 1}">
-            <i class="gg-arrow-right-r"></i>
-        </a>
     </div>
     <div class="return-button">
         <button type="button" onclick="window.history.back()">Return</button>
